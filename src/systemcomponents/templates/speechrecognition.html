@@ -1,0 +1,55 @@
+<!--
+SpiceUI 1.1.0
+
+Copyright (c) 2016-present, aac services.k.s - All rights reserved.
+Redistribution and use in source and binary forms, without modification, are permitted provided that the following conditions are met:
+- Redistributions of source code must retain this copyright and license notice, this list of conditions and the following disclaimer.
+- Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+- If used the SpiceCRM Logo needs to be displayed in the upper left corner of the screen in a minimum dimension of 31x31 pixels and be clearly visible, the icon needs to provide a link to http://www.spicecrm.io
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+-->
+
+<div *ngIf="1 || !cancelling" role="dialog" class="slds-modal slds-fade-in-open slds-modal_large">
+    <div class="slds-modal__container">
+        <div class="slds-modal__header slds-theme--default">
+            <h2 class="slds-text-heading--medium" style="position: relative">
+                {{language.getLabel('LBL_SPEECH_RECOGNITION')}}
+                <span *ngIf="working" style="position:absolute;left:0; opacity: 0.5;">&#9678;</span>
+                <span *ngIf="pausing" style="position:absolute;right:0; opacity: 0.5;">PAUSE</span>
+            </h2>
+        </div>
+        <div class="slds-modal__content slds-theme--default slds-p-around--medium slds-p-bottom--xx-small" style="margin-bottom:-0.75rem">
+            <div *ngIf="!dirty" class="slds-text-align_center slds-m-vertical--x-large" style="margin-bottom:3rem" [style.visibility]="pausing ? 'hidden':'visible'">{{language.getLabel('LBL_WAITING_START_SPEAKING')}}</div>
+            <div *ngIf="dirty" [innerHTML]="theTextHtml" class="slds-text-longform"></div>
+        </div>
+        <div class="slds-modal__footer">
+            <div class="slds-grid slds-grid_align-spread">
+                <div class="slds-col">
+                    <div class="slds-select_container">
+                        <select class="slds-select" (change)="changeLang($event)">
+                            <option *ngFor="let lang of languages;let index=i" [value]="lang.id" [selected]="i == selectedLanguage">{{lang.name}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="slds-col">
+                    <button class="slds-button slds-button--neutral" (click)="buttonCancel()">{{language.getLabel('LBL_CANCEL')}}</button>
+                    <button class="slds-button slds-button--neutral" (click)="buttonPause()" [disabled]="cancelling">
+                        <ng-container *ngIf="!pausing">
+                            <system-button-icon [icon]="'pause'" [position]="'left'"></system-button-icon>
+                            {{language.getLabel('LBL_PAUSE')}}
+                        </ng-container>
+                        <ng-container *ngIf="pausing">
+                            <system-button-icon [icon]="'record'" [position]="'left'"></system-button-icon>
+                            {{language.getLabel('LBL_CONTINUE')}}
+                        </ng-container>
+                    </button>
+                    <button class="slds-button slds-button--brand" (click)="buttonAcceptClose($event)" [disabled]="!dirty || cancelling">
+                        <system-button-icon [icon]="'stop'" [position]="'left'"></system-button-icon>
+                        {{language.getLabel('LBL_ACCEPT')}} &amp; {{language.getLabel('LBL_CLOSE')}}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

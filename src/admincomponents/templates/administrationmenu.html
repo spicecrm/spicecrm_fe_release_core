@@ -1,0 +1,71 @@
+<!--
+SpiceUI 1.1.0
+
+Copyright (c) 2016-present, aac services.k.s - All rights reserved.
+Redistribution and use in source and binary forms, without modification, are permitted provided that the following conditions are met:
+- Redistributions of source code must retain this copyright and license notice, this list of conditions and the following disclaimer.
+- Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+- If used the SpiceCRM Logo needs to be displayed in the upper left corner of the screen in a minimum dimension of 31x31 pixels and be clearly visible, the icon needs to provide a link to http://www.spicecrm.io
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+-->
+
+<div class="slds-grid" [ngStyle]="getContainerStyle()">
+    <div class="slds-grid slds-grid--vertical slds-navigation-list--vertical slds-navigation-list--vertical-inverse slds-border--right" style="height:100%;width: 250px;">
+        <div class="slds-p-horizontal--xx-small slds-p-vertical--small slds-border--bottom">
+            <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon_right slds-input-has-icon_group-right slds-m-vertical--xx-small">
+                <input type="text" class="slds-input" [placeholder]="language.getLabel('LBL_SEARCH')" [(ngModel)]="itemfilter" />
+                <system-utility-icon *ngIf="itemfilter == ''" [icon]="'search'" [addclasses]="'slds-input__icon slds-input__icon--left'"></system-utility-icon>
+                <div *ngIf="itemfilter != ''" class="slds-input__icon-group slds-input__icon-group_right">
+                    <button class="slds-input__icon slds-input__icon_right slds-button slds-button_icon"  (click)="itemfilter = ''">
+                        <system-button-icon [icon]="'clear'"></system-button-icon>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div #adminitemscontainer class="slds-scrollable--y" [ngStyle]="getItemsStyle()">
+            <ng-container  *ngFor="let adminNavigationBlock of getNavigationBlocks()" >
+                <h2 class="slds-text-title--caps slds-p-around--medium">{{adminNavigationBlock}}</h2>
+                <ul>
+                    <li *ngFor="let item of getNavigationItems(adminNavigationBlock)">
+                        <a href="javascript:void(0);" class="slds-navigation-list--vertical__action slds-text-link--reset" (click)="openContent(adminNavigationBlock, item)" [ngClass]="{'slds-theme_inverse': item == opened_item}">
+                            {{item.name}}
+                        </a>
+                    </li>
+                </ul>
+            </ng-container>
+        </div>
+    </div>
+    <div style="width:100%; height: 100%;" class="slds-scrollable" >
+        <div #admincontentcontainer></div>
+    </div>
+    <!--footer class="slds-utility-bar_container" aria-label="Utility Bar">
+        <h2 class="slds-assistive-text">Utility Bar</h2>
+        <ul class="slds-utility-bar">
+            <li class="slds-utility-bar__item">
+                <button class="slds-button slds-utility-bar__action" aria-pressed="false">
+                    <svg class="slds-button__icon slds-button__icon_left" aria-hidden="true">
+                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#call" />
+                    </svg>
+                    <span class="slds-utility-bar__text">Call</span>
+                </button>
+            </li>
+            <li class="slds-utility-bar__item">
+                <button class="slds-button slds-utility-bar__action" aria-pressed="false">
+                    <svg class="slds-button__icon slds-button__icon_left" aria-hidden="true">
+                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#clock" />
+                    </svg>
+                    <span class="slds-utility-bar__text">History</span>
+                </button>
+            </li>
+            <li class="slds-utility-bar__item">
+                <button class="slds-button slds-utility-bar__action" aria-pressed="false">
+                    <svg class="slds-button__icon slds-button__icon_left" aria-hidden="true">
+                        <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/assets/icons/utility-sprite/svg/symbols.svg#note" />
+                    </svg>
+                    <span class="slds-utility-bar__text">Notes</span>
+                </button>
+            </li>
+        </ul>
+    </footer-->
+</div>

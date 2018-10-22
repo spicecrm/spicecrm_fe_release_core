@@ -1,0 +1,59 @@
+<!--
+SpiceUI 1.1.0
+
+Copyright (c) 2016-present, aac services.k.s - All rights reserved.
+Redistribution and use in source and binary forms, without modification, are permitted provided that the following conditions are met:
+- Redistributions of source code must retain this copyright and license notice, this list of conditions and the following disclaimer.
+- Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+- If used the SpiceCRM Logo needs to be displayed in the upper left corner of the screen in a minimum dimension of 31x31 pixels and be clearly visible, the icon needs to provide a link to http://www.spicecrm.io
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+-->
+
+<!--div class="slds-card__footer">
+    <div class="slds-grid slds-grid--align-spread">
+        <div>
+            <button *ngIf="canViewAll()" class="slds-button" (click)="showAll()">{{language.getLabel('LBL_VIEWALL')}}
+            </button>
+        </div>
+        <div>
+            <fieldset *ngIf="canSetCount()" class="slds-form-element">
+                <div class="slds-form-element__control">
+                    <div class="slds-radio--button-group">
+                        <span class="slds-button slds-radio--button">
+                            <input type="radio" name="radio" [checked]="displayitems==5"/>
+                            <label class="slds-radio--button__label" (click)="setDisplayItems(5)">
+                              <span class="slds-radio--faux">5</span>
+                            </label>
+                        </span>
+                        <span class="slds-button slds-radio--button">
+                            <input type="radio" name="radio" [checked]="displayitems==10"/>
+                            <label class="slds-radio--button__label" (click)="setDisplayItems(10)">
+                              <span class="slds-radio--faux">10</span>
+                            </label>
+                        </span>
+                        <span class="slds-button slds-radio--button">
+                            <input type="radio" name="radio" [checked]="displayitems==25"/>
+                            <label class="slds-radio--button__label" (click)="setDisplayItems(25)">
+                              <span class="slds-radio--faux">25</span>
+                            </label>
+                        </span>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+    </div>
+</div-->
+<footer class="slds-card__footer">
+    <div class="slds-grid slds-grid_vertical-align-center">
+        <div class="slds-size--1-of-5"></div>
+        <div class="slds-size--3-of-5 slds-text-align_center">
+            <a href="javascript:void(0);" (click)="showAll()">{{language.getLabel('LBL_VIEWALL')}}</a>
+        </div>
+        <div class="slds-size--1-of-5 slds-text-align--right">
+            <button class="slds-button slds-button_icon" (click)="reload()">
+                <system-button-icon icon="refresh"></system-button-icon>
+            </button>
+        </div>
+    </div>
+</footer>

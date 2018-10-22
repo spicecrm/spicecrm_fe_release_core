@@ -1,0 +1,850 @@
+@import url('https://fonts.googleapis.com/css?family=Titillium+Web');
+
+body, .x-body {
+    font-family: 'Titillium Web', sans-serif;
+}
+
+/* hide spin buttons in number fields */
+input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button {
+    display: none;
+}
+
+.spiceLoadingLogo {
+    /*width: 200px;
+    height: 200px;*/
+    /*position: absolute;
+    top: calc(40% - 320px);
+    left: calc(25% - 100px);
+    text-align: center;*/
+}
+
+.spiceRotate {
+    animation-name: wag;
+    animation-duration: 3000ms;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+    transform-origin: bottom;
+}
+
+.loderRotate {
+    animation-name: spin;
+    animation-duration: 3000ms;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+}
+
+.loaderspinner .over {
+    -webkit-animation: spin 2s ease-in-out infinite;
+    stroke-dasharray: 78, 38;
+}
+
+.loaderspinner .bag {
+    position: absolute;
+}
+
+
+@keyframes wag {
+    0% {
+        transform: rotate(0deg);
+    }
+    33% {
+        transform: rotate(10deg)
+    }
+    66% {
+        transform: rotate(-10deg);
+    }
+    100% {
+        transform: rotate(0deg);
+    }
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0px 1000px white inset;
+}
+
+.required {
+    float: left;
+    padding-right: 2px;
+    color: rgb(194, 57, 52);
+    font-weight: 700;
+}
+
+.slds-global-header_container {
+    z-index: 999;
+}
+
+global-login {
+    display: flex;
+}
+
+.spiceContent {
+    margin-top: 90px;
+}
+
+global-user-panel {
+    position: absolute;
+}
+
+.userProfilePanel {
+    position: fixed;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    right: 5px;
+    top: 60px;
+    z-index: 100;
+    background: #fff;
+    filter: drop-shadow(0px 2px 3px rgba(0, 0, 0, 0.16));
+    min-width: 350px;
+}
+
+.userProfilePanel .pointer {
+    z-index: 1;
+    width: calc(1.25rem + .0625rem);
+    height: calc(1.25rem + .0625rem);
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+    border-top: 1px solid #d8dde6;
+    border-left: 1px solid #d8dde6;
+    background: #fff;
+    position: absolute;
+    top: -11px;
+    right: 16px;
+}
+
+.spiceActivitiyTimelineHeader::before {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    left: 120px;
+    margin-top: -1px;
+    border-bottom: 1px solid rgb(216, 221, 230);
+    content: ' ';
+}
+
+.spiceActivitiyTimelineHeader .showmorebutton {
+    position: absolute;
+    right: 0px;
+    top: 0px;
+}
+
+
+.spicecrm-fieldbody {
+    /*padding: 5px 0px*/;
+    min-height: 29px;
+}
+
+.spicecrm-fieldminheight {
+    /*padding: 5px 0px*/;
+    min-height: 34px;
+}
+
+.panelChevron {
+    height: 10px;
+    width: 10px;
+    margin-right: 10px;
+    margin-top: 2px;
+    border-top: 2px solid black;
+    border-right: 2px solid black;
+    transform: rotate(135deg);
+    float: left;
+    transition: 0.5s;
+}
+
+/* subpanel card tile sizes*/
+.spicecrm-card-size {
+    width: 100%;
+}
+
+@media only screen and (min-width: 1200px) {
+    .spicecrm-card-size {
+        width: 50%;
+    }
+}
+
+@media only screen and (min-width: 1800px) {
+    .spicecrm-card-size {
+        width: 33%;
+    }
+}
+
+.spicecrm-admin-main {
+    display: flex;
+    height: calc(100vh - 90px);
+}
+
+.spicecrm-admin-menu {
+    width: 200px;
+}
+
+.spicecrm-admin-content {
+    width: calc(100% - 200px);
+    height: 100%;
+    padding: 10px;
+}
+
+/* filter panel */
+object-listview-filter-panel {
+    height: 100%;
+    position: fixed;
+    right: 0px;
+    z-index: 90;
+    width: 320px;
+    transition: right 0.5s;
+}
+
+object-listview-filter-panel .slds-panel {
+    height: 100%;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .40)
+}
+
+object-listview-aggregates-panel {
+    height: 100%;
+    position: fixed;
+    right: 0px;
+    z-index: 90;
+    width: 320px;
+    transition: right 0.5s;
+}
+
+object-listview-aggregates-panel .slds-panel {
+    height: 100%;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .40)
+}
+
+global-navigation-menu-item li.slds-dropdown-trigger, global-navigation-menu-more li.slds-dropdown-trigger {
+    display: flex;
+}
+
+.spicecrm-popup-buttoncontainer {
+    min-height: 2rem;
+    margin-top: 1rem;
+}
+
+.spicecrm-popup-buttoncontainer button {
+    float: right;
+}
+
+/* global search */
+.spicecrm-globalsearch-container {
+    display: flex;
+}
+
+.spicecrm-globalsearch-menu {
+    width: 250px;
+    border-right: 1px solid #d8dde6;
+    background-color: #f7f9fb;
+}
+
+.spicecrm-globalsearch-results {
+    width: calc(100% - 250px);
+    background-color: #f7f9fb;
+    height: 100%;
+    overflow-y: auto;
+}
+
+table,
+.slds-table tr,
+tr.slds-hint-parent td,
+tr[global-search-module-item] td {
+    font-size: 13px !important;
+}
+
+.spicecrm-globalsearch-results div[global-search-module]:last-child {
+    margin-bottom: 0px;
+}
+
+/* todo: get color codes right and with scss variables */
+div[global-search-module] div.slds-page-header {
+    border-top: 1px solid #d8dde6;
+    background-color: #fff;
+}
+
+/* for the css loader http://cssload.net/en/spinners/4*/
+
+.cssload-container {
+    width: 100%;
+    /*height: 26px;*/
+    text-align: center;
+    margin: 10px 0px;
+}
+
+.cssload-double-torus {
+    width: 26px;
+    height: 26px;
+    margin: 0 auto;
+    border: 2px double;
+    border-radius: 50%;
+    border-color: transparent rgba(0, 0, 0, 0.9) rgba(0, 0, 0, 0.9);
+    animation: cssload-spin 1410ms infinite linear;
+    -o-animation: cssload-spin 1410ms infinite linear;
+    -ms-animation: cssload-spin 1410ms infinite linear;
+    -webkit-animation: cssload-spin 1410ms infinite linear;
+    -moz-animation: cssload-spin 1410ms infinite linear;
+}
+
+@keyframes cssload-spin {
+    100% {
+        transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+
+@-o-keyframes cssload-spin {
+    100% {
+        -o-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+
+@-ms-keyframes cssload-spin {
+    100% {
+        -ms-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+
+@-webkit-keyframes cssload-spin {
+    100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+
+@-moz-keyframes cssload-spin {
+    100% {
+        -moz-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+
+/* for the coach spiceprocess */
+.spicecrm-processicon {
+    fill: #fff;
+    margin-top: 5px;
+}
+
+/* slds overrides */
+
+.slds-section__title-action-icon {
+    transition: 0.5s;
+}
+
+/* Color override */
+/* CSS - Cascading Style Sheet */
+/* Palette color codes */
+/* Palette URL: http://paletton.com/#uid=75C0x0krJpAdHFWkLv+w8fKKea5 */
+
+/* Feel free to copy&paste color codes to your application */
+
+/* As hex codes */
+
+.color-primary-0 {
+    color: #CA1B1F
+}
+
+/* Main Primary color */
+.color-primary-1 {
+    color: #FD9194
+}
+
+.color-primary-2 {
+    color: #FD595D
+}
+
+.color-primary-3 {
+    color: #7C0003
+}
+
+.color-primary-4 {
+    color: #500002
+}
+
+.color-secondary-1-0 {
+    color: #CC6E1B
+}
+
+/* Main Secondary color (1) */
+.color-secondary-1-1 {
+    color: #FFC592
+}
+
+.color-secondary-1-2 {
+    color: #FFA75A
+}
+
+.color-secondary-1-3 {
+    color: #7D3B00
+}
+
+.color-secondary-1-4 {
+    color: #502600
+}
+
+.color-secondary-2-0 {
+    color: #12737C
+}
+
+/* Main Secondary color (2) */
+.color-secondary-2-1 {
+    color: #6DB6BD
+}
+
+.color-secondary-2-2 {
+    color: #38939B
+}
+
+.color-secondary-2-3 {
+    color: #01464C
+}
+
+.color-secondary-2-4 {
+    color: #002D31
+}
+
+.color-complement-0 {
+    color: #1DA516
+}
+
+/* Main Complement color */
+.color-complement-1 {
+    color: #84DF80
+}
+
+.color-complement-2 {
+    color: #4FCF49
+}
+
+.color-complement-3 {
+    color: #056600
+}
+
+.color-complement-4 {
+    color: #034100
+}
+
+/* As RGBa codes */
+
+.rgba-primary-0 {
+    color: rgba(202, 27, 31, 1)
+}
+
+/* Main Primary color */
+.rgba-primary-1 {
+    color: rgba(253, 145, 148, 1)
+}
+
+.rgba-primary-2 {
+    color: rgba(253, 89, 93, 1)
+}
+
+.rgba-primary-3 {
+    color: rgba(124, 0, 3, 1)
+}
+
+.rgba-primary-4 {
+    color: rgba(80, 0, 2, 1)
+}
+
+.rgba-secondary-1-0 {
+    color: rgba(204, 110, 27, 1)
+}
+
+/* Main Secondary color (1) */
+.rgba-secondary-1-1 {
+    color: rgba(255, 197, 146, 1)
+}
+
+.rgba-secondary-1-2 {
+    color: rgba(255, 167, 90, 1)
+}
+
+.rgba-secondary-1-3 {
+    color: rgba(125, 59, 0, 1)
+}
+
+.rgba-secondary-1-4 {
+    color: rgba(80, 38, 0, 1)
+}
+
+.rgba-secondary-2-0 {
+    color: rgba(18, 115, 124, 1)
+}
+
+/* Main Secondary color (2) */
+.rgba-secondary-2-1 {
+    color: rgba(109, 182, 189, 1)
+}
+
+.rgba-secondary-2-2 {
+    color: rgba(56, 147, 155, 1)
+}
+
+.rgba-secondary-2-3 {
+    color: rgba(1, 70, 76, 1)
+}
+
+.rgba-secondary-2-4 {
+    color: rgba(0, 45, 49, 1)
+}
+
+.rgba-complement-0 {
+    color: rgba(29, 165, 22, 1)
+}
+
+/* Main Complement color */
+.rgba-complement-1 {
+    color: rgba(132, 223, 128, 1)
+}
+
+.rgba-complement-2 {
+    color: rgba(79, 207, 73, 1)
+}
+
+.rgba-complement-3 {
+    color: rgba(5, 102, 0, 1)
+}
+
+.rgba-complement-4 {
+    color: rgba(3, 65, 0, 1)
+}
+
+/* Generated by Paletton.com © 2002-2014 */
+/* http://paletton.com */
+
+a, a:focus, a:hover {
+    /* todo: find proper color */
+    color: #444;
+}
+
+.slds-button:focus {
+    box-shadow: 0 0 3px #01464C;
+}
+
+
+.slds-button--icon-border.slds-is-selected:focus,
+.slds-button--icon-border.slds-is-selected:active,
+.slds-button--icon-border.slds-is-selected,
+.slds-button--icon-border.slds-is-selected:not([disabled]):hover,
+.slds-button--brand, .slds-button--brand:active, .slds-button--brand:focus {
+    background-color: #CA1B21;
+    border-color: #CA1B21;
+}
+
+.slds-button--icon-more:not([disabled]):hover .slds-button__icon {
+    fill: #CA1B21;
+}
+
+field-generic-display:hover .slds-button--icon{
+    color: #5B5B5B;
+}
+
+field-generic-display .slds-button--icon{
+    color: #eeeeee;
+}
+/*
+.slds-button:not([disabled]):focus, .slds-button:not([disabled]):hover {
+    color: #CA1B21;
+}
+*/
+.slds-button--brand:not([disabled]):focus, .slds-button--brand:not([disabled]):hover {
+    color: #FFF;
+}
+/*
+.slds-button:not([disabled]):focus svg, .slds-button:not([disabled]):hover svg {
+    fill: #CA1B21;
+}
+*/
+.slds-button--brand:not([disabled]):focus svg, .slds-button--brand:not([disabled]):hover svg {
+    fill: currentColor;
+}
+
+.slds-button--icon-border.slds-is-selected {
+    border: 1px solid #CA1B21;
+}
+
+.slds-button--brand:not([disabled]):hover {
+    color: #FFF;
+    background-color: #CA1B21;
+    font-weight: bold;
+}
+
+.slds-button:focus {
+    box-shadow: 0 0 3px #01464C;
+}
+
+.slds-tabs--default__item.slds-active:after,
+.slds-tabs--default__item.slds-is-active:after,
+.slds-tabs--default__item:hover:after {
+    background-color: #CA1B21;
+}
+
+.slds-active .slds-tabs--scoped__link,
+.slds-button,
+.slds-navigation-list--vertical .slds-is-active {
+    color: #5B5B5B;
+}
+
+.slds-button.slds-active {
+    color: #CA1B21;
+}
+
+.slds-button.slds-button--brand,
+.slds-button.slds-button--icon-inverse {
+    color: #fff;
+}
+
+/* special rule for the action container since the first child is an empty div
+object-action-container .slds-button-group .slds-button:nth-child(2) {
+    border-radius: .25rem 0 0 .25rem;
+}
+*/
+
+.slds-navigation-list--vertical .slds-is-active .slds-navigation-list--vertical__action {
+    border-left-color: #CA1B21;
+}
+
+.slds-radio--button [type=radio]:checked + .slds-radio--button__label:hover,
+.slds-radio--button [type=radio]:checked + .slds-radio--button__label {
+    background-color: #CA1B1F;
+}
+
+/* forms */
+.slds-input:active, .slds-input:focus,
+.slds-select:active, .slds-select:focus,
+.slds-checkbox [type=checkbox]:focus + .slds-checkbox--faux, .slds-checkbox [type=checkbox]:focus + .slds-checkbox__label .slds-checkbox--faux, .slds-checkbox [type=checkbox]:focus ~ .slds-checkbox--faux {
+    border-color: #12737C;
+    box-shadow: 0 0 3px #01464C;
+}
+
+.slds-checkbox [type=checkbox]:checked + .slds-checkbox--faux:after,
+.slds-checkbox [type=checkbox]:checked + .slds-checkbox__label .slds-checkbox--faux:after,
+.slds-checkbox [type=checkbox]:checked + .slds-checkbox__label .slds-checkbox_faux:after,
+.slds-checkbox [type=checkbox]:checked + .slds-checkbox_faux:after,
+.slds-checkbox [type=checkbox]:checked ~ .slds-checkbox--faux:after,
+.slds-checkbox [type=checkbox]:checked ~ .slds-checkbox_faux:after,
+.slds-checkbox [type=checkbox]:checked + .slds-checkbox--faux:after,
+.slds-checkbox [type=checkbox]:checked + .slds-checkbox__label .slds-checkbox--faux:after,
+.slds-checkbox [type=checkbox]:checked ~ .slds-checkbox--faux:after {
+    border-bottom: 2px solid #CA1B1F;
+    border-left: 2px solid #CA1B1F;
+}
+
+.slds-checkbox--button [type=checkbox]:checked + .slds-checkbox--button__label, .slds-checkbox--button [type=checkbox]:checked + .slds-checkbox--faux, .slds-checkbox--button [type=checkbox]:checked + .slds-checkbox_button__label, .slds-checkbox--button [type=checkbox]:checked + .slds-checkbox_faux, .slds-checkbox--button [type=checkbox]:checked ~ .slds-checkbox--faux, .slds-checkbox--button [type=checkbox]:checked ~ .slds-checkbox_faux, .slds-checkbox_button [type=checkbox]:checked + .slds-checkbox--button__label, .slds-checkbox_button [type=checkbox]:checked + .slds-checkbox--faux, .slds-checkbox_button [type=checkbox]:checked + .slds-checkbox_button__label, .slds-checkbox_button [type=checkbox]:checked + .slds-checkbox_faux, .slds-checkbox_button [type=checkbox]:checked ~ .slds-checkbox--faux, .slds-checkbox_button [type=checkbox]:checked ~ .slds-checkbox_faux {
+    background-color: #CA1B1F;
+}
+
+.slds-checkbox--button [type=checkbox]:checked + .slds-checkbox--button__label:focus, .slds-checkbox--button [type=checkbox]:checked + .slds-checkbox--button__label:hover, .slds-checkbox--button [type=checkbox]:checked + .slds-checkbox--faux:focus, .slds-checkbox--button [type=checkbox]:checked + .slds-checkbox--faux:hover, .slds-checkbox--button [type=checkbox]:checked + .slds-checkbox_button__label:focus, .slds-checkbox--button [type=checkbox]:checked + .slds-checkbox_button__label:hover, .slds-checkbox--button [type=checkbox]:checked + .slds-checkbox_faux:focus, .slds-checkbox--button [type=checkbox]:checked + .slds-checkbox_faux:hover, .slds-checkbox--button [type=checkbox]:checked ~ .slds-checkbox--faux:focus, .slds-checkbox--button [type=checkbox]:checked ~ .slds-checkbox--faux:hover, .slds-checkbox--button [type=checkbox]:checked ~ .slds-checkbox_faux:focus, .slds-checkbox--button [type=checkbox]:checked ~ .slds-checkbox_faux:hover, .slds-checkbox_button [type=checkbox]:checked + .slds-checkbox--button__label:focus, .slds-checkbox_button [type=checkbox]:checked + .slds-checkbox--button__label:hover, .slds-checkbox_button [type=checkbox]:checked + .slds-checkbox--faux:focus, .slds-checkbox_button [type=checkbox]:checked + .slds-checkbox--faux:hover, .slds-checkbox_button [type=checkbox]:checked + .slds-checkbox_button__label:focus, .slds-checkbox_button [type=checkbox]:checked + .slds-checkbox_button__label:hover, .slds-checkbox_button [type=checkbox]:checked + .slds-checkbox_faux:focus, .slds-checkbox_button [type=checkbox]:checked + .slds-checkbox_faux:hover, .slds-checkbox_button [type=checkbox]:checked ~ .slds-checkbox--faux:focus, .slds-checkbox_button [type=checkbox]:checked ~ .slds-checkbox--faux:hover, .slds-checkbox_button [type=checkbox]:checked ~ .slds-checkbox_faux:focus, .slds-checkbox_button [type=checkbox]:checked ~ .slds-checkbox_faux:hover {
+    background-color: #CA1B1F;
+}
+
+.slds-checkbox--toggle [type=checkbox]:checked + .slds-checkbox--faux:focus, .slds-checkbox--toggle [type=checkbox]:checked + .slds-checkbox--faux:hover, .slds-checkbox--toggle [type=checkbox]:checked + .slds-checkbox--faux_container .slds-checkbox--faux:focus, .slds-checkbox--toggle [type=checkbox]:checked + .slds-checkbox--faux_container .slds-checkbox--faux:hover, .slds-checkbox--toggle [type=checkbox]:checked + .slds-checkbox_faux:focus, .slds-checkbox--toggle [type=checkbox]:checked + .slds-checkbox_faux:hover, .slds-checkbox--toggle [type=checkbox]:checked + .slds-checkbox_faux_container .slds-checkbox_faux:focus, .slds-checkbox--toggle [type=checkbox]:checked + .slds-checkbox_faux_container .slds-checkbox_faux:hover, .slds-checkbox--toggle [type=checkbox]:checked ~ .slds-checkbox--faux:focus, .slds-checkbox--toggle [type=checkbox]:checked ~ .slds-checkbox--faux:hover, .slds-checkbox--toggle [type=checkbox]:checked ~ .slds-checkbox_faux:focus, .slds-checkbox--toggle [type=checkbox]:checked ~ .slds-checkbox_faux:hover, .slds-checkbox_toggle [type=checkbox]:checked + .slds-checkbox--faux:focus, .slds-checkbox_toggle [type=checkbox]:checked + .slds-checkbox--faux:hover, .slds-checkbox_toggle [type=checkbox]:checked + .slds-checkbox--faux_container .slds-checkbox--faux:focus, .slds-checkbox_toggle [type=checkbox]:checked + .slds-checkbox--faux_container .slds-checkbox--faux:hover, .slds-checkbox_toggle [type=checkbox]:checked + .slds-checkbox_faux:focus, .slds-checkbox_toggle [type=checkbox]:checked + .slds-checkbox_faux:hover, .slds-checkbox_toggle [type=checkbox]:checked + .slds-checkbox_faux_container .slds-checkbox_faux:focus, .slds-checkbox_toggle [type=checkbox]:checked + .slds-checkbox_faux_container .slds-checkbox_faux:hover, .slds-checkbox_toggle [type=checkbox]:checked ~ .slds-checkbox--faux:focus, .slds-checkbox_toggle [type=checkbox]:checked ~ .slds-checkbox--faux:hover, .slds-checkbox_toggle [type=checkbox]:checked ~ .slds-checkbox_faux:focus, .slds-checkbox_toggle [type=checkbox]:checked ~ .slds-checkbox_faux:hover {
+    background-color: #CA1B1F;
+}
+
+.slds-checkbox--toggle [type=checkbox]:checked + .slds-checkbox--faux, .slds-checkbox--toggle [type=checkbox]:checked + .slds-checkbox--faux_container .slds-checkbox--faux, .slds-checkbox--toggle [type=checkbox]:checked + .slds-checkbox_faux, .slds-checkbox--toggle [type=checkbox]:checked + .slds-checkbox_faux_container .slds-checkbox_faux, .slds-checkbox--toggle [type=checkbox]:checked ~ .slds-checkbox--faux, .slds-checkbox--toggle [type=checkbox]:checked ~ .slds-checkbox_faux, .slds-checkbox_toggle [type=checkbox]:checked + .slds-checkbox--faux, .slds-checkbox_toggle [type=checkbox]:checked + .slds-checkbox--faux_container .slds-checkbox--faux, .slds-checkbox_toggle [type=checkbox]:checked + .slds-checkbox_faux, .slds-checkbox_toggle [type=checkbox]:checked + .slds-checkbox_faux_container .slds-checkbox_faux, .slds-checkbox_toggle [type=checkbox]:checked ~ .slds-checkbox--faux, .slds-checkbox_toggle [type=checkbox]:checked ~ .slds-checkbox_faux {
+    border-color: #CA1B1F;
+    background-color: #CA1B1F;
+}
+
+/* for the progress indicator */
+.slds-tabs--path .slds-is-current,
+.slds-tabs--path .slds-is-current + .slds-is-incomplete:before {
+    background-color: #CA1B1F;
+}
+
+.slds-tabs--path .slds-is-current:hover,
+.slds-tabs--path .slds-is-current:hover + .slds-is-incomplete:before {
+    background-color: #7C0003;
+}
+
+.slds-tabs--path .slds-is-complete,
+.slds-tabs--path .slds-is-active + .slds-tabs--path__item.slds-is-current:before,
+.slds-tabs--path__item + .slds-is-complete:before, .slds-tabs--path__item + .slds-is-current:before {
+    background-color: #2D2D2D;
+}
+
+.slds-tabs--path .slds-is-complete:hover,
+.slds-tabs--path .slds-is-active:hover + .slds-tabs--path__item.slds-is-current:before,
+.slds-tabs--path__item:hover + .slds-is-complete:before, .slds-tabs--path__item:hover + .slds-is-current:before {
+    background-color: #111;
+}
+
+/*
+.slds-tabs--path .slds-is-incomplete .slds-tabs--path__link{
+    color: #bbb;
+}
+*/
+.slds-tabs--path .slds-is-incomplete:hover .slds-tabs--path__link {
+    color: #fff;
+}
+
+.slds-tabs--path .slds-is-incomplete.slds-is-active,
+.slds-tabs--path .slds-is-incomplete.slds-is-active + .slds-tabs--path__item:before {
+    background-color: #d8dde6;
+}
+
+.slds-tabs--path .slds-is-incomplete.slds-is-active .slds-tabs--path__link {
+    color: #111;
+}
+
+.slds-context-bar {
+    border-bottom: 3px solid #CA1B1F;
+}
+
+.slds-context-bar__item:not(.slds-no-hover):not(.slds-is-active):hover {
+    /*border-bottom: 3px solid #FD595D;*/
+}
+
+.slds-context-bar__item.slds-is-active:after, .slds-context-bar__item.slds-is-active:before {
+    background: #CA1B1F;
+}
+
+.slds-progress__item.slds-is-active .slds-progress__marker, .slds-progress__item.slds-is-completed .slds-progress__marker {
+    border-color: #CA1B1F;
+}
+
+.slds-progress__item.slds-is-active .slds-progress__marker:focus, .slds-progress__item.slds-is-active .slds-progress__marker:hover {
+    border-color: #CA1B1F;
+}
+
+.slds-progress-bar .slds-progress-bar__value {
+    background: #FD595D;
+}
+
+.slds-progress__item.slds-is-active .slds-progress__marker:focus {
+    box-shadow: #fff 0 0 0 4px, 0 0 3px 4px #FD595D;
+}
+
+.slds-box--border.slds-has-error {
+    background-color: #fff;
+    border-color: #c23934;
+    box-shadow: #c23934 0 0 0 1px inset;
+    background-clip: padding-box;
+}
+
+.slds-radio [type=radio]:checked + .slds-radio--faux:after, .slds-radio [type=radio]:checked + .slds-radio__label .slds-radio--faux:after, .slds-radio [type=radio]:checked ~ .slds-radio--faux:after {
+    background-color: #CA1B1F;
+}
+
+.slds-context-bar__dropdown-trigger .slds-dropdown:before {
+    background-color: transparent;
+}
+
+.slds-popover--tooltip, .slds-popover_tooltip {
+    background: #002D31;
+}
+
+.slds-nav-vertical__item.slds-is-active:before {
+    background: #CA1B1F;
+}
+
+/*
+ generic classes
+ */
+.spice-h-full {
+    height: 100%;
+    overflow-y: auto;
+}
+
+.slds-docked-composer__header {
+    border-bottom-color: #CA1B1F;
+}
+
+.slds-context-bar__item.slds-is-active, .slds-context-bar__item:not(.slds-no-hover):hover {
+    background-color: rgba(155, 155, 155, .1);
+}
+
+.slds-context-bar__item.slds-is-active {
+    animation: spiceAnim 135ms cubic-bezier(.39, .575, .565, 1) both
+}
+
+@keyframes spiceAnim {
+    50% {
+        background-color: #fff
+    }
+    100% {
+        background-color: rgba(155, 155, 155, .1);
+    }
+}
+
+.slds-active .slds-tabs--scoped__link, .slds-active .slds-tabs_scoped__link, .slds-is-active .slds-tabs--scoped__link, .slds-is-active .slds-tabs_scoped__link,
+.slds-tabs--default__item.slds-active, .slds-tabs--default__item.slds-is-active, .slds-tabs_default__item.slds-active, .slds-tabs_default__item.slds-is-active,
+.slds-tabs--default__item.slds-active .slds-tabs--default__link:hover{
+    color: #111
+}
+
+.slds-tabs--default__item:hover:after, .slds-tabs_default__item:hover:after,
+.slds-tabs--default__item.slds-active:after, .slds-tabs--default__item.slds-is-active:after, .slds-tabs_default__item.slds-active:after, .slds-tabs_default__item.slds-is-active:after{
+    background-color: #CA1B1F;
+}
+
+.slds-progress__item.slds-is-completed .slds-progress__marker--icon, .slds-progress__item.slds-is-completed .slds-progress__marker_icon{
+    color: #CA1B1F;
+}
+
+.slds-radio [type=radio]:checked+.slds-radio--faux:after, .slds-radio [type=radio]:checked+.slds-radio__label .slds-radio--faux:after, .slds-radio [type=radio]:checked+.slds-radio__label .slds-radio_faux:after, .slds-radio [type=radio]:checked+.slds-radio_faux:after, .slds-radio [type=radio]:checked~.slds-radio--faux:after, .slds-radio [type=radio]:checked~.slds-radio_faux:after{
+    background-color: #CA1B1F;
+}
+
+.slds-theme--inverse, .slds-theme_inverse{
+    background-color: #CA1B1F;
+    border-color: #CA1B1F;
+}
+
+.slds-tree .slds-is-selected {
+    box-shadow: #CA1B1F 4px 0 0 inset;
+}
+
+
+.slds-button span{
+    text-transform: capitalize;
+}
+
+/* rich text editor */
+.slds-rich-text-area__content{
+    max-height: none;
+    resize: vertical;
+    overflow: auto;
+    height: 300px;
+}
+
+/* Style Definition for HTML fields */
+
+.html-text h1, .html-text h2, .html-text h3, .html-text h4, .html-text h5, .html-text h6 {
+    margin: 0.75rem 0;
+    line-height: 1.25;
+}
+.html-text h1 { font-size: 1.25rem; }
+.html-text h2 { font-size: 1rem; color: #000; }
+.html-text h3, .html-text h4, .html-text h5, .html-text h6 { font-size: 0.75rem; color: #000; line-height: 1.25; }
+
+.html-text b, .html-text strong { font-weight: 700; }
+
+.html-text i, .html-text em { font-style: italic; }
+
+.html-text p, .html-text ul { margin: 0.75rem 0; }
+
+.html-text *:first-child { margin-top: 0; }
+.html-text *:last-child { margin-bottom: 0; }
+
+.html-text a { color: #444; text-decoration: underline; }
+.html-text a:hover { color: #000; text-decoration: none; }
+
+.html-text ul { list-style: disc outside; }
+.html-text ol { list-style: decimal outside; }
+.html-text li { margin-left: 1.75rem; }
+
+.html-text .align-right { text-align: right; }
+.html-text .align-left { text-align: left; }
+.html-text .align-center { text-align: center; }
+.html-text .align-justify { text-align: justify; }

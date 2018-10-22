@@ -1,0 +1,28 @@
+<!--
+SpiceUI 1.1.0
+
+Copyright (c) 2016-present, aac services.k.s - All rights reserved.
+Redistribution and use in source and binary forms, without modification, are permitted provided that the following conditions are met:
+- Redistributions of source code must retain this copyright and license notice, this list of conditions and the following disclaimer.
+- Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+- If used the SpiceCRM Logo needs to be displayed in the upper left corner of the screen in a minimum dimension of 31x31 pixels and be clearly visible, the icon needs to provide a link to http://www.spicecrm.io
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+-->
+
+<div #bodycontainer class="slds-is-relative slds-scrollable--y" [ngStyle]="bodyContainerStyle">
+    <ng-container *ngIf="isEditing">
+        <ng-container *ngFor="let row of dashboardlayout.dashboardGrid">
+            <ng-container *ngFor="let column of row">
+                <div [ngStyle]="column" style="padding:10px;border: 1px solid #ddd;position: absolute;">
+                    <button class="slds-button slds-button--icon slds-align--absolute-center"  style="height: 100%; width: 100%" (click)="addDashlet(column)">
+                        <system-button-icon [icon]="'add'" [size]="'medium'"  style="height: 100%; width: 100%"></system-button-icon>
+                    </button>
+                </div>
+            </ng-container>
+        </ng-container>
+    </ng-container>
+    <ng-container *ngFor="let item of dashboardlayout.dashboardElements">
+        <dashboard-container-element [item]="item"></dashboard-container-element>
+    </ng-container>
+</div>

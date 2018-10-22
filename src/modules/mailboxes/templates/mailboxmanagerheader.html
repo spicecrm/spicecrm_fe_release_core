@@ -1,0 +1,63 @@
+<!--
+SpiceUI 1.1.0
+
+Copyright (c) 2016-present, aac services.k.s - All rights reserved.
+Redistribution and use in source and binary forms, without modification, are permitted provided that the following conditions are met:
+- Redistributions of source code must retain this copyright and license notice, this list of conditions and the following disclaimer.
+- Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+- If used the SpiceCRM Logo needs to be displayed in the upper left corner of the screen in a minimum dimension of 31x31 pixels and be clearly visible, the icon needs to provide a link to http://www.spicecrm.io
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+-->
+
+<div class="slds-grid slds-form--inline slds-p-around--small slds-border--bottom">
+    <div class="slds-grid slds-grid--vertical-align-center">
+        <div class="slds-form-element__control">
+            <select class="slds-select" [(ngModel)]="mailboxselection" (change)="selectMailbox()" style="min-width: 250px;" [disabled]="mailboxesEmails.mailboxes.length==0">
+                <option *ngFor="let mailbox of mailboxesEmails.mailboxes" value="{{mailbox.id}}">
+                    {{mailbox.name}}
+                </option>
+            </select>
+        </div>
+        <div class="slds-form-element__control slds-p-left--small">
+            <span class="slds-checkbox">
+              <input type="checkbox" [disabled]="refreshDisabled"
+                     name="options" id="unread_only" value="1"
+                     [(ngModel)]="mailboxesEmails.unreadonly" (change)="reloadList()"/>
+              <label class="slds-checkbox__label" for="unread_only">
+                <span class="slds-checkbox_faux"></span>
+                <span class="slds-form-element__label">{{language.getLabel('LBL_UNREAD_ONLY', 'EmailTemplates')}}</span>
+              </label>
+            </span>
+        </div>
+        <div class="slds-form-element__control">
+            <select class="slds-select" [(ngModel)]="emailopenness"
+                    (change)="selectEmailOpenness()" id="email_openness">
+                <option value="all"
+                        selected>{{language.getLabel('LBL_EMAILS_ALL',
+                    'EmailTemplates')}}</option>
+                <option value="open">{{language.getLabel('LBL_EMAILS_OPEN',
+                    'EmailTemplates')}}</option>
+                <option
+                        value="user_closed">{{language.getLabel('LBL_EMAILS_USER_CLOSED',
+                    'EmailTemplates')}}</option>
+                <option
+                        value="system_closed">{{language.getLabel('LBL_EMAILS_SYSTEM_CLOSED', 'EmailTemplates')}}</option>
+            </select>
+        </div>
+    </div>
+    <div class="slds-col--bump-left">
+        <button class="slds-button slds-button--neutral" [disabled]="!buttonenabled" (click)="reloadList()">
+            <div class="slds-grid slds-grid--vertical-align-center">
+                <system-button-icon [icon]="'refresh'"></system-button-icon>
+                <span>{{language.getLabel('LBL_REFRESH')}}</span>
+            </div>
+        </button>
+        <button class="slds-button slds-button--neutral" [disabled]="!buttonenabled" (click)="fetchEmails()">
+            <div class="slds-grid slds-grid--vertical-align-center">
+                <system-button-icon [icon]="'email'"></system-button-icon>
+                <span>{{language.getLabel('LBL_FETCH_EMAILS')}}</span>
+            </div>
+        </button>
+    </div>
+</div>

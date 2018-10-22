@@ -1,0 +1,79 @@
+/*
+SpiceUI 1.1.0
+
+Copyright (c) 2016-present, aac services.k.s - All rights reserved.
+Redistribution and use in source and binary forms, without modification, are permitted provided that the following conditions are met:
+- Redistributions of source code must retain this copyright and license notice, this list of conditions and the following disclaimer.
+- Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+- If used the SpiceCRM Logo needs to be displayed in the upper left corner of the screen in a minimum dimension of 31x31 pixels and be clearly visible, the icon needs to provide a link to http://www.spicecrm.io
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+*/
+
+import {Component, Input, HostBinding} from '@angular/core';
+import {Router} from '@angular/router';
+import {metadata} from '../../../services/metadata.service';
+import {model} from '../../../services/model.service';
+import {toast} from '../../../services/toast.service';
+import {language} from '../../../services/language.service';
+import {popup} from '../../../services/popup.service';
+import {backend} from "../../../services/backend.service";
+
+@Component({
+    selector: 'campaign-send-mail-button',
+    templateUrl: './src/modules/campaigns/templates/campaignsendmailbutton.html',
+    host: {
+        'class': 'slds-button slds-button--neutral',
+        '(click)': 'sendMail()',
+        '[style.display]': 'getDisplay()'
+    },
+    styles: [
+        ':host >>> {cursor:pointer;}'
+    ]
+})
+export class CampaignSendMailButton {
+
+    sending: boolean = false;
+
+    constructor(private language: language, private model: model, private backend: backend, private toast: toast) {
+    }
+
+    sendMail() {
+        if (!this.sending) {
+            this.sending = true;
+            this.backend.postRequest('module/CampaignTasks/'+this.model.id+'/queuemail').subscribe((results: any) => {
+                this.sending = false;
+                this.toast.sendToast('Mails queued');
+
+                // set the campaigntask to activated
+                this.model.setField('activated', true);
+            });
+        }
+    }
+
+    getDisplay() {
+
+        // not if activated already
+        if(this.model.getField('activated'))
+            return 'none';
+
+        // not if editing
+        if(this.model.data.acl && !this.model.data.acl.edit)
+            return 'none';
+
+        // only for email
+        if(this.model.data.campaigntask_type !== 'Email')
+            return 'none';
+
+        // mailrelais is set
+        if(!this.model.data.mailbox_id)
+            return 'none';
+
+        // template is set is set
+        if(!this.model.data.email_template_id)
+            return 'none';
+
+        // not if editing
+        return this.model.isEditing ? 'none' : 'inherit';
+    }
+}
