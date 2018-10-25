@@ -161,7 +161,7 @@ export class userpreferences {
             let timeFormat: string = this.toUse.timef;
             return this.jsTimeFormat2momentTimeFormat(timeFormat);
         } else {
-            return 'YYYY-MM-DD';
+            return 'hh:mm';
         }
     }
 

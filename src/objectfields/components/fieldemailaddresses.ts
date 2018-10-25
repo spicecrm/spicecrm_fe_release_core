@@ -10,7 +10,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {model} from '../../services/model.service';
 import {view} from '../../services/view.service';
 import {language} from '../../services/language.service';
@@ -22,7 +22,7 @@ import {Router} from '@angular/router';
     selector: 'field-email-addresses',
     templateUrl: './src/objectfields/templates/fieldemailaddresses.html'
 })
-export class fieldEmailAddresses extends fieldGeneric {
+export class fieldEmailAddresses extends fieldGeneric implements OnInit {
 
     constructor(public model: model,
                 public view: view,
@@ -32,6 +32,18 @@ export class fieldEmailAddresses extends fieldGeneric {
         super(model, view, language, metadata, router);
     }
 
+    public ngOnInit() {
+        if (!this.model.data.emailaddresses) {
+            this.model.data.emailaddresses = [{
+                id: this.model.generateGuid(),
+                bean_id: this.model.id,
+                bean_module: this.model.module,
+                email_address: '',
+                email_address_id: '',
+                primary_address: '1'
+            }];
+        }
+    }
     get emailAddresses() {
         return this.model.data[this.fieldname];
     }
@@ -59,7 +71,7 @@ export class fieldEmailAddresses extends fieldGeneric {
             bean_module: this.model.module,
             email_address: '',
             email_address_id: '',
-            primary_address: this.model.data.emailaddresses.length == 0 ? '1' : '0'
+            primary_address: '0'
         });
     }
 
