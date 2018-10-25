@@ -10,11 +10,11 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
-import { Component, Input, Optional, OnInit } from "@angular/core";
-import { metadata } from "../../services/metadata.service";
-import { model } from "../../services/model.service";
-import { relatedmodels } from "../../services/relatedmodels.service";
-import { language } from "../../services/language.service";
+import {Component, Input, Optional, OnInit} from "@angular/core";
+import {metadata} from "../../services/metadata.service";
+import {model} from "../../services/model.service";
+import {relatedmodels} from "../../services/relatedmodels.service";
+import {language} from "../../services/language.service";
 
 @Component({
     selector: "object-action-newrelated-button",
@@ -22,24 +22,24 @@ import { language } from "../../services/language.service";
     host: {
         "class": "slds-button slds-button--neutral",
         "[style.display]": "getDisplay()",
-        "(click)" : "this.addModel()"
+        "(click)": "this.addModel()"
     },
     styles: [
         ":host {cursor:pointer;}"
     ],
     providers: [model]
 })
-export class ObjectActionNewrelatedButton implements OnInit{
+export class ObjectActionNewrelatedButton implements OnInit {
 
     public parent: any = {};
 
-    constructor( private language: language, private metadata: metadata, private model: model, private relatedmodels: relatedmodels) {
+    constructor(private language: language, private metadata: metadata, private model: model, private relatedmodels: relatedmodels) {
 
     }
 
     private addModel() {
 
-        if(!this.parent.data.id) {
+        if (!this.parent.data.id) {
             this.parent.data.id = this.parent.id;
         }
 
@@ -48,22 +48,21 @@ export class ObjectActionNewrelatedButton implements OnInit{
 
         // add the model
         this.model.addModel("", this.parent).subscribe(response => {
-            if(response != false){
+            if (response != false) {
                 this.relatedmodels.addItems([response]);
             }
         });
     }
 
-    public ngOnInit(){
+    public ngOnInit() {
         this.model.module = this.relatedmodels.relatedModule;
     }
 
     private getDisplay() {
-        if(!this.model.module || !this.metadata.checkModuleAcl(this.model.module, "create")) {
+        if (!this.model.module || !this.metadata.checkModuleAcl(this.model.module, "create")) {
             return "none";
         }
 
         return "inherit";
     }
-
 }

@@ -13,15 +13,6 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 import {Component, EventEmitter, Input, Output, SimpleChanges} from "@angular/core";
 
 declare var _: any;
-
-export interface IConfig {
-    draggable?: boolean;
-    canadd?: boolean;
-    clickable?: boolean;
-    icon?: string;
-    expandall?: boolean;
-    collapsible?: boolean;
-}
 /*
 * -- @INPUT PARAMS --
 * - treelist: any[] = [];
