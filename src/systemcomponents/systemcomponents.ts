@@ -1,5 +1,5 @@
 /*
-SpiceUI 1.1.0
+SpiceUI 2018.10.001
 
 Copyright (c) 2016-present, aac services.k.s - All rights reserved.
 Redistribution and use in source and binary forms, without modification, are permitted provided that the following conditions are met:
@@ -33,6 +33,7 @@ import {backend} from "../services/backend.service";
 import {VersionManagerService} from "../services/versionmanager.service";
 import { configurationService } from "../services/configuration.service";
 import { modal } from "../services/modal.service";
+import { userpreferences } from "../services/userpreferences.service";
 
 
 import /*embed*/ {systemrichtextservice} from "./services/systemrichtext.service";
@@ -77,6 +78,10 @@ import /*embed*/ {SystemCheckboxGroup, SystemCheckboxGroupCheckbox} from "./comp
 import /*embed*/ {SystemSection} from "./components/systemsection";
 import /*embed*/ {SystemRichTextEditor} from "./components/systemrichtexteditor";
 import /*embed*/ {SystemRichTextSourceModal} from "./components/systemrichtextsourcemodal";
+import /*embed*/ {SystemInputTime} from "./components/systeminputtime";
+import /*embed*/ {SystemInputDate} from "./components/systeminputdate";
+import /*embed*/ {SystemInputDatePicker} from "./components/systeminputdatepicker";
+
 
 @NgModule({
     imports: [
@@ -128,7 +133,10 @@ import /*embed*/ {SystemRichTextSourceModal} from "./components/systemrichtextso
         SystemSelect,
         SystemSection,
         SystemRichTextEditor,
-        SystemRichTextSourceModal
+        SystemRichTextSourceModal,
+        SystemInputTime,
+        SystemInputDate,
+        SystemInputDatePicker
     ],
     entryComponents: [
         SystemDynamicRouteContainer
@@ -170,7 +178,10 @@ import /*embed*/ {SystemRichTextSourceModal} from "./components/systemrichtextso
         SystemTreeItem,
         SystemSelect,
         SystemSection,
-        SystemRichTextEditor
+        SystemRichTextEditor,
+        SystemInputTime,
+        SystemInputDate,
+        SystemInputDatePicker
     ]
 })
 export class SystemComponents {

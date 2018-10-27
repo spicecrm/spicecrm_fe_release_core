@@ -1,5 +1,5 @@
 /*
-SpiceUI 1.1.0
+SpiceUI 2018.10.001
 
 Copyright (c) 2016-present, aac services.k.s - All rights reserved.
 Redistribution and use in source and binary forms, without modification, are permitted provided that the following conditions are met:
@@ -83,7 +83,6 @@ import /*embed*/ {fieldDateTime} from './components/fielddatetime';
 import /*embed*/ {fieldDateTimeDuration} from './components/fielddatetimeduration';
 import /*embed*/ {fieldDuration} from './components/fieldduration';
 import /*embed*/ {fieldDateTimeSpan} from './components/fielddatetimespan';
-import /*embed*/ {fieldDatePicker} from './components/fielddatepicker';
 import /*embed*/ {fieldAddress} from './components/fieldaddress';
 import /*embed*/ {fieldFullName} from './components/fieldfullname';
 import /*embed*/ {fieldTitle} from './components/fieldtitle';
@@ -173,7 +172,6 @@ import /*embed*/ {fieldRichText} from "./components/fieldrichtext";
         fieldDateTimeDuration,
         fieldDuration,
         fieldDateTimeSpan,
-        fieldDatePicker,
         fieldParent,
         fieldRelate,
         fieldModifiedBy,
@@ -265,7 +263,6 @@ import /*embed*/ {fieldRichText} from "./components/fieldrichtext";
         fieldGeneric,
         fieldGenericDisplay,
         fieldHtml,
-        fieldDatePicker,
         fieldMediaFileImage,
         FieldMessagesComponent,
         FieldModuleLookupComponent,
@@ -273,8 +270,8 @@ import /*embed*/ {fieldRichText} from "./components/fieldrichtext";
     ]
 })
 export class ObjectFields {
-    readonly version = '1.0';
-    readonly build_date = '/*build_date*/';
+    private readonly  version = '1.0';
+    private readonly build_date = '/*build_date*/';
 
     constructor(
         public metadata: metadata,
