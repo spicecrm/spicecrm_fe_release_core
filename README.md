@@ -4,11 +4,11 @@ Welcome to the [SpiceCRM Frontend](https://www.spicecrm.io/spicecrmfrontend)
 
 ![SpiceUI](https://www.spicecrm.io/wp-content/uploads/2018/10/dashboards.png)
 
-* Built from scratch as new felxible UI that can be used with the SpiceCRM backend
+* Built from scratch as new flexible UI that can be used with the SpiceCRM backend
 * written in Angular (currently Release 6)
 * based on the lightning design system
 
-This is the pulic core release. You can learn more about the differences between vore and more release at [www.spicecrm.io](https://www.spicecrm.io/core-vs-more/)
+This is the public core release. You can learn more about the differences between core and more release at [www.spicecrm.io](https://www.spicecrm.io/core-vs-more/)
 
 ## Prerequisites
 
