@@ -34,8 +34,8 @@ import {mailboxesEmails} from "../services/mailboxesemail.service";
 })
 export class MailboxManagerEmail implements OnInit {
 
-    @Input() email: any = {}
-    componentFields: Array<any> = [];
+    @Input() private email: any = {}
+    private componentFields: Array<any> = [];
 
     constructor(
         private metadata: metadata,
@@ -62,8 +62,9 @@ export class MailboxManagerEmail implements OnInit {
     }
 
     private selectMail(e) {
-        if (!this.mailboxesEmails.activeEmail || e.id != this.mailboxesEmails.activeEmail.id)
+        if (!this.mailboxesEmails.activeEmail || e.id != this.mailboxesEmails.activeEmail.id) {
             this.mailboxesEmails.activeEmail = e;
+        }
     }
 
     get isSelected() {
@@ -73,7 +74,7 @@ export class MailboxManagerEmail implements OnInit {
     get nameStyle() {
         let style = {};
         if (this.email.status === 'unread') {
-            style['font-weight'] = 'bold'
+            style['font-weight'] = 'bold';
         }
         switch (this.email.openness) {
             case 'user_closed':

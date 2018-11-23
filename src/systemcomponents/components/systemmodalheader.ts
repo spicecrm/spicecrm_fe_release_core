@@ -12,6 +12,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 import {Component, Input, Output, EventEmitter} from '@angular/core';
 import {metadata} from '../../services/metadata.service';
+import {language} from '../../services/language.service';
 
 @Component({
     selector: 'system-modal-header',
@@ -19,9 +20,10 @@ import {metadata} from '../../services/metadata.service';
 })
 export class SystemModalHeader {
     @Input() private module: string = '';
+    @Input() private hiddenCloseButton = false;
     @Output() private close: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-    constructor(private metadata: metadata) {
+    constructor(private metadata: metadata, private language: language) {
 
     }
 }

@@ -299,6 +299,7 @@ export class metadata {
                     this.moduleDefs = response.modules;
                     this.roles = response.roles;
                     // todo: integrate validation rules
+                    this.role = '';
                     // set the default role
                     this.roles.some(role => {
                         if (role.defaultrole == 1) {
@@ -1043,7 +1044,7 @@ export class metadata {
         }
     }
 
-    public getModuleDefaultComponentConfigByUsage(module: string, usage: "list"|"details") {
+    public getModuleDefaultComponentConfigByUsage(module: string, usage: string) {
         let component = "";
         switch(usage) {
             case "list":

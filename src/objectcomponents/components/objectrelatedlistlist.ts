@@ -31,10 +31,10 @@ export class ObjectRelatedlistList implements OnInit, OnDestroy, AfterViewInit {
 
 
     constructor(
-        private language: language,
-        private metadata: metadata,
-        private relatedmodels: relatedmodels,
-        private model: model,
+        public language: language,
+        public metadata: metadata,
+        public relatedmodels: relatedmodels,
+        public model: model,
     ) {
         this.relatedmodels.module = this.model.module;
         this.relatedmodels.id = this.model.id
@@ -98,7 +98,7 @@ export class ObjectRelatedlistList implements OnInit, OnDestroy, AfterViewInit {
 
         if (this.componentconfig.sortfield) {
             this.relatedmodels.sort.sortfield = this.componentconfig.sortfield;
-            this.relatedmodels.sort.sortdirection = this.componentconfig.sortdirection ? this.componentconfig.sortdirection : "ASC"
+            this.relatedmodels.sort.sortdirection = this.componentconfig.sortdirection ? this.componentconfig.sortdirection : "ASC";
         }
     }
 

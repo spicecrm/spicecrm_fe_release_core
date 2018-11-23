@@ -10,9 +10,6 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
-/**
- * Created by christian on 08.11.2016.
- */
 import {
     AfterViewInit,
     ComponentFactoryResolver,
@@ -26,10 +23,12 @@ import {HttpClient, HttpHeaders, HttpResponse} from "@angular/common/http";
 import {dockedComposer} from '../../services/dockedcomposer.service';
 
 
-
 @Component({
     selector: 'global-docked-composer-container',
     templateUrl: './src/globalcomponents/templates/globaldockedcomposercontainer.html',
+    host: {
+        '[class.slds-docked_container]': 'isVisible'
+    }
 })
 export class GlobalDockedComposerContainer {
 
@@ -37,20 +36,24 @@ export class GlobalDockedComposerContainer {
 
     }
 
-    closeComposer() {
+    get isVisible() {
+        return this.dockedComposer.composers.length > 0;
+    }
+
+    private closeComposer() {
         this.dockedComposer.showComposer = false;
     }
 
     // function to return the style if multiple composers are shown .. to stack them
-    getComposerStyle(composerindex) : any {
-        if(composerindex >= this.dockedComposer.maxComposers){
+    private getComposerStyle(composerindex): any {
+        if (composerindex >= this.dockedComposer.maxComposers) {
             return {
                 display: 'none'
-            }
+            };
         }
     }
 
-    get displayOverflow() : boolean {
+    get displayOverflow(): boolean {
         return this.dockedComposer.composers.length > this.dockedComposer.maxComposers ? true : false;
     }
 }

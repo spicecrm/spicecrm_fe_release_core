@@ -11,19 +11,47 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 */
 
 import {CommonModule} from '@angular/common';
-import {AfterViewInit, ComponentFactoryResolver, Component, ElementRef, NgModule, HostListener, Renderer, Renderer2, ViewChild, ViewContainerRef, Injectable, Input, Output, EventEmitter, SimpleChanges, OnInit, OnDestroy, OnChanges, ChangeDetectorRef, HostBinding, Pipe, PipeTransform, Optional, Attribute} from '@angular/core';
+import {
+    AfterViewInit,
+    ComponentFactoryResolver,
+    Component,
+    ElementRef,
+    NgModule,
+    NgZone,
+    HostListener,
+    Renderer,
+    Renderer2,
+    ViewChild,
+    ViewContainerRef,
+    Injectable,
+    Input,
+    Output,
+    EventEmitter,
+    SimpleChanges,
+    OnInit,
+    OnDestroy,
+    OnChanges,
+    ChangeDetectorRef,
+    HostBinding,
+    Pipe,
+    PipeTransform,
+    Optional,
+    Attribute,
+    ViewChildren,
+    QueryList
+} from '@angular/core';
 import {HttpClient, HttpHeaders, HttpResponse} from "@angular/common/http";
 import {Title, DomSanitizer} from '@angular/platform-browser';
 
 import {Subject, Observable} from 'rxjs';
 
 
-import {FormsModule}   from '@angular/forms';
+import {FormsModule} from '@angular/forms';
 import {RouterModule, Routes, Router, ActivatedRoute} from '@angular/router';
 import {DirectivesModule} from "../directives/directives";
-import {ObjectFields}      from '../objectfields/objectfields';
-import {GlobalComponents}      from '../globalcomponents/globalcomponents';
-import {SystemComponents}      from '../systemcomponents/systemcomponents';
+import {ObjectFields} from '../objectfields/objectfields';
+import {GlobalComponents} from '../globalcomponents/globalcomponents';
+import {SystemComponents} from '../systemcomponents/systemcomponents';
 
 import {fielderrorgrouping} from '../services/fielderrorgrouping.service';
 import {modal} from '../services/modal.service';
@@ -75,6 +103,7 @@ import /*embed*/ {ObjectActionsetMenuContainerEdit} from './components/objectact
 import /*embed*/ {ObjectActionsetMenuContainerDelete} from './components/objectactionsetmenucontainerdelete';
 import /*embed*/ {ObjectListTypes} from './components/objectlisttypes';
 
+import /*embed*/ {ObjectActionContainerItem} from './components/objectactioncontaineritem';
 import /*embed*/ {ObjectActionContainer} from './components/objectactioncontainer';
 import /*embed*/ {ObjectActionEditButton} from './components/objectactioneditbutton';
 import /*embed*/ {ObjectActionDeleteButton} from './components/objectactiondeletebutton';
@@ -94,6 +123,9 @@ import /*embed*/ {ObjectEditModal} from './components/objecteditmodal';
 import /*embed*/ {ObjectEditModalWReference} from './components/objecteditmodalwreference';
 import /*embed*/ {ObjectEditModalDialogContainer} from './components/objecteditmodaldialogcontainer';
 import /*embed*/ {ObjectEditModalDialogDuplicates} from './components/objecteditmodaldialogduplicates';
+import /*embed*/ {ObjectOptimisticLockingModal} from './components/objectoptimisticlockingmodal';
+import /*embed*/ {ObjectOptimisticLockingModalDataField} from "./components/objectoptimisticlockingmodaldatafield";
+import /*embed*/ {ObjectOptimisticLockingModalChange} from "./components/objectoptimisticlockingmodalchange";
 
 import /*embed*/ {ObjectListViewAggregatesPanel} from './components/objectlistviewaggregatespanel';
 import /*embed*/ {ObjectListViewAggregate} from './components/objectlistviewaggregate';
@@ -222,6 +254,11 @@ import /*embed*/ {ObjectKeyValuesPipe} from "./components/objectkeyvalue.pipe";
 import /*embed*/ {ObjectTableRow} from "./components/objecttablerow";
 import /*embed*/ {ObjectTable} from "./components/objecttable";
 
+import /*embed*/ {ObjectModelPopover} from "./components/objectmodelpopover";
+import /*embed*/ {ObjectModelPopoverField} from "./components/objectmodelpopoverfield";
+import /*embed*/ {ObjectModelPopoverRelated} from "./components/objectmodelpopoverrelated";
+import /*embed*/ {ObjectModelPopoverRelatedItem} from "./components/objectmodelpopoverrelateditem";
+
 
 @NgModule({
     imports: [
@@ -237,7 +274,11 @@ import /*embed*/ {ObjectTable} from "./components/objecttable";
             {path: 'module/:module/import', component: ObjectImport, canActivate: [loginCheck]},
             {path: 'module/:module/:id', component: ObjectRecordViewContainer, canActivate: [loginCheck]},
             {path: 'module/:module/:id/:related/:link', component: ObjectRelatedlistAll, canActivate: [loginCheck]},
-            {path: 'module/:module/:id/:related/:link/:fieldset', component: ObjectRelatedlistAll, canActivate: [loginCheck]},
+            {
+                path: 'module/:module/:id/:related/:link/:fieldset',
+                component: ObjectRelatedlistAll,
+                canActivate: [loginCheck]
+            },
             {path: '**', redirectTo: 'module/Home', canActivate: [loginCheck]}
         ])],
     declarations: [
@@ -274,6 +315,7 @@ import /*embed*/ {ObjectTable} from "./components/objecttable";
         ObjectListViewSettingsDeletelistModal,
         ObjectListViewSettingsSetfieldsModal,
         ObjectActionContainer,
+        ObjectActionContainerItem,
         ObjectActionEditButton,
         ObjectActionSaveButton,
         ObjectActionDeleteButton,
@@ -289,6 +331,9 @@ import /*embed*/ {ObjectTable} from "./components/objecttable";
         ObjectEditModalWReference,
         ObjectEditModalDialogContainer,
         ObjectEditModalDialogDuplicates,
+        ObjectOptimisticLockingModal,
+        ObjectOptimisticLockingModalDataField,
+        ObjectOptimisticLockingModalChange,
         ObjectRecordViewContainer,
         ObjectRecordView,
         ObjectRecordViewDetail1,
@@ -389,6 +434,10 @@ import /*embed*/ {ObjectTable} from "./components/objecttable";
         ObjectKeyValuesPipe,
         ObjectTableRow,
         ObjectTable,
+        ObjectModelPopover,
+        ObjectModelPopoverField,
+        ObjectModelPopoverRelated,
+        ObjectModelPopoverRelatedItem
     ],
     entryComponents: [
         ObjectIcon,
@@ -451,6 +500,7 @@ import /*embed*/ {ObjectTable} from "./components/objecttable";
         ObjectTabContainerItemHeader,
         ObjectTableRow,
         ObjectTable,
+        ObjectActivitiyTimelineItemContainer
     ]
 })
 export class ObjectComponents {

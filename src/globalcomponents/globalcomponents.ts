@@ -12,6 +12,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 import {CommonModule} from "@angular/common";
 import {FormsModule}   from "@angular/forms";
+import {DirectivesModule} from "../directives/directives";
 import {AfterViewInit, ComponentFactoryResolver, Component, NgModule, ViewChild, ViewContainerRef, Injectable, Renderer, Renderer2, Input, ElementRef, OnDestroy, OnInit, OnChanges, EventEmitter, Output} from "@angular/core";
 import {HttpClient, HttpHeaders, HttpResponse} from "@angular/common/http";
 import {RouterModule, Routes, Router, ActivationStart, NavigationStart} from "@angular/router";
@@ -22,6 +23,7 @@ declare var gapi: any;
 
 import {loginService, loginCheck} from "../services/login.service";
 import {session} from "../services/session.service";
+import {backend} from "../services/backend.service";
 import {language} from "../services/language.service";
 import {configurationService} from "../services/configuration.service";
 import {popup} from "../services/popup.service";
@@ -39,6 +41,7 @@ import {toast} from "../services/toast.service";
 import {footer} from "../services/footer.service";
 import {cookie} from "../services/cookie.service";
 import { modal } from "../services/modal.service";
+import { loader } from "../services/loader.service";
 
 import {ObjectFields}      from "../objectfields/objectfields";
 import {SystemComponents}      from "../systemcomponents/systemcomponents";
@@ -59,6 +62,7 @@ import /*embed*/ {GlobalHeaderFavorite} from "./components/globalheaderfavorite"
 import /*embed*/ {GlobalHeaderWorkbench} from "./components/globalheaderworkbench";
 import /*embed*/ {GlobalFooter} from "./components/globalfooter";
 import /*embed*/ {GlobalLogin} from "./components/globallogin";
+import /*embed*/ {GlobalLoaderProgress} from "./components/globalloaderprogress";
 import /*embed*/ {GlobalSetup} from "./components/globalsetup";
 import /*embed*/ {GlobalLoginForgotPassword} from "./components/globalloginforgotpassword";
 import /*embed*/ {GlobalLoginResetPassword} from "./components/globalloginresetpassword";
@@ -76,6 +80,7 @@ import /*embed*/ {GlobalDockedComposerOverflow} from "./components/globaldockedc
 import /*embed*/ {GlobalComposeButton} from "./components/globalcomposebutton";
 import /*embed*/ {GlobalAppLauncher} from "./components/globalapplauncher";
 import /*embed*/ {GlobalAppLauncherDialog} from "./components/globalapplauncherdialog";
+import /*embed*/ {GlobalAppLauncherDialogRoleTile} from "./components/globalapplauncherdialogroletile";
 
 
 import /*embed*/ {GlobalUser} from "./components/globaluser";
@@ -98,6 +103,7 @@ import /*embed*/ {GlobalLoginGoogle} from "./components/globallogingoogle";
         CommonModule,
         FormsModule,
         ObjectFields,
+        DirectivesModule,
         SystemComponents,
         RouterModule.forRoot([
             {path: "login", component: GlobalLogin},
@@ -130,6 +136,7 @@ import /*embed*/ {GlobalLoginGoogle} from "./components/globallogingoogle";
         GlobalNavigationMenuItemIcon,
         GlobalNavigationMenuMore,
         GlobalLogin,
+        GlobalLoaderProgress,
         GlobalSetup,
         GlobalLoginForgotPassword,
         GlobalLoginResetPassword,
@@ -137,6 +144,7 @@ import /*embed*/ {GlobalLoginGoogle} from "./components/globallogingoogle";
         GlobaUserPanel,
         GlobalAppLauncher,
         GlobalAppLauncherDialog,
+        GlobalAppLauncherDialogRoleTile,
         GlobalDockedComposerContainer,
         GlobalDockedComposer,
         GlobalDockedComposerModal,
@@ -169,7 +177,8 @@ import /*embed*/ {GlobalLoginGoogle} from "./components/globallogingoogle";
         GlobalDockedComposerContainer,
         GlobalDockedComposer,
         GlobalDockedComposerOverflow,
-        GlobalComposeButton
+        GlobalComposeButton,
+        GlobalLoaderProgress
     ]
 })
 export class GlobalComponents {

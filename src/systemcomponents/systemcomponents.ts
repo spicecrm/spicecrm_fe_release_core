@@ -51,6 +51,7 @@ import /*embed*/ {SystemDynamicRouteContainer} from "./components/systemdynamicr
 import /*embed*/ {SystemTooltip} from "./components/systemtooltip";
 import /*embed*/ {SystemToastContainer} from "./components/systemtoastcontainer";
 import /*embed*/ {SystemButtonIcon} from "./components/systembuttonicon";
+import /*embed*/ {SystemButtonCustomIcon} from "./components/systembuttoncustomicon";
 import /*embed*/ {SystemButtonGroup} from "./components/systembuttongroup";
 import /*embed*/ {SystemActionIcon} from "./components/systemactionicon";
 import /*embed*/ {SystemConfirmDialog} from "./components/systemconfirmdialog";
@@ -82,6 +83,7 @@ import /*embed*/ {SystemInputTime} from "./components/systeminputtime";
 import /*embed*/ {SystemInputDate} from "./components/systeminputdate";
 import /*embed*/ {SystemInputDatePicker} from "./components/systeminputdatepicker";
 import /*embed*/ {SystemGoogleplacesSearch} from "./components/systemgoogleplacessearch";
+import /*embed*/ {SystemComponentSet} from "./components/systemcomponentset";
 
 
 @NgModule({
@@ -103,6 +105,7 @@ import /*embed*/ {SystemGoogleplacesSearch} from "./components/systemgoogleplace
         SystemTooltip,
         SystemToastContainer,
         SystemButtonIcon,
+        SystemButtonCustomIcon,
         SystemButtonGroup,
         SystemActionIcon,
         SystemConfirmDialog,
@@ -138,7 +141,8 @@ import /*embed*/ {SystemGoogleplacesSearch} from "./components/systemgoogleplace
         SystemInputTime,
         SystemInputDate,
         SystemInputDatePicker,
-        SystemGoogleplacesSearch
+        SystemGoogleplacesSearch,
+        SystemComponentSet
     ],
     entryComponents: [
         SystemDynamicRouteContainer
@@ -154,6 +158,7 @@ import /*embed*/ {SystemGoogleplacesSearch} from "./components/systemgoogleplace
         SystemTooltip,
         SystemToastContainer,
         SystemButtonIcon,
+        SystemButtonCustomIcon,
         SystemButtonGroup,
         SystemActionIcon,
         SystemTinyMCE,
@@ -184,7 +189,9 @@ import /*embed*/ {SystemGoogleplacesSearch} from "./components/systemgoogleplace
         SystemInputTime,
         SystemInputDate,
         SystemInputDatePicker,
-        SystemGoogleplacesSearch
+        SystemGoogleplacesSearch,
+        SystemStencil,
+        SystemComponentSet
     ]
 })
 export class SystemComponents {

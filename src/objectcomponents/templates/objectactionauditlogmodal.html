@@ -14,7 +14,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
     <system-modal-header (close)="hideAuditLog()">
         {{language.getLabel('LBL_LOGGED_CHANGES')}}
     </system-modal-header>
-    <system-modal-content>
+    <system-modal-content margin="none">
         <system-spinner *ngIf="loading" class="slds-p-around--medium"></system-spinner>
         <table *ngIf="!loading" class="slds-table slds-table--bordered slds-table--cell-buffer">
             <thead>
@@ -22,6 +22,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
                     <th scope="col">
                         <div class="slds-truncate">{{language.getLabel('LBL_DATE')}}</div>
                     </th>
+                    <!--th scope="col">
+                        <div class="slds-truncate">{{language.getLabel('LBL_TRANSACTION')}}</div>
+                    </th-->
                     <th scope="col">
                         <div class="slds-truncate">{{language.getLabel('LBL_USER')}}</div>
                     </th>
@@ -41,6 +44,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
                     <td scope="row">
                         <div class="slds-truncate">{{auditEntry.date_created}}</div>
                     </td>
+                    <!--td scope="row">
+                        <div class="slds-truncate">{{auditEntry.transaction_id}}</div>
+                    </td-->
                     <td scope="row">
                         <div class="slds-truncate">{{auditEntry.user_name}}</div>
                     </td>

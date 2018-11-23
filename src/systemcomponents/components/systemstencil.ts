@@ -12,15 +12,8 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 import {Component} from '@angular/core';
 
-
 @Component({
     selector: 'system-stencil',
     template: '<div class="slds-theme--shade" style="background-color:#e4e9f3; min-width:100px;">&nbsp;</div>'
 })
-export class SystemStencil {
-
-    constructor() {
-
-    }
-
-}
+export class SystemStencil {}

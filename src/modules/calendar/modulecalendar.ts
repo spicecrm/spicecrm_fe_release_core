@@ -11,7 +11,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 */
 
 import {CommonModule} from "@angular/common";
-import {AfterViewInit, ComponentFactoryResolver, Component, ElementRef, NgModule, Renderer, Renderer2, ViewChild, ViewContainerRef, Injectable, Input, Output, EventEmitter, SimpleChanges, OnInit, OnDestroy, OnChanges} from "@angular/core";
+import {AfterViewInit, ChangeDetectorRef, HostListener, ComponentFactoryResolver, Component, ElementRef, NgModule, Renderer, Renderer2, ViewChild, ViewContainerRef, Injectable, Input, Output, EventEmitter, SimpleChanges, OnInit, OnDestroy, OnChanges} from "@angular/core";
 import {HttpClient, HttpHeaders, HttpResponse} from "@angular/common/http";
 import {FormsModule}   from "@angular/forms";
 import {RouterModule, Routes, Router, ActivatedRoute} from "@angular/router";
@@ -37,6 +37,7 @@ import {view} from "../../services/view.service";
 import {popup} from "../../services/popup.service";
 import {toast} from "../../services/toast.service";
 import {fts} from "../../services/fts.service";
+import {recent} from "../../services/recent.service";
 import {configurationService} from "../../services/configuration.service";
 
 import {VersionManagerService} from "../../services/versionmanager.service";
@@ -46,21 +47,23 @@ import {ObjectFields} from "../../objectfields/objectfields";
 import {GlobalComponents} from "../../globalcomponents/globalcomponents";
 import {ObjectComponents} from "../../objectcomponents/objectcomponents";
 import {SystemComponents} from "../../systemcomponents/systemcomponents";
+import {DirectivesModule} from "../../directives/directives";
 
 import /*embed*/ { calendar } from "./services/calendar.service";
+import /*embed*/ {userpreferences} from "../../services/userpreferences.service";
 
 import /*embed*/ {Calendar} from "./components/calendar";
 import /*embed*/ {CalendarDatePicker} from "./components/calendardatepicker";
 import /*embed*/ {CalendarSheetDay} from "./components/calendarsheetday";
 import /*embed*/ {CalendarSheetWeek} from "./components/calendarsheetweek";
 import /*embed*/ {CalendarSheetMonth} from "./components/calendarsheetmonth";
-import /*embed*/ {CalendarSheetWeekEvent} from "./components/calendarsheetweekevent";
-import /*embed*/ {CalendarSheetDayEvent} from "./components/calendarsheetdayevent";
-import /*embed*/ {CalendarSheetMonthDay} from "./components/calendarsheetmonthday";
-import /*embed*/ {CalendarSheetMonthEvent} from "./components/calendarsheetmonthevent";
+import /*embed*/ {CalendarSheetEvent} from "./components/calendarsheetevent";
 import /*embed*/ {CalendarEventSummary} from "./components/calendareventsummary";
-import /*embed*/ {CalendarEventPopover} from "./components/calendareventpopover";
 import /*embed*/ {CalendarSheetDropTarget} from "./components/calendarsheetdroptarget";
+import /*embed*/ {CalendarMorePopover} from "./components/calendarmorepopover";
+import /*embed*/ {CalendarMorePopoverEvent} from "./components/calendarmorepopoverevent";
+import /*embed*/ {CalendarMoreButton} from "./components/calendarmorebutton";
+
 
 @NgModule({
     imports: [
@@ -70,6 +73,7 @@ import /*embed*/ {CalendarSheetDropTarget} from "./components/calendarsheetdropt
         GlobalComponents,
         ObjectComponents,
         SystemComponents,
+        DirectivesModule
     ],
     declarations: [
         Calendar,
@@ -77,14 +81,14 @@ import /*embed*/ {CalendarSheetDropTarget} from "./components/calendarsheetdropt
         CalendarSheetDay,
         CalendarSheetWeek,
         CalendarSheetMonth,
-        CalendarSheetWeekEvent,
-        CalendarSheetDayEvent,
-        CalendarSheetMonthDay,
-        CalendarSheetMonthEvent,
+        CalendarSheetEvent,
         CalendarEventSummary,
-        CalendarEventPopover,
-        CalendarSheetDropTarget
-    ]
+        CalendarSheetDropTarget,
+        CalendarMorePopover,
+        CalendarMorePopoverEvent,
+        CalendarMoreButton,
+    ],
+    providers: [userpreferences]
 })
 export class ModuleCalendar {
     public version = "1.0";

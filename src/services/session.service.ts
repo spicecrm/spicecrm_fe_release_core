@@ -35,6 +35,7 @@ interface authDataIf {
     password: string;
     admin: boolean;
     portalOnly: boolean;
+    googleToken: string;
 }
 
 @Injectable()
@@ -51,7 +52,8 @@ export class session {
         password: '',
         admin: false,
         renewPass: false,
-        portalOnly: false
+        portalOnly: false,
+        googleToken: '',
     };
 
     footercontainer: any = null;
