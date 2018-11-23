@@ -15,7 +15,6 @@
             '@angular/forms': 'vendor:@angular/forms/bundles/forms.umd.min.js',
             '@angular/upgrade': 'vendor:@angular/upgrade/bundles/upgrade.umd.min.js',
             'rxjs': 'vendor:rxjs',
-            'rxjs-compat': 'vendor:rxjs-compat',
             'rxjs/ajax': 'vendor:rxjs/ajax/index.js',
             'rxjs/internal-compatibility': 'vendor:rxjs/internal-compatibility/index.js',
             'rxjs/operators': 'vendor:rxjs/operators/index.js',
@@ -32,10 +31,6 @@
             rxjs: {
                 main: "index.js",
                 defaultExtension: 'js'
-            },
-            "rxjs-compat": {
-                main: "index.js",
-                defaultExtension: "js"
             }
         }
     });
