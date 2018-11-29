@@ -95,8 +95,8 @@ export class CalendarSheetWeek implements OnChanges, AfterViewInit {
     }
 
     private getEvents() {
-        let startDate = new moment(this.setdate).day(0).hour(this.calendar.startHour).minute(0).second(0);
-        let endDate = new moment(startDate).add(moment.duration(this.calendar.weekDaysCount, 'd')).hour(this.calendar.endHour);
+        let startDate = new moment(this.setdate).day(this.calendar.weekStartDay).hour(this.calendar.startHour).minute(0).second(0);
+        let endDate = new moment(startDate).add(moment.duration((this.calendar.weekDaysCount - 1), 'd')).hour(this.calendar.endHour);
         this.ownerEvents = [];
         this.ownerMultiEvents = [];
 
@@ -250,7 +250,6 @@ export class CalendarSheetWeek implements OnChanges, AfterViewInit {
             left: left + "px",
             height: this.calendar.multiEventHeight + "px",
             top: multiEvents.top + (this.calendar.multiEventHeight * eventIndex) + "px",
-            padding: "2px"
         };
     }
 

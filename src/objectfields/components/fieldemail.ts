@@ -59,7 +59,7 @@ export class fieldEmail extends fieldGeneric {
             this.invalid = false;
         }
 
-        this.model.setField(this.fieldname, newemail);
+        // this.model.setField(this.fieldname, newemail);
         if (!this.model.getFieldValue('emailaddresses')) {
             return;
         }

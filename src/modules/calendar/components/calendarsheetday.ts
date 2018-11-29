@@ -213,7 +213,6 @@ export class CalendarSheetDay implements OnChanges, AfterViewInit {
             width: multiEvents.width + "px",
             top: multiEvents.top + (this.calendar.multiEventHeight * index) + "px",
             left: multiEvents.left + "px",
-            padding: "1px"
         };
 
     }
