@@ -11,7 +11,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 */
 
 import {CommonModule} from "@angular/common";
-import {NgModule,Directive, Input, HostListener, OnDestroy, ElementRef, OnInit, TemplateRef, ViewContainerRef, Pipe, PipeTransform} from "@angular/core";
+import {NgModule,Directive, Renderer2, Input, HostListener, HostBinding, OnDestroy, ElementRef, OnInit, DoCheck, TemplateRef, ViewContainerRef, Pipe, PipeTransform, Optional} from "@angular/core";
 import {Router}   from '@angular/router';
 
 import {metadata} from '../services/metadata.service';
@@ -25,6 +25,9 @@ import /*embed*/ {ModelProviderDirective} from "./directives/modelprovider";
 import /*embed*/ {LocalVariableDirective} from "./directives/localvariable";
 import /*embed*/ {SpiceUIAutofocusDirective} from "./directives/spiceuiautofocus";
 import /*embed*/ {FirstUpperCasePipe} from "./directives/firstuppercase";
+import /*embed*/ {DropdownTriggerDirective} from "./directives/dropdowntrigger";
+import /*embed*/ {ToBottomDirective} from "./directives/tobottom";
+import /*embed*/ {TrimInputDirective} from './directives/triminput';
 
 @NgModule({
     imports: [
@@ -36,7 +39,10 @@ import /*embed*/ {FirstUpperCasePipe} from "./directives/firstuppercase";
         ModelProviderDirective,
         LocalVariableDirective,
         SpiceUIAutofocusDirective,
-        FirstUpperCasePipe
+        FirstUpperCasePipe,
+        DropdownTriggerDirective,
+        ToBottomDirective,
+        TrimInputDirective
     ],
     exports: [
         ModelPopOverDirective,
@@ -44,7 +50,10 @@ import /*embed*/ {FirstUpperCasePipe} from "./directives/firstuppercase";
         ModelProviderDirective,
         LocalVariableDirective,
         SpiceUIAutofocusDirective,
-        FirstUpperCasePipe
+        FirstUpperCasePipe,
+        DropdownTriggerDirective,
+        ToBottomDirective,
+        TrimInputDirective
     ]
 })
 export class DirectivesModule {

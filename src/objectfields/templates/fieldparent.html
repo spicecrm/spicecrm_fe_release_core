@@ -29,7 +29,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
             </div>
         </div>
         <div *ngIf="!model.data[parentIdField]" class="slds-combobox-group slds-p-around--xx-small">
-            <div class="slds-combobox_object-switcher slds-combobox-addon_start">
+            <div *ngIf="parentTypes.length > 1" class="slds-combobox_object-switcher slds-combobox-addon_start">
                 <div class="slds-form-element">
                     <div class="slds-form-element__control">
                         <div class="slds-combobox_container">
@@ -59,11 +59,11 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
                 <div class="slds-combobox slds-dropdown-trigger slds-dropdown-trigger_click" [ngClass]="{'slds-is-open': parentSearchOpen}"  role="combobox">
                     <div class="slds-combobox__form-element slds-input-has-icon slds-input-has-icon_right" role="none">
                         <input type="text" class="slds-input slds-combobox__input" aria-autocomplete="list" (focus)="onFocusParent()" autoComplete="off" role="textbox" [(ngModel)]="parentSearchTerm" [placeholder]="'Search ' + language.getModuleName(parentType)"/>
-                        <system-icon icon="search" sprite="utility" addclasses="slds-input__icon slds-input__icon_right"></system-icon>
+                        <button (click)="searchWithModal()" class="slds-button slds-button_icon slds-input__icon slds-input__icon_right"><system-button-icon [icon]="'search'"></system-button-icon></button>
                     </div>
                     <div class="slds-dropdown slds-dropdown_length-with-icon-7 slds-dropdown_fluid" role="listbox">
                         <field-lookup-recent *ngIf="parentSearchOpen && parentSearchTerm === ''" [module]="parentType" (selectedObject)="setParent($event)"></field-lookup-recent>
-                        <field-lookup-search *ngIf="parentSearchOpen && parentSearchTerm !== ''" [module]="parentType" (selectedObject)="setParent($event)" [fieldid]="fieldid" [(searchterm)]="parentSearchTerm"></field-lookup-search>
+                        <field-lookup-search *ngIf="parentSearchOpen && parentSearchTerm !== ''" [module]="parentType" (selectedObject)="setParent($event)" (searchWithModal)="searchWithModal()" [fieldid]="fieldid" [searchterm]="parentSearchTerm"></field-lookup-search>
                     </div>
                 </div>
             </div>

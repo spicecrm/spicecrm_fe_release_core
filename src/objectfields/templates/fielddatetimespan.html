@@ -11,7 +11,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 -->
 
 <field-generic-display *ngIf="!isEditMode()" [fielddisplayclass]="fielddisplayclass" [editable]="isEditable()" [fieldconfig]="fieldconfig">
-    {{editStartDate}}&nbsp;{{editStartTime}}&nbsp;-&nbsp;{{editEndDate}}&nbsp;{{editEndTime}}
+    {{formattedStartDate}}&nbsp;-&nbsp;{{formattedEndDate}}
 </field-generic-display>
 <div *ngIf="isEditable() && isEditMode()" class="slds-form-element__control slds-p-around--xx-small" [ngClass]="css_classes">
     <fieldset class="slds-form--compound">

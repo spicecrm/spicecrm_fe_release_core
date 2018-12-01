@@ -26,6 +26,7 @@ import {metadata} from "./metadata.service";
 import {backend} from "./backend.service";
 import {recent} from "./recent.service";
 import {Router} from "@angular/router";
+import {ObjectOptimisticLockingModal} from "../objectcomponents/components/objectoptimisticlockingmodal";
 
 declare var moment: any;
 moment.defaultFormat = "YYYY-MM-DD HH:mm:ss";
@@ -53,6 +54,7 @@ export class model {
     };
     private backupData: any = {};
     public data$ = new EventEmitter();
+    public mode$ = new EventEmitter();
     public isValid: boolean = false;
     public isLoading: boolean = false;
     public isEditing: boolean = false;
@@ -92,6 +94,14 @@ export class model {
     set module(val: string) {
         this._module = val;
         this.initializeFieldsStati();
+    }
+
+    /*
+    * a getter function to return a displayname
+    * todo: make customizable so this can be defined in sysmodules
+     */
+    get displayname() {
+        return this.getFieldValue('summary_text');
     }
 
     get fields(): any[] {
@@ -519,6 +529,7 @@ export class model {
         // shift to backend format .. no objects like date embedded
         this.backupData = {...this.data};
         this.isEditing = true;
+        this.mode$.emit('edit');
     }
 
 
@@ -550,6 +561,7 @@ export class model {
 
     public cancelEdit() {
         this.isEditing = false;
+        this.mode$.emit('display');
         if (this.backupData) {
             this.data = {...this.backupData};
             this.data$.emit(this.data);
@@ -562,12 +574,13 @@ export class model {
     public endEdit() {
         this.backupData = null;
         this.isEditing = false;
+        this.mode$.emit('display');
     }
 
     private getDirtyFields() {
         let d = {};
         for (let property in this.data) {
-            if (property && ( _.isArray(this.data[property]) || !_.isEqual(this.data[property], this.backupData[property]) || this.isFieldARelationLink(property))) {
+            if (property && (_.isArray(this.data[property]) || !_.isEqual(this.data[property], this.backupData[property]) || this.isFieldARelationLink(property))) {
                 d[property] = this.data[property];
             }
         }
@@ -578,34 +591,55 @@ export class model {
         let responseSubject = new Subject<boolean>();
 
         // determine changed fields
-        let changedData = {};
+        let changedData: any = {};
         if (this.isEditing) {
             changedData = this.getDirtyFields();
+            // in any case send back date_modified
+            changedData.date_modified = this.data.date_modified;
+
+            // hack to provoke the changes for Testing
+            // changedData.date_modified.subtract( 1, 'days');
         } else {
             changedData = this.data;
         }
 
-
         this.backend.save(this.module, this.id, changedData)
-            .subscribe(res => {
-                this.data = res;
-                this.isNew = false;
-                this.data$.emit(res);
-                this.broadcast.broadcastMessage("model.save", {
-                    id: this.id,
-                    reference: this.reference,
-                    module: this.module,
-                    data: this.data
+            .subscribe(
+                res => {
+                    this.data = res;
+                    this.isNew = false;
+                    this.data$.emit(res);
+                    this.broadcast.broadcastMessage("model.save", {
+                        id: this.id,
+                        reference: this.reference,
+                        module: this.module,
+                        data: this.data
+                    });
+                    responseSubject.next(true);
+                    responseSubject.complete();
+
+                    if (notify) {
+                        this.toast.sendToast(this.language.getLabel("LBL_DATA_SAVED") + ".", "success");
+                    }
+
+                    this.endEdit();
+                },
+                error => {
+                    console.log(error);
+                    switch (error.status) {
+                        case 409:
+                            this.modal.openModal("ObjectOptimisticLockingModal", false, this.injector).subscribe(lockingModalRef => {
+                                lockingModalRef.instance.conflicts = error.error.error.conflicts;
+                            });
+                            break;
+                        default:
+                            if (notify) {
+                                this.toast.sendToast(this.language.getLabel("LBL_ERROR") + " " + error.status, "error", error.error.message);
+                            }
+                            ;
+                            break;
+                    }
                 });
-                responseSubject.next(true);
-                responseSubject.complete();
-
-                if (notify) {
-                    this.toast.sendToast(this.language.getLabel("LBL_DATA_SAVED") + ".", "success");
-                }
-
-                this.endEdit();
-            });
         return responseSubject.asObservable();
     }
 
@@ -630,6 +664,7 @@ export class model {
 
         this.isLoading = false;
         this.isEditing = false;
+        this.mode$.emit('display');
         this.resetMessages();
         this.resetData();
     }
@@ -644,13 +679,18 @@ export class model {
         return clone;
     }
 
-    public getAuditLog(): Observable<any> {
+    public getAuditLog(filters: any = {}): Observable<any> {
         let responseSubject = new Subject<boolean>();
-        this.backend.getAudit(this.module, this.id)
-            .subscribe(res => {
-                responseSubject.next(res);
-                responseSubject.complete();
-            });
+        this.backend.getAudit(this.module, this.id, filters)
+            .subscribe(
+                res => {
+                    responseSubject.next(res);
+                    responseSubject.complete();
+                },
+                error => {
+                    responseSubject.next(error);
+                    responseSubject.complete();
+                });
         return responseSubject.asObservable();
     }
 
@@ -935,7 +975,7 @@ export class model {
             } else {
                 return false;
             }
-        } catch(e){
+        } catch (e) {
             return false;
         }
     }

@@ -299,6 +299,7 @@ export class metadata {
                     this.moduleDefs = response.modules;
                     this.roles = response.roles;
                     // todo: integrate validation rules
+                    this.role = '';
                     // set the default role
                     this.roles.some(role => {
                         if (role.defaultrole == 1) {
@@ -584,6 +585,16 @@ export class metadata {
     public getComponentSet(componentSetId) {
         return this.componentSets[componentSetId];
     }
+
+    public getAllComponentsets() {
+        try {
+            return this.componentSets;
+        } catch (e) {
+            return "";
+        }
+    }
+
+
 
     public addComponentSet(id, module, name, type = "custom") {
         this.componentSets[id] = {
@@ -1043,7 +1054,7 @@ export class metadata {
         }
     }
 
-    public getModuleDefaultComponentConfigByUsage(module: string, usage: "list"|"details") {
+    public getModuleDefaultComponentConfigByUsage(module: string, usage: string) {
         let component = "";
         switch(usage) {
             case "list":

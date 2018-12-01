@@ -18,6 +18,8 @@ import {toast} from "../../../services/toast.service";
 import {userpreferences} from "../../../services/userpreferences.service";
 import {currency} from '../../../services/currency.service';
 import {Subject} from "rxjs";
+import { session } from '../../../services/session.service';
+import { model } from '../../../services/model.service';
 
 declare var _: any;
 declare var moment: any;
@@ -50,18 +52,25 @@ export class UserPreferences {
         "timezone",
         "num_grp_sep",
         "dec_sep",
-        "default_locale_name_format"
+        "default_locale_name_format",
+        "week_day_start",
+        "week_days_count",
+        "calendar_day_start_hour",
+        "calendar_day_end_hour",
     ];
+    private weekDayStartList = ["Sunday", "Monday"];
+    private weekDaysCountList = [5,6,7];
+    private dayHoursList = [];
 
-    private expanded = {loc: true, exp: true, other: true};
+    private expanded = {loc: true, exp: true, other: true, calendar: true};
     private exportDelimiterList = [",", ";"];
     private charsetlist = [
         "BIG-5", "CP1251", "CP1252", "EUC-CN", "EUC-JP", "EUC-KR", "EUC-TW", "ISO-2022-JP",
         "ISO-2022-KR", "ISO-8859-1", "ISO-8859-2", "ISO-8859-3", "ISO-8859-4", "ISO-8859-5",
         "ISO-8859-6", "ISO-8859-7", "ISO-8859-8", "ISO-8859-9", "ISO-8859-10", "ISO-8859-13",
         "ISO-8859-14", "ISO-8859-15", "KOI8-R", "KOI8-U", "SJIS", "UTF-8"];
-    private currencySignificantDigitsList: Array<string> = ["1", "2", "3", "4", "5", "6"];
-    private thousandDelimiterList: Array<any> = [",", "."];
+    private currencySignificantDigitsList: string[] = ["1", "2", "3", "4", "5", "6"];
+    private thousandDelimiterList: string[] = [",", "."];
     private dateFormatList = [
         {name: moment().format(this.prefservice.jsDateFormat2momentDateFormat("Y-m-d")), value: "Y-m-d"},
         {name: moment().format(this.prefservice.jsDateFormat2momentDateFormat("m-d-Y")), value: "m-d-Y"},
@@ -85,7 +94,7 @@ export class UserPreferences {
         {name: moment().format(this.prefservice.jsTimeFormat2momentTimeFormat("h.i a")), value: "h.i a"},
         {name: moment().format(this.prefservice.jsTimeFormat2momentTimeFormat("h.i A")), value: "h.i A"}
     ];
-    public currencyList: any[] = [];
+    private currencyList: any[] = [];
     private formattingsOfNumbers = [
         {
             show: "1.000.000,00",
@@ -102,7 +111,9 @@ export class UserPreferences {
     private prefsLoaded = new Subject<string>();
 
     private timezones: object;
-    public timezoneKeys: Array<any>;
+    private timezoneKeys: string[];
+
+    private canPrefs: boolean;
 
     constructor(
         private backend: backend,
@@ -110,21 +121,33 @@ export class UserPreferences {
         private toast: toast,
         private currency: currency,
         private language: language,
-        private prefservice: userpreferences) {
+        private prefservice: userpreferences,
+        private session: session,
+        private model: model ) {
 
-        this.prefsLoaded.subscribe(() => {
-            this.preferences = _.pick(this.prefservice.unchangedPreferences.global, this.names);
-        });
-        this.prefservice.getPreferences(this.prefsLoaded);
-
-        this.prefservice.needFormats();
-
-        this.backend.getRequest("/timezones").subscribe(response => {
-            this.timezones = response;
-            this.timezoneKeys = Object.keys(this.timezones);
-        });
-        this.currencyList = this.currency.getCurrencies();
         this.view.isEditable = true;
+
+        this.canPrefs = this.session.authData.userId === this.model.data.id; // only the user himself can view/edit the preferences
+        if ( this.canPrefs ) {
+
+            this.prefsLoaded.subscribe( () => {
+                this.preferences = _.pick( this.prefservice.unchangedPreferences.global, this.names );
+            } );
+            this.prefservice.getPreferences( this.prefsLoaded );
+
+            this.prefservice.needFormats();
+
+            this.backend.getRequest( "/timezones" ).subscribe( response => {
+                this.timezones = response;
+                this.timezoneKeys = Object.keys( this.timezones );
+            } );
+            this.currencyList = this.currency.getCurrencies();
+
+        }
+
+        for (let i = 0; i < 24; i++) {
+            this.dayHoursList.push(i);
+        }
 
     }
 
@@ -147,8 +170,8 @@ export class UserPreferences {
     }
 
     private setFormattingOfNumbers(val: number | string) {
-        if (val === "") {
-            this.preferences.num_grp_sep = this.preferences.dec_sep = "";
+        if (val === '-') {
+            this.preferences.num_grp_sep = this.preferences.dec_sep = null;
         } else {
             this.preferences.num_grp_sep = this.formattingsOfNumbers[val].num_grp_sep;
             this.preferences.dec_sep = this.formattingsOfNumbers[val].dec_sep;
@@ -160,7 +183,7 @@ export class UserPreferences {
     }
 
     private save() {
-        this.prefservice.setPreferences(this.preferences, true).subscribe(() => {
+        this.prefservice.setPreferences( this.preferences ).subscribe(() => {
             this.toast.sendToast(this.language.getLabel("LBL_DATA_SAVED"), "success");
             this.preferences = _.pick(this.prefservice.unchangedPreferences.global, this.names);
         });
@@ -191,6 +214,10 @@ export class UserPreferences {
             });
         }
         return exampleText;
+    }
+
+    private change( event, pref ) {
+        this.preferences[pref] = ( event.srcElement.value === '-' ? null : event.srcElement.value );
     }
 
 }

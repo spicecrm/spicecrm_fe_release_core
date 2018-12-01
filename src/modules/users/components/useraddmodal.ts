@@ -30,8 +30,8 @@ export class UserAddModal implements OnInit, AfterViewChecked {
     public self: any;
     @ViewChild("addcontainer", {read: ViewContainerRef}) private addcontainer: ViewContainerRef;
     private componentconfig: any = {};
-    private informationFieldset: any[] = [];
-    private profileFieldset: any[] = [];
+    public informationFieldset: any[] = [];
+    public profileFieldset: any[] = [];
     private response: Observable<object> = null;
     private responseSubject: Subject<any> = null;
     private expanded: any = {profile: true, password: true, info: true};
@@ -42,8 +42,11 @@ export class UserAddModal implements OnInit, AfterViewChecked {
     private userNameCheck: RegExp = new RegExp("^(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]{1,60}$");
     private pwdGuideline: string = undefined;
     private infoLoaded = false;
-    private passwordAction: string = "auto";
+    private autogenerate: boolean = false;
+    private sendByEmail: boolean = false;
+    private showPassword: boolean = false;
     private saveTriggered: boolean = false;
+    private canSendByEmail: boolean = true;
 
     constructor(
         private language: language,
@@ -73,9 +76,22 @@ export class UserAddModal implements OnInit, AfterViewChecked {
     get saveData() {
         let saveData: any = {};
         for (let fieldName in this.model.data) {
-            saveData[fieldName] = this.modelutilities.spice2backend("Users", fieldName, this.model.data[fieldName]);
+            if (this.model.data.hasOwnProperty(fieldName)) {
+                saveData[fieldName] = this.modelutilities.spice2backend("Users", fieldName, this.model.data[fieldName]);
+
+            }
         }
         return saveData;
+    }
+
+    set autoGenerate(value) {
+        this.autogenerate = value;
+        this.password = value ? Math.random().toString(36).slice(-8) : "";
+        this.repeatPassword = this.password;
+    }
+
+    get autoGenerate() {
+        return this.autogenerate;
     }
 
     public ngOnInit() {
@@ -100,6 +116,32 @@ export class UserAddModal implements OnInit, AfterViewChecked {
         if (this.componentconfig.information) {
             this.informationFieldset = this.componentconfig.information;
         }
+    }
+
+    private getPasswordStyle(inputField, isRepeat = false) {
+        return !this.autoGenerate && (inputField.touched && inputField.dirty && (isRepeat ? this.pwdreperror : this.pwderror)) ||
+        ((isRepeat ? !this.repeatPassword : !this.password) && this.saveTriggered) ? 'slds-has-error' : '';
+    }
+
+    private toggleShowPassword() {
+        this.showPassword = !this.showPassword;
+    }
+
+    private copyPassword() {
+        if (!this.autoGenerate) {return;}
+
+        let selBox = document.createElement('textarea');
+        selBox.style.position = 'fixed';
+        selBox.style.left = '0';
+        selBox.style.top = '0';
+        selBox.style.opacity = '0';
+        selBox.value = this.password;
+        document.body.appendChild(selBox);
+        selBox.focus();
+        selBox.select();
+        document.execCommand('copy');
+        document.body.removeChild(selBox);
+        this.toast.sendToast("Password copied", "success");
     }
 
     private getInfo() {
@@ -143,7 +185,9 @@ export class UserAddModal implements OnInit, AfterViewChecked {
             .subscribe(
                 response => {
                     for (let fieldName in response) {
-                        response[fieldName] = this.modelutilities.backend2spice("Users", fieldName, response[fieldName]);
+                        if (response.hasOwnProperty(fieldName)) {
+                            response[fieldName] = this.modelutilities.backend2spice("Users", fieldName, response[fieldName]);
+                        }
                     }
                     this.model.data = response;
                     this.model.endEdit();
@@ -158,25 +202,20 @@ export class UserAddModal implements OnInit, AfterViewChecked {
     }
 
     private setDefaultModelData() {
-        this.model.data.system_generated_password = (this.passwordAction == "auto");
+        this.model.data.system_generated_password = this.autoGenerate;
         this.model.data.date_entered = new moment();
         this.model.data.date_modified = new moment();
         this.model.data.pwd_last_changed = new moment();
     }
 
     private checkErrors() {
-
+        if (this.autoGenerate) {return true;}
         let isValid = true;
-
-        if (this.infoLoaded) {
-            if (this.pwderror) {
-                isValid = false;
-            }
+        if (this.infoLoaded && this.pwderror) {
+            isValid = false;
         }
-        if (this.passwordAction == "select") {
-            if (!this.password || this.pwdreperror) {
-                isValid = false;
-            }
+        if (!this.password || this.pwdreperror) {
+            isValid = false;
         }
 
         if (!this.model.validate()) {
@@ -191,14 +230,16 @@ export class UserAddModal implements OnInit, AfterViewChecked {
     }
 
     private savePassword(goDetail) {
-        this.backend.postRequest("user/password/new", {}, {
+        let body = {
             newpwd: this.password,
             userId: this.model.id,
-            SystemGeneratedPassword: this.model.data.system_generated_password
-        }).subscribe(res => {
+            SystemGeneratedPassword: this.autoGenerate,
+            sendByEmail: this.sendByEmail
+        }
+        this.backend.postRequest("user/password/new", {}, body).subscribe(res => {
             if (res.status) {
-                if (this.passwordAction == "auto") {
-                    this.toast.sendToast("An Email with the new password was successfully sent, check your inbox", "success", "", 5);
+                if (this.sendByEmail) {
+                    this.toast.sendToast("An Email with the new password was successfully sent, check your inbox", "success", "", 10);
                 } else {
                     this.toast.sendToast("Data saved", "success");
                 }
@@ -206,12 +247,16 @@ export class UserAddModal implements OnInit, AfterViewChecked {
                 if (goDetail) {
                     this.model.goToDetail();
                 }
-
                 this.self.destroy();
             } else {
+                this.sendByEmail = false;
+                this.canSendByEmail = false;
                 this.toast.sendToast(res.message, "error");
             }
-        }, error => this.toast.sendToast("Email couldn't be send. Check Mailbox Settings.", "error"));
+        }, error => {
+            this.sendByEmail = false;
+            this.canSendByEmail = false;
+            this.toast.sendToast("Email couldn't be send. Check Mailbox Settings.", "error");
+        });
     }
-
 }

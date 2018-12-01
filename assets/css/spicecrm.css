@@ -740,6 +740,10 @@ object-action-container .slds-button-group .slds-button:nth-child(2) {
     background-color: transparent;
 }
 
+.slds-dropdown--actions a, .slds-dropdown_actions a {
+    color: #002D31;
+}
+
 .slds-popover--tooltip, .slds-popover_tooltip {
     background: #002D31;
 }
@@ -809,6 +813,9 @@ object-action-container .slds-button-group .slds-button:nth-child(2) {
     fill: #CA1B1F;
 }
 
+.slds-listbox__option.slds-is-selected .slds-listbox__option-icon{
+    color: #CA1B1F;
+}
 
 .slds-button span{
     text-transform: capitalize;
@@ -820,6 +827,28 @@ object-action-container .slds-button-group .slds-button:nth-child(2) {
     resize: vertical;
     overflow: auto;
     height: 300px;
+}
+
+.slds-timeline__item_expandable .slds-media__figure{
+    z-index: auto;
+}
+
+.slds-timeline__item_expandable:before{
+    height: calc(100% - 30px);
+    top: 30px;
+}
+
+.slds-text-align--justify{
+    text-align: justify;
+}
+
+.slds-height_full{
+    height: 100%;
+}
+
+.slds-is-absolute__top{
+    position: absolute;
+    top: 0px;
 }
 
 /* Style Definition for HTML fields */

@@ -61,8 +61,12 @@ curl_setopt($ch, CURLOPT_HTTPHEADER, $headerarray);
 $cookieArray = [];
 foreach ($_COOKIE as $key => $value)
     $cookieArray[] = $key . '=' . $value;
-if (count($cookieArray > 0))
-    curl_setopt($ch, CURLOPT_COOKIE, implode(',', $cookieArray));
+
+if (is_array($cookieArray) || $cookieArray instanceof Countable) {
+    if (count($cookieArray > 0)) {
+        curl_setopt($ch, CURLOPT_COOKIE, implode(',', $cookieArray));
+    }
+}
 
 curl_setopt($ch, CURLOPT_FOLLOWLOCATION, false);
 

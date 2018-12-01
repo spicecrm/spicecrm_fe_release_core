@@ -10,8 +10,16 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
-import {AfterViewInit, ComponentFactoryResolver, Component, ViewChild, ViewContainerRef, Input, OnInit} from '@angular/core';
-import {ActivatedRoute}   from '@angular/router';
+import {
+    AfterViewInit,
+    ComponentFactoryResolver,
+    Component,
+    ViewChild,
+    ViewContainerRef,
+    Input,
+    OnInit
+} from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
 import {metadata} from '../../services/metadata.service';
 import {model} from '../../services/model.service';
 import {view} from '../../services/view.service';
@@ -20,16 +28,22 @@ import {view} from '../../services/view.service';
     selector: 'object-record-fieldset-field',
     templateUrl: './src/objectcomponents/templates/objectrecordfieldsetfield.html'
 })
-export class ObjectRecordFieldsetField{
+export class ObjectRecordFieldsetField {
 
-    @Input()fieldsetitem: string = '';
+    @Input() private fieldsetitem: string = '';
+    @Input() private fieldpadding: string = 'x-small';
+    @Input() private fielddisplayclass: string = 'slds-has-divider--bottom slds-p-vertical--x-small spicecrm-fieldminheight';
 
 
-    showLabel(fieldConfig){
-        if(fieldConfig.hidelabel === true)
+    private showLabel(fieldConfig) {
+        if (fieldConfig.hidelabel === true) {
             return false;
-        else
+        } else {
             return true;
+        }
     }
 
+    get padding(){
+        return this.fieldpadding ? 'slds-p-around--' + this.fieldpadding : '';
+    }
 }

@@ -102,7 +102,6 @@ import /*embed*/ {fieldRating} from './components/fieldrating';
 import /*embed*/ {fieldLookupRecent} from './components/fieldlookuprecent';
 import /*embed*/ {fieldLookupSearch} from './components/fieldlookupsearch';
 import /*embed*/ {fieldLookupSearchAdd} from './components/fieldlookupsearchadd';
-import /*embed*/ {fieldModelPopover} from './components/fieldmodelpopover';
 import /*embed*/ {fieldModelFooterPopover} from './components/fieldmodelfooterpopover';
 import /*embed*/ {fieldMediaFileImage} from './components/fieldmediafileimage';
 import /*embed*/ {FieldMessagesComponent} from "./components/fieldmessages";
@@ -128,6 +127,7 @@ import /*embed*/ {fieldBase64} from "./components/fieldbase64";
 import /*embed*/ {fieldNotAuthorized} from "./components/fieldnotauthorized";
 import /*embed*/ {fieldModuleIcon} from "./components/fieldmoduleicon";
 import /*embed*/ {fieldRichText} from "./components/fieldrichtext";
+import /*embed*/ {fieldEnumMulti} from "./components/fieldenummulti";
 
 @NgModule({
     imports: [
@@ -180,7 +180,6 @@ import /*embed*/ {fieldRichText} from "./components/fieldrichtext";
         fieldLookupSearch,
         fieldLookupSearchAdd,
         fieldAddress,
-        fieldModelPopover,
         fieldModelFooterPopover,
         fieldFullName,
         fieldTitle,
@@ -219,7 +218,8 @@ import /*embed*/ {fieldRichText} from "./components/fieldrichtext";
         fieldColorEnum,
         fieldBase64,
         fieldModuleIcon,
-        fieldRichText
+        fieldRichText,
+        fieldEnumMulti
     ],
     entryComponents: [
         fieldLabel,
@@ -253,7 +253,8 @@ import /*embed*/ {fieldRichText} from "./components/fieldrichtext";
         fieldFile,
         fieldUrl,
         fieldEmail,
-        fieldColorEnum
+        fieldColorEnum,
+        fieldEnumMulti
     ],
     exports: [
         fieldSet,
