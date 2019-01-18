@@ -11,7 +11,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 -->
 
 <ng-container *ngFor="let field of fieldsetfields">
-    <td style="min-width: 8rem">
+    <td style="min-width: 8rem" [attr.data-label]="language.getFieldDisplayName(module, field.field)">
         <field-container [field]="field.field" [fieldconfig]="field.fieldconfig" [fielddisplayclass]="'slds-truncate'"></field-container>
     </td>
 </ng-container>

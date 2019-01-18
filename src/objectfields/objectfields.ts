@@ -74,6 +74,7 @@ import /*embed*/ {fieldMultienumCheckBox} from './components/fieldmultienumcheck
 import /*embed*/ {fieldEnumAlternate} from './components/fieldenumalternate';
 import /*embed*/ {fieldBool} from './components/fieldbool';
 import /*embed*/ {fieldParent} from './components/fieldparent';
+import /*embed*/ {fieldModuleFilter} from './components/fieldmodulefilter';
 import /*embed*/ {fieldRelate} from './components/fieldrelate';
 import /*embed*/ {fieldModifiedBy} from './components/fieldmodifiedby';
 import /*embed*/ {fieldLookup} from './components/fieldlookup';
@@ -128,6 +129,8 @@ import /*embed*/ {fieldNotAuthorized} from "./components/fieldnotauthorized";
 import /*embed*/ {fieldModuleIcon} from "./components/fieldmoduleicon";
 import /*embed*/ {fieldRichText} from "./components/fieldrichtext";
 import /*embed*/ {fieldEnumMulti} from "./components/fieldenummulti";
+import /*embed*/ {fieldPhone} from "./components/fieldphone";
+import /*embed*/ {fieldCronInterval} from "./components/fieldcroninterval";
 
 @NgModule({
     imports: [
@@ -173,6 +176,7 @@ import /*embed*/ {fieldEnumMulti} from "./components/fieldenummulti";
         fieldDuration,
         fieldDateTimeSpan,
         fieldParent,
+        fieldModuleFilter,
         fieldRelate,
         fieldModifiedBy,
         fieldLookup,
@@ -219,7 +223,9 @@ import /*embed*/ {fieldEnumMulti} from "./components/fieldenummulti";
         fieldBase64,
         fieldModuleIcon,
         fieldRichText,
-        fieldEnumMulti
+        fieldEnumMulti,
+        fieldPhone,
+        fieldCronInterval
     ],
     entryComponents: [
         fieldLabel,
@@ -243,6 +249,7 @@ import /*embed*/ {fieldEnumMulti} from "./components/fieldenummulti";
         fieldDuration,
         fieldDateTimeSpan,
         fieldParent,
+        fieldModuleFilter,
         fieldRelate,
         fieldLookup,
         fieldFloat,
@@ -254,7 +261,8 @@ import /*embed*/ {fieldEnumMulti} from "./components/fieldenummulti";
         fieldUrl,
         fieldEmail,
         fieldColorEnum,
-        fieldEnumMulti
+        fieldEnumMulti,
+        fieldCronInterval
     ],
     exports: [
         fieldSet,

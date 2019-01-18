@@ -25,8 +25,6 @@ import {broadcast} from '../../services/broadcast.service';
 import {favorite} from '../../services/favorite.service';
 import {navigation} from '../../services/navigation.service';
 
-//var System = require('../../../../node_modules/systemjs/dist/system.js');
-
 @Component({
     selector: 'object-recordview',
     templateUrl: './src/objectcomponents/templates/objectrecordview.html',
@@ -34,17 +32,14 @@ import {navigation} from '../../services/navigation.service';
 
 })
 export class ObjectRecordView implements AfterViewInit, OnInit, OnDestroy {
-    @ViewChild('headercontainer', {read: ViewContainerRef}) headercontainer: ViewContainerRef;
-    @ViewChild('main', {read: ViewContainerRef}) main: ViewContainerRef;
-    @ViewChild('maincontainer', {read: ViewContainerRef}) maincontainer: ViewContainerRef;
-    //@ViewChild('sidebarcontainer', {read: ViewContainerRef}) sidebarcontainer: ViewContainerRef;
-    moduleName: any = '';
-    initialized: boolean = false;
-    componentRefs: any = [];
-    componentSubscriptions: Array<any> = [];
-    listViewDefs: any = [];
-    componentSets: any = {};
-    topScroll: number = 0;
+    @ViewChild('headercontainer', {read: ViewContainerRef}) private headercontainer: ViewContainerRef;
+    @ViewChild('maincontainer', {read: ViewContainerRef}) private maincontainer: ViewContainerRef;
+    private moduleName: any = '';
+    private initialized: boolean = false;
+    private componentRefs: any = [];
+    private componentSubscriptions: Array<any> = [];
+    private listViewDefs: any = [];
+    private componentSets: any = {};
 
     constructor(
         private broadcast: broadcast,
@@ -62,15 +57,15 @@ export class ObjectRecordView implements AfterViewInit, OnInit, OnDestroy {
 
     }
 
-    ngOnInit(){
-        this.moduleName = this.activatedRoute.params['value']['module'];
+    public ngOnInit(){
+        this.moduleName = this.activatedRoute.params['value'].module;
 
         // set theenavigation paradigm
         this.navigation.setActiveModule(this.moduleName);
 
         // get the bean details
         this.model.module = this.moduleName;
-        this.model.id = this.activatedRoute.params['value']['id'];
+        this.model.id = this.activatedRoute.params['value'].id;
 
         // set data to the FAV service
         this.favorite.enable(this.model.module, this.model.id);
@@ -85,7 +80,7 @@ export class ObjectRecordView implements AfterViewInit, OnInit, OnDestroy {
 
     }
 
-    ngOnDestroy(){
+    public ngOnDestroy(){
         for (let component of this.componentRefs) {
             component.destroy();
         }
@@ -95,16 +90,12 @@ export class ObjectRecordView implements AfterViewInit, OnInit, OnDestroy {
         }
     }
 
-    ngAfterViewInit() {
+    public ngAfterViewInit() {
         this.initialized = true;
         this.buildContainer();
     }
 
-    onScroll(event) {
-        this.topScroll = this.main.element.nativeElement.scrollTop;
-    }
-
-    handleMessage(message: any) {
+    private handleMessage(message: any) {
         switch (message.messagetype) {
 
             case 'model.save':
@@ -115,7 +106,7 @@ export class ObjectRecordView implements AfterViewInit, OnInit, OnDestroy {
         }
     }
 
-    buildContainer() {
+    private buildContainer() {
         for (let component of this.componentRefs) {
             component.destroy();
         }
@@ -125,16 +116,16 @@ export class ObjectRecordView implements AfterViewInit, OnInit, OnDestroy {
         if (componentconfig.header) {
             for (let view of this.metadata.getComponentSetObjects(componentconfig.header)) {
                 this.metadata.addComponent(view.component, this.headercontainer).subscribe(componentRef => {
-                    componentRef.instance['componentconfig'] = view.componentconfig;
+                    componentRef.instance.componentconfig = view.componentconfig;
                     this.componentRefs.push(componentRef);
-                })
+                });
             }
         }
 
         if (componentconfig.main) {
             for (let view of this.metadata.getComponentSetObjects(componentconfig.main)) {
                 this.metadata.addComponent(view.component, this.maincontainer).subscribe(componentRef => {
-                    componentRef.instance['componentconfig'] = view.componentconfig;
+                    componentRef.instance.componentconfig = view.componentconfig;
                     this.componentRefs.push(componentRef);
                 })
             }
@@ -142,11 +133,4 @@ export class ObjectRecordView implements AfterViewInit, OnInit, OnDestroy {
 
     }
 
-    getMainStyle(){
-        let rect = this.main.element.nativeElement.getBoundingClientRect();
-        return({
-           'height': 'calc(100vh - ' +  rect.top + 'px)',
-            'overflow-y' : 'auto'
-        });
-    }
 }

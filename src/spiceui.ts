@@ -27,8 +27,8 @@ import {HttpClientModule} from "@angular/common/http";
 
 
 // spicecrm generic modules
-import {SystemComponents}      from "./systemcomponents/systemcomponents";
-import {GlobalComponents}      from "./globalcomponents/globalcomponents";
+import {SystemComponents} from "./systemcomponents/systemcomponents";
+import {GlobalComponents} from "./globalcomponents/globalcomponents";
 import {ObjectComponents} from "./objectcomponents/objectcomponents";
 
 
@@ -71,7 +71,8 @@ declare global {
     interface Date {
         format(format): string;
     }
-};
+}
+;
 
 moment.defaultFormat = "YYYY-MM-DD HH:mm:ss";
 
@@ -146,12 +147,36 @@ export class SpiceUIModule {
     }
 }
 
-
 // set prod mode
 /*
  import {enableProdMode} from "@angular/core";
  enableProdMode();
  */
 
-const platform = platformBrowserDynamic();
-platform.bootstrapModule(SpiceUIModule);
+// browser detection to display mesaeg when we have IE
+declare global {
+    interface Document {
+        documentMode?: any;
+    }
+}
+if (/*@cc_on!@*/false || !!document.documentMode) {
+    document.getElementsByClassName("loaderspinner")[0].setAttribute('style', 'display:none');
+    document.getElementById('loadstatus').innerHTML = '';
+    document.getElementById('loadermessage').innerHTML = 'Internet Explorer is not supported. Please use a supported Browser like Chrome, Safari, Edge, etc.';
+} else {
+    document.getElementById('loadstatus').innerHTML = '...preparing..';
+    platformBrowserDynamic().bootstrapModule(SpiceUIModule);
+}
+
+window.name = 'SpiceCRM';
+( () => {
+    if ( window.BroadcastChannel ) { // Does the browser know the Broadcast API?
+        let bc = new BroadcastChannel('spiceCRM_channel');
+        bc.onmessage = e => {
+            if (e.data.url && e.data.url.startsWith( window.location.origin + window.location.pathname )) {
+                window.location = e.data.url;
+                bc.postMessage({ urlReceived: true });
+            }
+        };
+    }
+})();

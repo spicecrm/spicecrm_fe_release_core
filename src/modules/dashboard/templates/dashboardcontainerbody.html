@@ -10,7 +10,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 -->
 
-<div #bodycontainer class="slds-is-relative slds-scrollable--y" [ngStyle]="bodyContainerStyle">
+<div #bodycontainer tobottom class="slds-is-relative slds-scrollable--y spicecrm-scrollbar" [ngStyle]="bodyContainerStyle">
     <ng-container *ngIf="isEditing">
         <ng-container *ngFor="let row of dashboardlayout.dashboardGrid">
             <ng-container *ngFor="let column of row">
@@ -22,7 +22,5 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
             </ng-container>
         </ng-container>
     </ng-container>
-    <ng-container *ngFor="let item of dashboardlayout.dashboardElements">
-        <dashboard-container-element [item]="item"></dashboard-container-element>
-    </ng-container>
+    <dashboard-container-element *ngFor="let item of dashboardlayout.dashboardElements; let last = last" [item]="item"></dashboard-container-element>
 </div>

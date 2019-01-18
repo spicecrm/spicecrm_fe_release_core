@@ -13,9 +13,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 import {CommonModule} from "@angular/common";
 import {FormsModule}   from "@angular/forms";
 import {DirectivesModule} from "../directives/directives";
-import {AfterViewInit, ComponentFactoryResolver, Component, NgModule, ViewChild, ViewContainerRef, Injectable, Renderer, Renderer2, Input, ElementRef, OnDestroy, OnInit, OnChanges, EventEmitter, Output} from "@angular/core";
+import {AfterViewInit, ComponentFactoryResolver, Component, NgModule, ViewChild, ViewContainerRef, Injectable, Renderer, Renderer2, Input, ElementRef, OnDestroy, OnInit, OnChanges, EventEmitter, Output, ChangeDetectorRef} from "@angular/core";
 import {HttpClient, HttpHeaders, HttpResponse} from "@angular/common/http";
-import {RouterModule, Routes, Router, ActivationStart, NavigationStart} from "@angular/router";
+import {RouterModule, Routes, Router, ActivationStart, NavigationStart, ActivatedRoute} from "@angular/router";
 import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
 
 declare var _: any;
@@ -62,7 +62,6 @@ import /*embed*/ {GlobalHeaderFavorite} from "./components/globalheaderfavorite"
 import /*embed*/ {GlobalHeaderWorkbench} from "./components/globalheaderworkbench";
 import /*embed*/ {GlobalFooter} from "./components/globalfooter";
 import /*embed*/ {GlobalLogin} from "./components/globallogin";
-import /*embed*/ {GlobalLoaderProgress} from "./components/globalloaderprogress";
 import /*embed*/ {GlobalSetup} from "./components/globalsetup";
 import /*embed*/ {GlobalLoginForgotPassword} from "./components/globalloginforgotpassword";
 import /*embed*/ {GlobalLoginResetPassword} from "./components/globalloginresetpassword";
@@ -73,8 +72,10 @@ import /*embed*/ {GlobalNavigationMenuItemNew} from "./components/globalnavigati
 import /*embed*/ {GlobalNavigationMenuItemRoute} from "./components/globalnavigationmenuitemroute";
 import /*embed*/ {GlobalNavigationMenuItemIcon} from "./components/globalnavigationmenuitemicon";
 import /*embed*/ {GlobalNavigationMenuMore} from "./components/globalnavigationmenumore";
+import /*embed*/ {GlobalNavigationCompact} from "./components/globalnavigationcompact";
 import /*embed*/ {GlobalDockedComposerContainer} from "./components/globaldockedcomposercontainer";
 import /*embed*/ {GlobalDockedComposer} from "./components/globaldockedcomposer";
+import /*embed*/ {GlobalDockedComposerCall} from "./components/globaldockedcomposercall";
 import /*embed*/ {GlobalDockedComposerModal} from "./components/globaldockedcomposermodal";
 import /*embed*/ {GlobalDockedComposerOverflow} from "./components/globaldockedcomposeroverflow";
 import /*embed*/ {GlobalComposeButton} from "./components/globalcomposebutton";
@@ -89,6 +90,7 @@ import /*embed*/ {GlobaUserPanel} from "./components/globaluserpanel";
 import /*embed*/ {GlobalRecentItems} from "./components/globalrecentitems";
 import /*embed*/ {GlobalSearch} from "./components/globalsearch";
 import /*embed*/ {GlobalSearchModule} from "./components/globalsearchmodule";
+import /*embed*/ {GlobalSearchModuleOnly} from "./components/globalsearchmoduleonly";
 import /*embed*/ {GlobalSearchModuleItem} from "./components/globalsearchmoduleitem";
 
 import /*embed*/ {GlobalNewsFeed} from "./components/globalnewsfeed";
@@ -110,6 +112,7 @@ import /*embed*/ {GlobalLoginGoogle} from "./components/globallogingoogle";
             {path: "setup", component: GlobalSetup},
             {path: "recent", component: GlobalRecentItems, canActivate: [loginCheck]},
             {path: "search", component: GlobalSearch, canActivate: [loginCheck]},
+            {path: "search/:searchterm", component: GlobalSearch, canActivate: [loginCheck]},
         ])
     ],
     declarations: [
@@ -135,8 +138,8 @@ import /*embed*/ {GlobalLoginGoogle} from "./components/globallogingoogle";
         GlobalNavigationMenuItemRoute,
         GlobalNavigationMenuItemIcon,
         GlobalNavigationMenuMore,
+        GlobalNavigationCompact,
         GlobalLogin,
-        GlobalLoaderProgress,
         GlobalSetup,
         GlobalLoginForgotPassword,
         GlobalLoginResetPassword,
@@ -147,12 +150,14 @@ import /*embed*/ {GlobalLoginGoogle} from "./components/globallogingoogle";
         GlobalAppLauncherDialogRoleTile,
         GlobalDockedComposerContainer,
         GlobalDockedComposer,
+        GlobalDockedComposerCall,
         GlobalDockedComposerModal,
         GlobalDockedComposerOverflow,
         GlobalComposeButton,
         GlobalRecentItems,
         GlobalSearch,
         GlobalSearchModule,
+        GlobalSearchModuleOnly,
         GlobalSearchModuleItem,
         GlobalLoginGoogle
     ],
@@ -178,7 +183,6 @@ import /*embed*/ {GlobalLoginGoogle} from "./components/globallogingoogle";
         GlobalDockedComposer,
         GlobalDockedComposerOverflow,
         GlobalComposeButton,
-        GlobalLoaderProgress
     ]
 })
 export class GlobalComponents {

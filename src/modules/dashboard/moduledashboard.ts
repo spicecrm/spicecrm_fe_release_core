@@ -11,8 +11,28 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 */
 
 import {CommonModule} from "@angular/common";
-import {FormsModule}   from "@angular/forms";
-import {Component, Input, NgModule, AfterViewInit, OnInit, OnDestroy, OnChanges, Renderer, ElementRef, ViewChild, ViewContainerRef, Injectable, EventEmitter, Renderer2} from "@angular/core";
+import {FormsModule} from "@angular/forms";
+import {DirectivesModule} from "../../directives/directives";
+
+import {
+    Component,
+    Input,
+    NgModule,
+    AfterViewInit,
+    AfterViewChecked,
+    OnInit,
+    OnDestroy,
+    OnChanges,
+    Renderer,
+    ElementRef,
+    ViewChild,
+    ViewContainerRef,
+    Injectable,
+    EventEmitter,
+    Renderer2,
+    Output,
+    SimpleChanges
+} from "@angular/core";
 import {RouterModule, Router, Routes} from "@angular/router";
 import {HttpClient, HttpHeaders, HttpResponse} from "@angular/common/http";
 
@@ -34,22 +54,23 @@ import {navigation} from "../../services/navigation.service";
 import {userpreferences} from "../../services/userpreferences.service";
 import {VersionManagerService} from "../../services/versionmanager.service";
 
-import {ObjectFields}      from "../../objectfields/objectfields";
-import {SystemComponents}      from "../../systemcomponents/systemcomponents";
+import {ObjectFields} from "../../objectfields/objectfields";
+import {SystemComponents} from "../../systemcomponents/systemcomponents";
 
 import /*embed*/ {dashboardlayout} from "./services/dashboardlayout.service";
-import /*embed*/ { DashboardView } from "./components/dashboardview";
-import /*embed*/ { DashboardContainer } from "./components/dashboardcontainer";
-import /*embed*/ { DashboardContainerHeader } from "./components/dashboardcontainerheader";
-import /*embed*/ { DashboardContainerHomeHeader } from "./components/dashboardcontainerhomeheader";
-import /*embed*/ { DashboardContainerBody } from "./components/dashboardcontainerbody";
-import /*embed*/ { DashboardContainerElement } from "./components/dashboardcontainerelement";
-import /*embed*/ { DashboardAddElement } from "./components/dashboardaddelement";
-import /*embed*/ { DashboardWeatherDashlet } from "./components/dashboardweatherdashlet";
-import /*embed*/ { DashboardGenericDashlet } from "./components/dashboardgenericdashlet";
-import /*embed*/ { DashboardGenericDashletRow } from "./components/dashboardgenericdashletrow";
-import /*embed*/ { DashboardRemindersDashlet } from "./components/dashboardremindersdashlet";
-
+import /*embed*/ {DashboardView} from "./components/dashboardview";
+import /*embed*/ {DashboardSelectPanel} from "./components/dashboardselectpanel";
+import /*embed*/ {DashboardContainer} from "./components/dashboardcontainer";
+import /*embed*/ {DashboardContainerHeader} from "./components/dashboardcontainerheader";
+import /*embed*/ {DashboardContainerHomeHeader} from "./components/dashboardcontainerhomeheader";
+import /*embed*/ {DashboardContainerBody} from "./components/dashboardcontainerbody";
+import /*embed*/ {DashboardContainerElement} from "./components/dashboardcontainerelement";
+import /*embed*/ {DashboardAddElement} from "./components/dashboardaddelement";
+import /*embed*/ {DashboardWeatherDashlet} from "./components/dashboardweatherdashlet";
+import /*embed*/ {DashboardGenericDashlet} from "./components/dashboardgenericdashlet";
+import /*embed*/ {DashboardGenericDashletRow} from "./components/dashboardgenericdashletrow";
+import /*embed*/ {DashboardRemindersDashlet} from "./components/dashboardremindersdashlet";
+import /*embed*/ {DashboardComponentset} from "./components/dashboardcomponentset";
 
 @NgModule({
     imports: [
@@ -57,9 +78,11 @@ import /*embed*/ { DashboardRemindersDashlet } from "./components/dashboardremin
         FormsModule,
         ObjectFields,
         SystemComponents,
-        ],
+        DirectivesModule
+    ],
     declarations: [
         DashboardView,
+        DashboardSelectPanel,
         DashboardContainer,
         DashboardContainerHeader,
         DashboardContainerHomeHeader,
@@ -70,9 +93,7 @@ import /*embed*/ { DashboardRemindersDashlet } from "./components/dashboardremin
         DashboardGenericDashlet,
         DashboardGenericDashletRow,
         DashboardRemindersDashlet,
-    ],
-    entryComponents: [
-        DashboardWeatherDashlet
+        DashboardComponentset,
     ],
     exports: [
         DashboardContainer,

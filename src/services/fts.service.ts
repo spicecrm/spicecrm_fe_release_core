@@ -24,15 +24,16 @@ import {Observable, Subject} from 'rxjs';
 @Injectable()
 export class fts {
 
-    public hits: Array<any> = [];
+    public hits: any[] = [];
     public found: number = 0;
     public runningsearch: any = undefined;
     public runningmodulesearch: any = undefined;
     public searchTerm: string = '';
     public searchSort: any = {};
     public searchAggregates: any = {};
-    public searchModules: Array<any> = [];
-    public moduleSearchresults: Array<any> = [];
+    public searchModules: any[] = [];
+    public modulefilter: string = '';
+    public moduleSearchresults: any[] = [];
     private lastSearchParams: any = {};
 
     public gloablSearchResults: any = {};
@@ -48,6 +49,11 @@ export class fts {
         this.getSearchModules();
     }
 
+
+    get loadedSearchModules() {
+        return this.searchModules.filter(module => this.metadata.checkModuleAcl(module, 'list'));
+    }
+
     private transformHits(hits) {
         let retArray = [];
         for (let hit of hits) {
@@ -59,7 +65,7 @@ export class fts {
     private tranformHit(hit) {
         // transform the fields
         for (let field in hit._source) {
-            if (hit._source.hasOwnProperty(field) && typeof(hit._source[field]) == 'string') {
+            if (hit._source.hasOwnProperty(field) && typeof (hit._source[field]) == 'string') {
                 // bugfix S&P gets translated later on anyway .. no need to do this here
                 // hit._source[field] = this.modelutilities.backend2spice(hit._type, field, hit._source[field])
                 hit._source[field] = hit._source[field];
@@ -74,27 +80,28 @@ export class fts {
         this.searchTerm = searchterm;
 
         // if we have a running search cancel it ...
-        if (this.runningsearch){
+        if (this.runningsearch) {
             this.runningsearch.unsubscribe();
         }
 
         this.resetData();
 
-        this.runningsearch = this.backend.getRequest(
-            'fts/searchterm/' + encodeURIComponent(searchterm),
-            {size: size},
-        ).subscribe((response) => {
+        this.runningsearch = this.backend.postRequest('search', {}, {
+            size,
+            searchterm,
+            modules: this.loadedSearchModules.join(',')
+        }).subscribe((response) => {
             this.hits = response.hits.hits;
             this.found = response.hits.total;
             this.runningsearch = undefined;
         });
     }
 
-    public searchByModules(searchterm: string, modules: Array<string> = [], size: number = 5, aggregates = {}, sortparams: any = {}, owner = false) {
+    public searchByModules(searchterm: string, modules: string[] = [], size: number = 10, aggregates = {}, sortparams: any = {}, owner = false, modulefilter = '') {
         let retSubject = new Subject<any>();
         // if no module is passed .. search all modules
         if (modules.length === 0) {
-            modules = this.searchModules;
+            modules = this.loadedSearchModules;
         }
 
         if (searchterm.indexOf('%') != -1) {
@@ -105,6 +112,7 @@ export class fts {
         this.searchTerm = searchterm;
         this.searchAggregates = aggregates;
         this.searchSort = sortparams;
+        this.modulefilter = modulefilter;
 
 
         // todo: check if same search is done .. and then do nothing .. avoid too many calls
@@ -116,11 +124,12 @@ export class fts {
 
         this.runningmodulesearch = this.backend.postRequest('search', {}, {
             modules: modules.length > 0 ? modules.join(',') : '',
-            searchterm: searchterm,
+            searchterm,
             records: size,
-            owner: owner,
+            owner,
             aggregates: this.searchAggregates,
-            sort: this.searchSort
+            sort: this.searchSort,
+            modulefilter
         }).subscribe(response => {
             // var response = res.json();
             this.moduleSearchresults = [];
@@ -128,7 +137,7 @@ export class fts {
             for (let module in response) {
                 if (response.hasOwnProperty(module)) {
                     this.moduleSearchresults.push({
-                        module: module,
+                        module,
                         data: {
                             hits: this.transformHits(response[module].hits),
                             max_score: response[module].max_score,
@@ -145,9 +154,9 @@ export class fts {
 
             // set the last parameters
             this.lastSearchParams = {
-                modules: modules,
-                searchterm: searchterm,
-                size: size
+                modules,
+                searchterm,
+                size
             };
             this.runningmodulesearch = undefined;
 
@@ -162,11 +171,11 @@ export class fts {
     public loadMore() {
         let retSubject = new Subject<any>();
         // if we are in a serch ... do nothing
-        if (this.runningmodulesearch){
+        if (this.runningmodulesearch) {
             return;
         }
 
-        if (this.moduleSearchresults[0].data.hits.length >= this.moduleSearchresults[0].data.total){
+        if (this.moduleSearchresults[0].data.hits.length >= this.moduleSearchresults[0].data.total) {
             return;
         }
 
@@ -176,7 +185,8 @@ export class fts {
             aggregates: this.searchAggregates,
             sort: this.searchSort,
             records: this.lastSearchParams.size,
-            start: this.moduleSearchresults[0].data.hits.length
+            start: this.moduleSearchresults[0].data.hits.length,
+            modulefilter: this.modulefilter
         }).subscribe(response => {
             // var response = res.json();
             for (let module of this.lastSearchParams.modules) {
@@ -196,8 +206,9 @@ export class fts {
         this.backend.getRequest('fts/searchmodules')
             .subscribe((response: any) => {
                 for (let module of response.modules) {
-                    if (this.metadata.checkModuleAcl(module, 'list'))
+                    if (this.metadata.checkModuleAcl(module, 'list')) {
                         this.searchModules.push(module);
+                    }
                 }
             });
     }

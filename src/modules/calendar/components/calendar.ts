@@ -10,100 +10,91 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
-import {Component, ElementRef, ViewChild, ViewContainerRef} from '@angular/core';
-import {broadcast} from '../../../services/broadcast.service';
+import {
+    AfterViewInit, ChangeDetectorRef,
+    Component,
+    ElementRef,
+    EventEmitter,
+    Input,
+    OnDestroy,
+    Output, Renderer2,
+    ViewChild,
+    ViewContainerRef
+} from '@angular/core';
 import {language} from '../../../services/language.service';
 import {navigation} from '../../../services/navigation.service';
-import {fts} from '../../../services/fts.service';
 import {calendar} from '../services/calendar.service';
-import {recent} from '../../../services/recent.service';
 
 declare var moment: any;
 declare var _: any;
 
 @Component({
+    selector: 'calendar',
     templateUrl: './src/modules/calendar/templates/calendar.html',
-    providers: [calendar],
-    styles: [`
-        /* Scrollbar */
-        /* width */
-        ::-webkit-scrollbar {
-            width: 5px;
-        }
-
-        /* Track */
-        ::-webkit-scrollbar-track {
-            background: #f1f1f1;
-        }
-
-        /* Handle */
-        ::-webkit-scrollbar-thumb {
-            background: #aaa;
-        }
-
-        /* Handle on hover */
-        ::-webkit-scrollbar-thumb:hover {
-            background: #888;
-        }
-    `]
+    providers: [calendar]
 })
-export class Calendar {
 
-    public usersCalendars: any[] = [];
-    public googleCalendarVisible: boolean = true;
-    public searchterm: string = "";
-    public searchopen: boolean = false;
-    public isLoading: boolean = false;
-    public resultsList: any[] = [];
-    public timeout: any = undefined;
-    public recentUsers: any[] = [];
+export class Calendar implements AfterViewInit, OnDestroy {
+    @ViewChild('calendarcontainer', {read: ViewContainerRef}) private calendarContainer: ViewContainerRef;
     @ViewChild('calendarcontent', {read: ViewContainerRef}) private calendarcontent: ViewContainerRef;
-    @ViewChild("inputcontainer", {read: ViewContainerRef}) private inputContainer: ViewContainerRef;
+
+    private clickListener: any;
+    private touchStartListener: any;
+    private touchMoveListener: any;
+    private resizeListener: any;
+    private xDown: number = null;
+    private yDown: number = null;
+    public usersCalendars: any[] = [];
+    public otherCalendars: any[] = [];
+    public openPicker: boolean = false;
+    public googleIsVisible: boolean = true;
+    public scheduleUntilDate: any = {};
     private showTypeSelector: boolean = false;
     private sheetType: string = 'Week';
+    private self: any = {};
     private duration: any = {
         Day: 'd',
+        Three_Days: 'd',
         Week: 'w',
         Month: 'M',
+        Schedule: 'M',
     };
 
     constructor(private language: language,
-                private broadcast: broadcast,
                 private navigation: navigation,
-                private fts: fts,
-                private recent: recent,
                 private elementRef: ElementRef,
+                private cdr: ChangeDetectorRef,
+                private renderer: Renderer2,
                 private calendar: calendar) {
         this.navigation.setActiveModule('Calendar');
-        this.calendarDate = new moment();
-        this.getRecent();
+        this.language.currentlanguage$.subscribe(lang => this.calendarDate = this.calendar.calendarDate);
+        this.scheduleUntilDate = new moment().minute(0).second(0).add(1, "M");
         this.calendar.usersCalendars$.subscribe(res => this.usersCalendars = res);
+        this.calendar.otherCalendars$.subscribe(res => this.otherCalendars = res);
+        this.resizeListener = this.renderer.listen('window', 'resize', () => {
+            this.calendar.isMobileView = this.calendarContainer.element.nativeElement.getBoundingClientRect().width < 768;
+        });
+        this.touchStartListener = this.renderer.listen('document', 'touchstart', e => this.handleTouchStart(e));
+    }
+
+    public ngAfterViewInit() {
+        this.calendar.isMobileView = this.calendarContainer.element.nativeElement.getBoundingClientRect().width < 768;
+    }
+
+    public ngAfterViewChecked() {
+        this.cdr.detectChanges();
+    }
+
+    get isMobileView() {
+        return this.calendar.isMobileView;
     }
 
     get owner() {
         return this.calendar.owner;
     }
 
-    get searchOpen() {
-        return this.searchopen;
-    }
-
-    get loggedByGoogle() {
-        return this.calendar.loggedByGoogle;
-    }
-
-    set searchOpen(value) {
-        this.searchopen = value;
-        if (value) {
-            this.getRecent();
-        }
-    }
-
-    get lookupMenuStyle() {
-        return {
-            display: this.searchOpen ? "block" : "none",
-            width: this.inputContainer.element.nativeElement.getBoundingClientRect().width + "px",
-        };
+    get sidebarWidth() {
+        return this.calendar.sidebarWidth;
     }
 
     get weekStartDay() {
@@ -114,72 +105,42 @@ export class Calendar {
         return this.calendar.weekDaysCount;
     }
 
+    set calendarDate(value) {
+        this.calendar.calendarDate = new moment(value).locale(this.language.currentlanguage.substring(0,2));
+    }
+
     get calendarDate() {
         return this.calendar.calendarDate;
     }
 
-    set calendarDate(value) {
-        this.calendar.calendarDate = value;
-    }
-
-    get searchTerm() {
-        return this.searchterm;
-    }
-
-    set searchTerm(value) {
-        clearTimeout(this.timeout);
-        this.timeout = setTimeout(() => this.searchterm = value, 500);
-        if (value == "") {
-            return;
+    set asPicker(value) {
+        if (value) {
+            this.sheetType = 'Three_Days';
+            this.calendar.asPicker = value;
+        } else {
+            this.closeModal();
         }
-        this.isLoading = true;
-        this.fts.searchByModules(this.searchterm, ["Users"], 5, "", {sortfield: "name"})
-            .subscribe(res => {
-                this.filterResultsList(res["Users"].hits.map(user => user = user._source));
-                this.isLoading = false;
-            }, err => this.isLoading = false);
     }
 
-    private getRecent() {
-        this.recent.getModuleRecent("Users")
-            .subscribe(recent => this.filterRecent(recent));
+    get asPicker() {
+        return this.calendar.asPicker;
     }
 
-    private filterRecent(recent) {
-        this.recentUsers =  recent.filter(user => user.item_id != this.owner && _.findWhere(this.calendar.usersCalendars, {id: user.item_id}) == undefined);
-    }
-
-    private filterResultsList(resultsList) {
-        this.resultsList = resultsList.filter(user => user.id != this.owner && _.findWhere(this.calendar.usersCalendars, {id: user.id}) == undefined);
-    }
-
-    private addUserCalendar(id, name) {
-        this.calendar.addUserCalendar(id, name);
-        this.filterRecent(this.recentUsers);
-        this.filterResultsList(this.resultsList);
-    }
-
-    private removeUserCalendar(id) {
-        this.calendar.removeUserCalendar(id);
-    }
-
-    private toggleVisibleGoogle() {
-        this.googleCalendarVisible = !this.googleCalendarVisible;
-    }
-
-    private toggleVisibleUsers(id) {
-        this.calendar.usersCalendars.some(calendar => {
-            if (calendar.id == id) {
-                calendar.visible = !calendar.visible;
-                this.calendar.setUserCalendars(this.calendar.usersCalendars.slice());
-                return true;
-            }
-        });
-    }
-
-    private getContentStyle() {
+    get sidebarStyle() {
         return {
-            height: 'calc(100vh - ' + this.calendarcontent.element.nativeElement.offsetTop + 'px)'
+            'width': this.calendar.sidebarwidth + 'px',
+            'z-index': 1,
+        };
+    }
+
+    private addOtherCalendar() {
+        this.calendar.addOtherCalendar();
+    }
+
+    private getSheetStyle() {
+        return {
+            width: `calc(100% - ${this.sidebarWidth}px)`,
+            height: '100%',
         };
     }
 
@@ -187,34 +148,39 @@ export class Calendar {
         const focDate = new moment(this.calendarDate);
         switch (this.sheetType) {
             case 'Week':
-                return 'Week ' + this.getCalendarWeek() + ': ' + this.getFirstDayOfWeek() + ' - ' + this.getLastDayOfWeek();
+                return this.getFirstDayOfWeek() + ' - ' + this.getLastDayOfWeek();
             case 'Month':
                 return focDate.format('MMMM YYYY');
             case 'Day':
-                return focDate.format('MMMM D, YYYY');
+                return focDate.format('MMMM D');
+            case 'Schedule':
+                return focDate.format("MMM D, YYYY") + ' - ' + this.scheduleUntilDate.format("MMM D, YYYY");
+            case 'Three_Days':
+                return focDate.format("MMM D") + ' - ' + moment(focDate.add(2, 'd')).format("MMM D");
         }
     }
 
-    private getCalendarWeek() {
-        let focDate = new moment(this.calendarDate);
-        focDate.day(1);
-        return focDate.isoWeek();
+    private getCompactCalendarHeader() {
+        const focDate = new moment(this.calendarDate);
+        return focDate.format('MMM, YYYY');
     }
 
     private getFirstDayOfWeek() {
         let focDate = new moment(this.calendarDate);
         focDate.day(this.weekStartDay);
-        return focDate.format('MMMM D, YYYY');
+        return focDate.format('MMM D');
     }
 
     private getLastDayOfWeek() {
         let focDate = new moment(this.calendarDate);
         focDate.day(this.weekDaysCount);
-        return focDate.format('MMMM D, YYYY');
+        return focDate.format('MMM D');
     }
 
     private setDateChanged(event) {
+        this.toggleClosed();
         this.calendarDate = new moment(event);
+        this.refresh();
     }
 
     private toggleTypeSelector() {
@@ -232,13 +198,9 @@ export class Calendar {
     }
 
     private gotToDayView(date) {
+        this.calendarDate = new moment(date);
         this.refresh();
-        this.calendarDate = date;
         this.sheetType = 'Day';
-    }
-
-    private goToWeekView() {
-        this.sheetType = 'Week';
     }
 
     private shiftPlus() {
@@ -246,7 +208,7 @@ export class Calendar {
         if (this.sheetType == "Day" && this.calendarDate.day() == this.weekStartDay + (this.weekDaysCount - 1)) {
             this.calendarDate = new moment(this.calendarDate.add(moment.duration(weekDaysCountOffset, "d")));
         }
-        this.calendarDate = new moment(this.calendarDate.add(moment.duration(1, this.duration[this.sheetType])));
+        this.calendarDate = new moment(this.calendarDate.add(moment.duration(this.sheetType == 'Three_Days'? 3 : 1, this.duration[this.sheetType])));
     }
 
     private shiftMinus() {
@@ -254,7 +216,7 @@ export class Calendar {
         if (this.sheetType == "Day" && this.calendarDate.day() == this.weekStartDay) {
             this.calendarDate = new moment(this.calendarDate.subtract(moment.duration(weekDaysCountOffset, "d")));
         }
-        this.calendarDate = new moment(this.calendarDate.subtract(moment.duration(1, this.duration[this.sheetType])));
+        this.calendarDate = new moment(this.calendarDate.subtract(moment.duration(this.sheetType == 'Three_Days'? 3 : 1, this.duration[this.sheetType])));
     }
 
     private zoomin() {
@@ -270,8 +232,72 @@ export class Calendar {
     }
 
     private refresh() {
-        this.calendar.currentStart = undefined;
-        this.calendar.currentEnd = undefined;
+        this.calendar.currentStart = {};
+        this.calendar.currentEnd = {};
         this.calendarDate = new moment(this.calendar.calendarDate);
+    }
+
+    private closeModal() {
+        this.self.destroy();
+    }
+
+    private handleTouchStart(evt) {
+        const touches = evt.touches || evt.originalEvent.touches;
+        this.xDown = touches[0].clientX;
+        this.yDown = touches[0].clientY;
+        this.touchMoveListener = this.renderer.listen('document', 'touchmove', e => this.handleTouchMove(e));
+    };
+
+    private handleTouchMove(evt) {
+        if (!this.xDown || !this.yDown) {return}
+        let xDiff = this.xDown - evt.touches[0].clientX;
+
+        if ( Math.abs( xDiff ) > Math.abs( this.yDown - evt.touches[0].clientY ) ) {
+            if ( xDiff < 0 ) {
+                this.shiftMinus();
+            } else {
+                this.shiftPlus();
+            }
+        }
+        this.xDown = null;
+        this.yDown = null;
+        this.touchMoveListener();
+    };
+
+    private toggleOpen(picker, button) {
+        this.openPicker = !this.openPicker;
+        if (this.openPicker) {
+            this.clickListener = this.renderer.listen('document', 'click', (event) => this.onDocumentClick(event, picker, button));
+        }
+    }
+
+    private toggleClosed() {
+        this.openPicker = false;
+        if (this.clickListener) {
+            this.clickListener();
+        }
+    }
+
+    private onDocumentClick(event: MouseEvent, picker, button) {
+        if (this.openPicker && !picker.contains(event.target) && !button.contains(event.target)) {
+            this.openPicker = false;
+            this.clickListener();
+        }
+    }
+
+    public ngOnDestroy() {
+        if (this.resizeListener) {
+            this.resizeListener();
+        }
+        if (this.touchStartListener) {
+            this.touchStartListener();
+        }
+        if (this.touchMoveListener) {
+            this.touchMoveListener();
+        }
+        if (this.clickListener) {
+            this.clickListener();
+        }
+        this.cdr.detach();
     }
 }

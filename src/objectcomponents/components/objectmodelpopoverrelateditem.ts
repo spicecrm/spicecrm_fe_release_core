@@ -10,16 +10,11 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
-import {Component, Input, ViewChild, ViewContainerRef, OnInit} from '@angular/core';
-import {Router} from "@angular/router";
+import {Component, Input} from '@angular/core';
 import {model} from '../../services/model.service';
 import {view} from '../../services/view.service';
 import {metadata} from '../../services/metadata.service';
 import {language} from "../../services/language.service";
-import {relatedmodels} from "../../services/relatedmodels.service";
-
-import {ObjectRelatedlistList} from "./objectrelatedlistlist";
-
 
 @Component({
     selector: 'object-model-popover-related-item',
@@ -30,7 +25,7 @@ export class ObjectModelPopoverRelatedItem {
 
     @Input() private module: string = '';
     @Input() private item: any = {};
-    @Input() private fields: Array<any> = [];
+    @Input() private fields: any[] = [];
 
     constructor(
         public language: language,

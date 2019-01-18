@@ -18,7 +18,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
                 <span class="slds-assistive-text">{{language.getLabel('LBL_CLOSE')}}</span>
             </button>
             <div class="slds-grid slds-grid--align-spread slds-grid--vertical-align-center">
-                <h2 class="slds-text-heading--medium">{{language.getLabel('LBL_APP_LAUNCHER')}}</h2>
+                <h2 class="slds-text-heading--medium slds-show--medium">{{language.getLabel('LBL_APP_LAUNCHER')}}</h2>
                 <div class="slds-app-launcher__header-search">
                     <div class="slds-form-element">
                         <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon--left">
@@ -27,7 +27,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
                         </div>
                     </div>
                 </div>
-                <button class="slds-button slds-button--neutral" disabled>App Store</button>
+                <button class="slds-button slds-button--neutral slds-show--medium" disabled>App Store</button>
             </div>
         </header>
         <system-modal-content margin="small" [grow]="true">
@@ -41,11 +41,11 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
             <system-section titlelabel="LBL_MODULES">
                 <ul class="slds-grid slds-grid--pull-padded slds-wrap">
                     <li *ngFor="let module of getModules()" class="slds-p-around--small slds-size--xx-small" (click)="gotoModule(module)">
-                        <div class="slds-app-launcher__tile-figure slds-app-launcher__tile-figure--small">
+                        <div class="slds-app-launcher__tile-figure slds-app-launcher__tile-figure--small slds-text-link_reset">
                             <system-icon [module]="module" [size]="'large'"></system-icon>
                         </div>
                         <div class="slds-align_absolute-center slds-p-top--xx-small">
-                            <p class="slds-truncate slds-text-link" [title]="language.getModuleName(module)">{{language.getModuleName(module)}}</p>
+                            <p class="slds-truncate slds-text-link_reset" [title]="language.getModuleName(module)">{{language.getModuleName(module)}}</p>
                         </div>
                     </li>
                 </ul>

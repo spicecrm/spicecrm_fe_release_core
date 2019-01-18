@@ -10,9 +10,6 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
-/**
- * Created by christian on 08.11.2016.
- */
 import {
     AfterViewInit, ComponentFactoryResolver, Component, NgModule, ViewChild, ViewContainerRef,
     OnDestroy

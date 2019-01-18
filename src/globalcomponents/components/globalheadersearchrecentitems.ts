@@ -10,14 +10,14 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
-/**
- * Created by christian on 08.11.2016.
- */
-import {AfterViewInit, ComponentFactoryResolver, Component, NgModule, ViewChild, ViewContainerRef} from '@angular/core';
-import { Router } from '@angular/router';
-import { recent } from '../../services/recent.service';
-import { popup } from '../../services/popup.service';
-import { language } from '../../services/language.service';
+import {
+    Component,
+    Output,
+    EventEmitter
+} from '@angular/core';
+import {Router} from '@angular/router';
+import {recent} from '../../services/recent.service';
+import {language} from '../../services/language.service';
 
 @Component({
     selector: 'global-header-search-recent-items',
@@ -26,11 +26,12 @@ import { language } from '../../services/language.service';
 })
 export class GlobalHeaderSearchRecentItems {
 
-    constructor(private language: language, private recent: recent, private popup: popup, private router: Router){
+    @Output() private selected: EventEmitter<any> = new EventEmitter<any>();
+
+    constructor(private language: language, private recent: recent, private router: Router) {
     }
 
-    goRecent(){
+    private goRecent() {
         this.router.navigate(['/recent']);
-        this.popup.close();
     }
 }

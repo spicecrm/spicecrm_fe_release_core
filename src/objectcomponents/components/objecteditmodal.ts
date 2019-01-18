@@ -11,7 +11,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 */
 
 import {
-    Component, OnInit,
+    Component, Input, OnInit,
     ViewChild,
     ViewContainerRef,
 } from '@angular/core';
@@ -40,6 +40,8 @@ export class ObjectEditModal implements OnInit {
 
     private doDuplicateCheck: boolean = true;
     private duplicates: Array<any> = [];
+
+    @Input() public preventGoingToRecord = false;
 
     private self: any = {};
 
@@ -83,7 +85,7 @@ export class ObjectEditModal implements OnInit {
     }
 
     private save(goDetail: boolean = false) {
-
+        if ( this.preventGoingToRecord ) goDetail = false;
         if (this.model.validate()) {
             if (this.model.isNew && this.doDuplicateCheck && !this.showDuplicates && this.metadata.getModuleDuplicatecheck(this.model.module)) {
                 this.model.duplicateCheck(true).subscribe(dupdata => {

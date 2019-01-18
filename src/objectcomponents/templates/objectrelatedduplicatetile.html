@@ -20,7 +20,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
     <div class="slds-tile__detail slds-text-body--small">
         <dl class="slds-dl--horizontal">
             <ng-container *ngFor="let field of getFields()">
-                <dt class="slds-dl--horizontal__label">
+                <dt class="slds-dl--horizontal__label slds-truncate">
                     <span class="slds-truncate">{{language.getFieldDisplayName(model.module, field.field)}}</span>
                 </dt>
                 <dd class="slds-dl--horizontal__detail slds-tile__meta">

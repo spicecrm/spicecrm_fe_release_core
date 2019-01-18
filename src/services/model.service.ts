@@ -67,6 +67,9 @@ export class model {
     private _fields: any = [];
     public messageChange$ = new EventEmitter<boolean>();
 
+    // mark the model as duplicate ... set to truie when duplicatimng to avoid storage of backup data
+    public duplicate: boolean = false;
+
     constructor(
         private backend: backend,
         private broadcast: broadcast,
@@ -280,7 +283,7 @@ export class model {
     private resetFieldStati(field: string) {
         this._fields_stati[field] = this.evaluateFieldStati(field);
         // tmp stati
-        this._fields_stati_tmp[field] = {... this._fields_stati[field]};
+        this._fields_stati_tmp[field] = {...this._fields_stati[field]};
         if (this.getFieldMessages(field, "error")) {
             this._fields_stati_tmp[field].invalid = true;
         }
@@ -500,9 +503,7 @@ export class model {
                         case "datetimecombo":
                         case "datetime":
                         case "date":
-                            if (replace)
-                                replace = replace.format("YYYY-MM-DD HH:mm:ss");
-                            break;
+                            if (replace) replace = replace.format("YYYY-MM-DD HH:mm:ss");
                     }
 
                     params = params.replace(match, replace);
@@ -527,7 +528,9 @@ export class model {
 
     public startEdit() {
         // shift to backend format .. no objects like date embedded
-        this.backupData = {...this.data};
+        if (!this.duplicate) {
+            this.backupData = {...this.data};
+        }
         this.isEditing = true;
         this.mode$.emit('edit');
     }
@@ -623,6 +626,9 @@ export class model {
                     }
 
                     this.endEdit();
+
+                    // reinitialize the Field Stats in case ACL Changed
+                    this.initializeFieldsStati();
                 },
                 error => {
                     console.log(error);
@@ -634,10 +640,8 @@ export class model {
                             break;
                         default:
                             if (notify) {
-                                this.toast.sendToast(this.language.getLabel("LBL_ERROR") + " " + error.status, "error", error.error.message);
+                                this.toast.sendToast(this.language.getLabel("BL_ERROR") + " " + error.status, "error", error.error.message);
                             }
-                            ;
-                            break;
                     }
                 });
         return responseSubject.asObservable();
@@ -727,14 +731,14 @@ export class model {
         // set default acl to allow editing
         this.data.acl = {
             edit: true
-        }
+        };
 
         // initialize the field stati and run the initial evaluation rules
         this.initializeFieldsStati();
         this.evaluateValidationRules(null, "init");
     }
 
-    public addModel(addReference: string = "", parent: any = null, presets: any = {}) {
+    public addModel(addReference: string = "", parent: any = null, presets: any = {}, preventGoingToRecord = false) {
 
         // a response subject to return if the model has been saved
         let retSubject = new Subject<any>();
@@ -756,7 +760,7 @@ export class model {
                 if (editModalRef) {
                     editModalRef.instance.model.isNew = true;
                     editModalRef.instance.reference = this.reference;
-
+                    editModalRef.instance.preventGoingToRecord = preventGoingToRecord;
                     // subscribe to the action$ observable and execute the subject
                     editModalRef.instance.action$.subscribe(response => {
                         retSubject.next(response);
@@ -773,8 +777,13 @@ export class model {
         return retSubject.asObservable();
     }
 
-    private executeCopyRules(parent) {
-        // get generic copy rules
+    public executeCopyRules(parent: model = null) {
+        this.executeCopyRulesGeneric();
+        if (parent && parent.data) this.executeCopyRulesParent(parent);
+    }
+
+    // get generic copy rules
+    public executeCopyRulesGeneric() {
         let copyrules = this.metadata.getCopyRules("*", this.module);
         for (let copyrule of copyrules) {
             if (copyrule.tofield && copyrule.fixedvalue) {
@@ -783,21 +792,19 @@ export class model {
                 this.setFieldValue(copyrule.tofield, this.getCalculatdValue(copyrule.calculatedvalue));
             }
         }
+    }
 
-        // apply parent specific copy rules
-        if (parent && parent.data) {
-
-            // todo: figure out why we loose the id in data
-            if (!parent.data.id) {
-                parent.data.id = parent.id;
-            }
-            copyrules = this.metadata.getCopyRules(parent.module, this.module);
-            for (let copyrule of copyrules) {
-                if (copyrule.fromfield && copyrule.tofield) {
-                    this.setFieldValue(copyrule.tofield, parent.getFieldValue(copyrule.fromfield));
-                } else if (copyrule.tofield && copyrule.fixedvalue) {
-                    this.setFieldValue(copyrule.tofield, copyrule.fixedvalue);
-                }
+    // apply parent specific copy rules
+    public executeCopyRulesParent(parent) {
+        // todo: figure out why we loose the id in data
+        if (!parent.data.id) parent.data.id = parent.id;
+        let copyrules = this.metadata.getCopyRules(parent.module, this.module);
+        for (let copyrule of copyrules) {
+            if (copyrule.fromfield && copyrule.tofield) {
+                // this.setFieldValue(copyrule.tofield, parent.getFieldValue(copyrule.fromfield));
+                this.setFieldValue(copyrule.tofield, parent.data[copyrule.fromfield]);
+            } else if (copyrule.tofield && copyrule.fixedvalue) {
+                this.setFieldValue(copyrule.tofield, copyrule.fixedvalue);
             }
         }
     }
@@ -848,7 +855,6 @@ export class model {
         });
     }
 
-
     public duplicateCheck(fromModelData = false) {
         let responseSubject = new Subject<any>();
         if (fromModelData) {
@@ -879,10 +885,10 @@ export class model {
      */
     private addMessage(type: "error" | "warning" | "notice", message: string, ref: string = null, source = "validation"): boolean {
         this._messages.push({
-            type: type,
-            message: message,
+            type,
+            message,
             reference: ref,
-            source: source,
+            source,
         });
         if (type == "error" && ref) {
             this.setFieldStatus(ref, "invalid", true);
@@ -907,7 +913,7 @@ export class model {
      */
     public getFieldMessages(ref: string, type?: "error" | "warning" | "notice") {
         let messages = this._messages.filter((e) => {
-            return e.reference == ref && (!type || e.type == type)
+            return e.reference == ref && (!type || e.type == type);
         });
         if (messages.length > 0) {
             return messages;

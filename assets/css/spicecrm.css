@@ -18,6 +18,32 @@ input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer
     text-align: center;*/
 }
 
+.loader-logo-image {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 150px;
+    height: 150px;
+    margin-left: -75px;
+    margin-top: -75px
+}
+
+.loader-text {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 50px
+}
+
+.loaderspinner .over circle {
+    stroke-dasharray: 150;
+    stroke: #ddd;
+}
+
+.loaderspinner .bag circle {
+    stroke: #777;
+}
+
 .spiceRotate {
     animation-name: wag;
     animation-duration: 3000ms;
@@ -34,8 +60,7 @@ input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer
 }
 
 .loaderspinner .over {
-    -webkit-animation: spin 2s ease-in-out infinite;
-    stroke-dasharray: 78, 38;
+    -webkit-animation: spin 3s linear infinite;
 }
 
 .loaderspinner .bag {
@@ -275,7 +300,7 @@ div[global-search-module] div.slds-page-header {
     width: 100%;
     /*height: 26px;*/
     text-align: center;
-    margin: 10px 0px;
+    /*margin: 10px 0px;*/
 }
 
 .cssload-double-torus {
@@ -544,13 +569,14 @@ a, a:focus, a:hover {
     fill: #CA1B21;
 }
 
-field-generic-display:hover .slds-button--icon{
+field-generic-display:hover .slds-button--icon {
     color: #5B5B5B;
 }
 
-field-generic-display .slds-button--icon{
+field-generic-display .slds-button--icon {
     color: #eeeeee;
 }
+
 /*
 .slds-button:not([disabled]):focus, .slds-button:not([disabled]):hover {
     color: #CA1B21;
@@ -559,6 +585,7 @@ field-generic-display .slds-button--icon{
 .slds-button--brand:not([disabled]):focus, .slds-button--brand:not([disabled]):hover {
     color: #FFF;
 }
+
 /*
 .slds-button:not([disabled]):focus svg, .slds-button:not([disabled]):hover svg {
     fill: #CA1B21;
@@ -579,7 +606,7 @@ field-generic-display .slds-button--icon{
 }
 
 .slds-button:focus {
-    box-shadow: 0 0 3px #01464C;
+    box-shadow: 0 0 3px #a7161a;
 }
 
 .slds-tabs--default__item.slds-active:after,
@@ -601,6 +628,10 @@ field-generic-display .slds-button--icon{
 .slds-button.slds-button--brand,
 .slds-button.slds-button--icon-inverse {
     color: #fff;
+}
+
+.slds-button_outline-brand {
+    border-color: #CA1B21;
 }
 
 /* special rule for the action container since the first child is an empty div
@@ -709,6 +740,10 @@ object-action-container .slds-button-group .slds-button:nth-child(2) {
     background: #CA1B1F;
 }
 
+.slds-context-bar__item:before {
+    bottom: 1;
+}
+
 .slds-progress__item.slds-is-active .slds-progress__marker, .slds-progress__item.slds-is-completed .slds-progress__marker {
     border-color: #CA1B1F;
 }
@@ -748,8 +783,12 @@ object-action-container .slds-button-group .slds-button:nth-child(2) {
     background: #002D31;
 }
 
-.slds-nav-vertical__item.slds-is-active:before {
-    background: #CA1B1F;
+.slds-nav-vertical__item.slds-is-active:before, .slds-nav-vertical__item:hover:before {
+    background: #ddd;
+}
+
+.slds-nav-vertical__item.slds-is-active .slds-nav-vertical__action, .slds-nav-vertical__action:hover {
+    box-shadow: inset 0.25rem 0 0 #CA1B1F;
 }
 
 /*
@@ -783,24 +822,24 @@ object-action-container .slds-button-group .slds-button:nth-child(2) {
 
 .slds-active .slds-tabs--scoped__link, .slds-active .slds-tabs_scoped__link, .slds-is-active .slds-tabs--scoped__link, .slds-is-active .slds-tabs_scoped__link,
 .slds-tabs--default__item.slds-active, .slds-tabs--default__item.slds-is-active, .slds-tabs_default__item.slds-active, .slds-tabs_default__item.slds-is-active,
-.slds-tabs--default__item.slds-active .slds-tabs--default__link:hover{
+.slds-tabs--default__item.slds-active .slds-tabs--default__link:hover {
     color: #111
 }
 
 .slds-tabs--default__item:hover:after, .slds-tabs_default__item:hover:after,
-.slds-tabs--default__item.slds-active:after, .slds-tabs--default__item.slds-is-active:after, .slds-tabs_default__item.slds-active:after, .slds-tabs_default__item.slds-is-active:after{
+.slds-tabs--default__item.slds-active:after, .slds-tabs--default__item.slds-is-active:after, .slds-tabs_default__item.slds-active:after, .slds-tabs_default__item.slds-is-active:after {
     background-color: #CA1B1F;
 }
 
-.slds-progress__item.slds-is-completed .slds-progress__marker--icon, .slds-progress__item.slds-is-completed .slds-progress__marker_icon{
+.slds-progress__item.slds-is-completed .slds-progress__marker--icon, .slds-progress__item.slds-is-completed .slds-progress__marker_icon {
     color: #CA1B1F;
 }
 
-.slds-radio [type=radio]:checked+.slds-radio--faux:after, .slds-radio [type=radio]:checked+.slds-radio__label .slds-radio--faux:after, .slds-radio [type=radio]:checked+.slds-radio__label .slds-radio_faux:after, .slds-radio [type=radio]:checked+.slds-radio_faux:after, .slds-radio [type=radio]:checked~.slds-radio--faux:after, .slds-radio [type=radio]:checked~.slds-radio_faux:after{
+.slds-radio [type=radio]:checked + .slds-radio--faux:after, .slds-radio [type=radio]:checked + .slds-radio__label .slds-radio--faux:after, .slds-radio [type=radio]:checked + .slds-radio__label .slds-radio_faux:after, .slds-radio [type=radio]:checked + .slds-radio_faux:after, .slds-radio [type=radio]:checked ~ .slds-radio--faux:after, .slds-radio [type=radio]:checked ~ .slds-radio_faux:after {
     background-color: #CA1B1F;
 }
 
-.slds-theme--inverse, .slds-theme_inverse{
+.slds-theme--inverse, .slds-theme_inverse {
     background-color: #CA1B1F;
     border-color: #CA1B1F;
 }
@@ -809,46 +848,74 @@ object-action-container .slds-button-group .slds-button:nth-child(2) {
     box-shadow: #CA1B1F 4px 0 0 inset;
 }
 
-.slds-listbox__icon-selected{
+.slds-listbox__icon-selected {
     fill: #CA1B1F;
 }
 
-.slds-listbox__option.slds-is-selected .slds-listbox__option-icon{
+.slds-listbox__option.slds-is-selected .slds-listbox__option-icon {
     color: #CA1B1F;
 }
 
-.slds-button span{
+.slds-button span {
     text-transform: capitalize;
 }
 
 /* rich text editor */
-.slds-rich-text-area__content{
+.slds-rich-text-area__content {
     max-height: none;
     resize: vertical;
     overflow: auto;
     height: 300px;
 }
 
-.slds-timeline__item_expandable .slds-media__figure{
+.slds-timeline__item_expandable .slds-media__figure {
     z-index: auto;
 }
 
-.slds-timeline__item_expandable:before{
+.slds-timeline__item_expandable:before {
     height: calc(100% - 30px);
     top: 30px;
 }
 
-.slds-text-align--justify{
+.slds-text-align--justify {
     text-align: justify;
 }
 
-.slds-height_full{
+.slds-height_full {
     height: 100%;
 }
 
-.slds-is-absolute__top{
+.slds-is-absolute__top {
     position: absolute;
     top: 0px;
+}
+
+/* for illustrations */
+.slds-illustration .slds-illustration__stroke-primary {
+    stroke: #aaa;
+}
+
+.slds-illustration .slds-illustration__fill-primary {
+    fill: #bbb;
+}
+
+.slds-illustration .slds-illustration__stroke-secondary {
+    stroke: #ccc;
+}
+
+.slds-illustration .slds-illustration__fill-secondary {
+    fill: #eee;
+}
+
+
+/* responsive tables */
+/* reduce padding */
+@media (max-width: 48em) {
+    .slds-max-medium-table--stacked-horizontal tr>td:first-child,
+    .slds-max-medium-table--stacked-horizontal td,
+    .slds-max-medium-table--stacked-horizontal tr>td:last-child {
+        padding: .5em;
+    }
 }
 
 /* Style Definition for HTML fields */
@@ -857,27 +924,152 @@ object-action-container .slds-button-group .slds-button:nth-child(2) {
     margin: 0.75rem 0;
     line-height: 1.25;
 }
-.html-text h1 { font-size: 1.25rem; }
-.html-text h2 { font-size: 1rem; color: #000; }
-.html-text h3, .html-text h4, .html-text h5, .html-text h6 { font-size: 0.75rem; color: #000; line-height: 1.25; }
 
-.html-text b, .html-text strong { font-weight: 700; }
+.html-text h1 {
+    font-size: 1.25rem;
+}
 
-.html-text i, .html-text em { font-style: italic; }
+.html-text h2 {
+    font-size: 1rem;
+    color: #000;
+}
 
-.html-text p, .html-text ul { margin: 0.75rem 0; }
+.html-text h3, .html-text h4, .html-text h5, .html-text h6 {
+    font-size: 0.75rem;
+    color: #000;
+    line-height: 1.25;
+}
 
-.html-text *:first-child { margin-top: 0; }
-.html-text *:last-child { margin-bottom: 0; }
+.html-text b, .html-text strong {
+    font-weight: 700;
+}
 
-.html-text a { color: #444; text-decoration: underline; }
-.html-text a:hover { color: #000; text-decoration: none; }
+.html-text i, .html-text em {
+    font-style: italic;
+}
 
-.html-text ul { list-style: disc outside; }
-.html-text ol { list-style: decimal outside; }
-.html-text li { margin-left: 1.75rem; }
+.html-text p, .html-text ul {
+    margin: 0.75rem 0;
+}
 
-.html-text .align-right { text-align: right; }
-.html-text .align-left { text-align: left; }
-.html-text .align-center { text-align: center; }
-.html-text .align-justify { text-align: justify; }
+.html-text *:first-child {
+    margin-top: 0;
+}
+
+.html-text *:last-child {
+    margin-bottom: 0;
+}
+
+.html-text a {
+    color: #444;
+    text-decoration: underline;
+}
+
+.html-text a:hover {
+    color: #000;
+    text-decoration: none;
+}
+
+.html-text ul {
+    list-style: disc outside;
+}
+
+.html-text ol {
+    list-style: decimal outside;
+}
+
+.html-text li {
+    margin-left: 1.75rem;
+}
+
+.html-text .align-right {
+    text-align: right;
+}
+
+.html-text .align-left {
+    text-align: left;
+}
+
+.html-text .align-center {
+    text-align: center;
+}
+
+.html-text .align-justify {
+    text-align: justify;
+}
+
+
+/* SpiceCRM Scrollbar */
+
+/* width normal */
+.spicecrm-scrollbar::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+/* width thin */
+.spicecrm-scrollbar-thin::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+}
+/* Track */
+.spicecrm-scrollbar::-webkit-scrollbar-track,
+.spicecrm-scrollbar-thin::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+/* Handle */
+.spicecrm-scrollbar::-webkit-scrollbar-thumb {
+    background: #aaa;
+    border-top: 2px solid #f1f1f1;
+    border-bottom: 2px solid #f1f1f1;
+}
+.spicecrm-scrollbar-thin::-webkit-scrollbar-thumb {
+    background: #aaa;
+    border-top: 1px solid #f1f1f1;
+    border-bottom: 1px solid #f1f1f1;
+}
+/* Handle on hover */
+.spicecrm-scrollbar::-webkit-scrollbar-thumb:hover,
+.spicecrm-scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background: #888;
+}
+/* Buttons */
+.spicecrm-scrollbar::-webkit-scrollbar-button:single-button {
+    background-color: #f1f1f1;
+    display: block;
+    border-style: solid;
+    height: 6px;
+    width: 8px;
+}
+.spicecrm-scrollbar-thin::-webkit-scrollbar-button:single-button {
+    background-color: #f1f1f1;
+    display: block;
+    border-style: solid;
+    height: 3px;
+    width: 4px;
+}
+/* Up */
+.spicecrm-scrollbar::-webkit-scrollbar-button:single-button:vertical:decrement {
+    border-width: 0 4px 4px 4px;
+    border-color: transparent transparent #aaa transparent;
+}
+.spicecrm-scrollbar-thin::-webkit-scrollbar-button:single-button:vertical:decrement {
+    border-width: 0 2px 2px 2px;
+    border-color: transparent transparent #aaa transparent;
+}
+.spicecrm-scrollbar::-webkit-scrollbar-button:single-button:vertical:decrement:hover,
+.spicecrm-scrollbar-thin::-webkit-scrollbar-button:single-button:vertical:decrement:hover {
+    border-color: transparent transparent #888 transparent;
+}
+/* Down */
+.spicecrm-scrollbar::-webkit-scrollbar-button:single-button:vertical:increment {
+    border-width: 4px 4px 0 4px;
+    border-color: #aaa transparent transparent transparent;
+}
+.spicecrm-scrollbar-thin::-webkit-scrollbar-button:single-button:vertical:increment {
+    border-width: 2px 2px 0 2px;
+    border-color: #aaa transparent transparent transparent;
+}
+.spicecrm-scrollbar::-webkit-scrollbar-button:vertical:single-button:increment:hover,
+.spicecrm-scrollbar-thin::-webkit-scrollbar-button:vertical:single-button:increment:hover {
+    border-color: #888 transparent transparent transparent;
+}

@@ -11,8 +11,29 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 */
 
 import {
-    AfterViewInit, ComponentFactoryResolver, Component, Input, Output, NgModule, ViewChild, ViewContainerRef,
-    OnInit, OnDestroy, EventEmitter, ElementRef, ChangeDetectorRef, ApplicationRef, Pipe, forwardRef, Directive, Renderer2, SimpleChanges, OnChanges, Host, Injectable, Inject
+    AfterViewInit,
+    ComponentFactoryResolver,
+    Component,
+    Input,
+    Output,
+    NgModule,
+    ViewChild,
+    ViewContainerRef,
+    OnInit,
+    OnDestroy,
+    EventEmitter,
+    ElementRef,
+    ChangeDetectorRef,
+    ApplicationRef,
+    Pipe,
+    forwardRef,
+    Directive,
+    Renderer2,
+    SimpleChanges,
+    OnChanges,
+    Host,
+    Injectable,
+    Inject
 } from "@angular/core";
 import {Subject} from "rxjs";
 import {Observable} from "rxjs";
@@ -22,18 +43,21 @@ import {DomSanitizer} from '@angular/platform-browser';
 
 // MODULEs
 import {CommonModule} from "@angular/common";
-import {FormsModule}   from "@angular/forms";
+import {FormsModule} from "@angular/forms";
 import {DirectivesModule} from "../directives/directives";
 // SERVICEs
-import {ActivatedRoute, Router}   from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {metadata} from "../services/metadata.service";
 import {toast} from "../services/toast.service";
 import {language} from "../services/language.service";
 import {backend} from "../services/backend.service";
 import {VersionManagerService} from "../services/versionmanager.service";
-import { configurationService } from "../services/configuration.service";
-import { modal } from "../services/modal.service";
-import { userpreferences } from "../services/userpreferences.service";
+import {configurationService} from "../services/configuration.service";
+import {modal} from "../services/modal.service";
+import {userpreferences} from "../services/userpreferences.service";
+import {loader} from "../services/loader.service";
+import {modelutilities} from "../services/modelutilities.service";
+import {broadcast} from "../services/broadcast.service";
 
 
 import /*embed*/ {systemrichtextservice} from "./services/systemrichtext.service";
@@ -70,7 +94,7 @@ import /*embed*/ {SystemModalContent} from "./components/systemmodalcontent";
 import /*embed*/ {SystemModalFooter} from "./components/systemmodalfooter";
 import /*embed*/ {SystemCollabsableTab} from "./components/systemcollabsabletab";
 import /*embed*/ {SystemCustomIcon} from "./components/systemcustomicon";
-import /*embed*/ {SystemCheckbox} from "./components/checkbox";
+import /*embed*/ {SystemCheckbox} from "./components/systemcheckbox";
 import /*embed*/ {SystemCard, SystemCardBody, SystemCardFooter, SystemCardHeaderTitle} from "./components/card";
 import /*embed*/ {SystemTree} from "./components/systemtree";
 import /*embed*/ {SystemTreeItem} from "./components/systemtreeitem";
@@ -84,7 +108,20 @@ import /*embed*/ {SystemInputDate} from "./components/systeminputdate";
 import /*embed*/ {SystemInputDatePicker} from "./components/systeminputdatepicker";
 import /*embed*/ {SystemGoogleplacesSearch} from "./components/systemgoogleplacessearch";
 import /*embed*/ {SystemComponentSet} from "./components/systemcomponentset";
+import /*embed*/ {SystemProgressRing} from "./components/systemprogressring";
+import /*embed*/ {SystemLoaderProgress} from "./components/systemloaderprogress";
+import /*embed*/ {SystemIllustrationNoAccess} from "./components/systemillustrationnoaccess";
+import /*embed*/ {SystemIllustrationNoTask} from "./components/systemillustrationnotask";
+import /*embed*/ {SystemIllustrationNoData} from "./components/systemillustrationnodata";
+import /*embed*/ {SystemIllustrationNoRecords} from "./components/systemillustrationnorecords";
+import /*embed*/ {SystemInputLabel} from "./components/systeminputlabel";
 
+import /*embed*/ {PackageLoader} from "./components/packageloader";
+import /*embed*/ {PackageLoaderPipe} from "./components/packageloaderpipe";
+import /*embed*/ {PackageLoaderPackages} from "./components/packageloaderpackages";
+import /*embed*/ {PackageLoaderPackage} from "./components/packageloaderpackage";
+import /*embed*/ {PackageLoaderLanguages} from "./components/packageloaderlanguages";
+import /*embed*/ {PackageLoaderLanguage} from "./components/packageloaderlanguage";
 
 @NgModule({
     imports: [
@@ -142,7 +179,20 @@ import /*embed*/ {SystemComponentSet} from "./components/systemcomponentset";
         SystemInputDate,
         SystemInputDatePicker,
         SystemGoogleplacesSearch,
-        SystemComponentSet
+        SystemComponentSet,
+        SystemProgressRing,
+        SystemLoaderProgress,
+        PackageLoader,
+        PackageLoaderPipe,
+        PackageLoaderPackages,
+        PackageLoaderPackage,
+        PackageLoaderLanguages,
+        PackageLoaderLanguage,
+        SystemIllustrationNoAccess,
+        SystemIllustrationNoTask,
+        SystemIllustrationNoData,
+        SystemIllustrationNoRecords,
+        SystemInputLabel
     ],
     entryComponents: [
         SystemDynamicRouteContainer
@@ -191,7 +241,14 @@ import /*embed*/ {SystemComponentSet} from "./components/systemcomponentset";
         SystemInputDatePicker,
         SystemGoogleplacesSearch,
         SystemStencil,
-        SystemComponentSet
+        SystemComponentSet,
+        SystemProgressRing,
+        SystemLoaderProgress,
+        SystemIllustrationNoAccess,
+        SystemIllustrationNoTask,
+        SystemIllustrationNoData,
+        SystemIllustrationNoRecords,
+        SystemInputLabel
     ]
 })
 export class SystemComponents {

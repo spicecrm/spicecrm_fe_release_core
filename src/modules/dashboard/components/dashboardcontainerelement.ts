@@ -42,6 +42,10 @@ export class DashboardContainerElement implements AfterViewInit {
         this.renderDashlet();
     }
 
+    get compactView() {
+        return this.dashboardlayout.compactView;
+    }
+
     private renderDashlet() {
         for (let component of this.componentRefs) {
             component.destroy();
@@ -127,7 +131,7 @@ export class DashboardContainerElement implements AfterViewInit {
     private applyMove(rect) {
         let style = rect;
         let mainContainer: any = this.dashboardlayout.mainContainer;
-        let mainContainerRight: number = mainContainer.right - mainContainer.x - this.dashboardlayout.paddingRight;
+        let mainContainerRight: number = mainContainer.right - mainContainer.x;
         let margin: number = this.dashboardlayout.boxMargin;
         let boxWidth: number = this.dashboardlayout.elementWidth - (2 * margin);
         let boxHeight: number = this.dashboardlayout.elementHeight - (2 * margin);

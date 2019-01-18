@@ -10,6 +10,6 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 -->
 
-<td *ngFor="let item of listfields" scope="row" (click)="navigateDetail()">
+<td *ngFor="let item of listfields" scope="row" (click)="navigateDetail($event)" [attr.data-label]="language.getFieldDisplayName(module, item.field)">
     <field-container [field]="item.field" [fieldconfig]="item.fieldconfig" [fielddisplayclass]="'slds-truncate'"></field-container>
 </td>

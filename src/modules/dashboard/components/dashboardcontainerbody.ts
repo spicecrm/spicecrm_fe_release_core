@@ -12,14 +12,12 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 import {
     Component,
-    Input,
     AfterViewInit,
-    OnInit,
     ElementRef,
     Renderer2,
     ViewChild,
     ViewContainerRef,
-    OnDestroy, OnChanges
+    AfterViewChecked,
 } from '@angular/core';
 import {language} from '../../../services/language.service';
 import {dashboardlayout} from '../services/dashboardlayout.service';
@@ -38,13 +36,10 @@ import {dashboardlayout} from '../services/dashboardlayout.service';
         }`
     ]
 })
-export class DashboardContainerBody implements AfterViewInit, OnInit, OnDestroy, OnChanges {
+export class DashboardContainerBody implements AfterViewInit, AfterViewChecked {
     @ViewChild('bodycontainer', {read: ViewContainerRef}) private bodycontainer: ViewContainerRef;
-    @Input() private dashboardid: string = '';
-    private resizeListener: any = {};
 
     constructor(private dashboardlayout: dashboardlayout, private language: language, private elementRef: ElementRef, private renderer: Renderer2) {
-        this.resizeListener = this.renderer.listen('window', 'resize', () => this.calculateGrid());
         this.renderer.listen('window', 'mousemove', (event) => {
             if (this.dashboardlayout.editMode && this.dashboardlayout.isMoving) {
                 if (event.pageY < (this.dashboardlayout.mainContainer.top + 20) && this.bodycontainer.element.nativeElement.scrollTop > 0) {
@@ -57,36 +52,36 @@ export class DashboardContainerBody implements AfterViewInit, OnInit, OnDestroy,
         });
     }
 
-    public ngOnInit() {
-        this.dashboardlayout.loadDashboard(this.dashboardid);
-    }
-
-    public ngOnChanges() {
-        this.dashboardlayout.loadDashboard(this.dashboardid);
-    }
-
     public ngAfterViewInit() {
         this.calculateGrid();
     }
 
-    public ngOnDestroy() {
-        this.resizeListener();
+    public ngAfterViewChecked() {
+        if (this.bodycontainer.element.nativeElement.clientWidth != this.dashboardlayout.mainContainer.width) {
+            this.calculateGrid();
+        }
     }
 
     get isEditing() {
-        return this.dashboardlayout.editMode === true ? true : false;
+        return this.dashboardlayout.editMode;
     }
 
     get bodyContainerStyle() {
         return {
-            height: 'calc(100vh - ' + this.bodycontainer.element.nativeElement.getBoundingClientRect().top + 'px)',
-            border: this.dashboardlayout.editMode ? '1px dashed #ca1b21' : '0',
-            'padding-right': this.dashboardlayout.paddingRight + 'px'
+            'border': this.dashboardlayout.editMode ? '1px dashed #ca1b21' : '0',
+            'width': '100%'
         };
     }
 
     private calculateGrid() {
-        this.dashboardlayout.mainContainer = this.elementRef.nativeElement.getBoundingClientRect();
+        this.dashboardlayout.mainContainer = {
+            width: this.bodycontainer.element.nativeElement.clientWidth,
+            height: this.bodycontainer.element.nativeElement.clientHeight
+        };
+        if (window.innerWidth < 1024) {
+            this.dashboardlayout.editing = '';
+            this.dashboardlayout.editMode = false;
+        }
         this.dashboardlayout.calculateGrid();
     }
 

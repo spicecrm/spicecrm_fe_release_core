@@ -26,11 +26,11 @@ export class GlobalHeaderWorkbench {
 
     }
 
-    isAdmin(){
+    private isAdmin(){
         return this.session.isAdmin;
     }
 
-    goAdmin(){
+    private goAdmin(){
         this.router.navigate(['/admin']);
     }
 

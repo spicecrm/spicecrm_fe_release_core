@@ -12,7 +12,6 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 import {Component, ViewChild, ViewContainerRef, OnInit} from '@angular/core';
 import {metadata} from '../../../services/metadata.service';
-import {Router} from "@angular/router";
 import {calendar} from "../services/calendar.service";
 import {language} from "../../../services/language.service";
 
@@ -27,6 +26,8 @@ export class CalendarMorePopover implements OnInit {
     public popoverside: string = 'right';
     public popoverpos: string = 'top';
     public styles = null;
+    public isMobileView: boolean = false;
+    public sheetDay: any = {};
 
     private hidePopoverTimeout: any = {};
 
@@ -38,16 +39,11 @@ export class CalendarMorePopover implements OnInit {
     private heightcorrection = 30;
     private widthcorrection = 30;
 
-    constructor(private metadata: metadata, private calendar: calendar, private router: Router, private language: language) {}
+    constructor(private metadata: metadata, private calendar: calendar, private language: language) {}
 
     public ngOnInit() {
         // don't know why... but this call fixes ExpressionChangedAfterItHasBeenCheckedError ... maybe because it sets the nubbin class earlier so it won't change after changedetection anymore?
         this.styles = this.popoverStyle;
-    }
-
-    private goDetails(id, module) {
-        this.closePopover(true);
-        this.router.navigate([`/module/${module}/${id}`]);
     }
 
     private onMouseOver() {
@@ -60,7 +56,16 @@ export class CalendarMorePopover implements OnInit {
         this.closePopover(true);
     }
 
+    get shortDate() {
+        let navigateDate = moment(this.calendar.calendarDate);
+        return navigateDate.month(this.sheetDay.month).date(this.sheetDay.day).format('D MMM,');
+    }
+
     get popoverStyle() {
+        if (this.isMobileView) {
+            return {left:0, bottom:0, width: '100%'};
+        }
+
         let rect = this.parentElementRef.nativeElement.getBoundingClientRect();
         let poprect = this.popover.element.nativeElement.getBoundingClientRect();
 
