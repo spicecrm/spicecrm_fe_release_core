@@ -38,7 +38,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
         </div>
         <div class="slds-form-element">
             <div class="slds-form-element">
-                <field-label [fieldname]="'emailtemplate_id'"></field-label>
+                <field-label fieldname="emailtemplate_id"></field-label>
                 <field-container field="emailtemplate_id" [fieldconfig]="{fieldtype:'emailtemplate'}"></field-container>
             </div>
         </div>
@@ -56,9 +56,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
         <div class="slds-form-element">
             <button class="slds-button slds-button--neutral" (click)="cancel()">{{language.getLabel('LBL_CANCEL')}}
             </button>
-            <button class="slds-button slds-button--brand .slds-button-space-left slds-float--right" (click)="send()">
-                Send
-            </button>
+            <button class="slds-button slds-button--brand .slds-button-space-left slds-float--right" (click)="send()">{{language.getLabel('LBL_SEND')}}</button>
         </div>
     </ng-container>
 </div>

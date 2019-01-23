@@ -16,11 +16,11 @@ import {
     HostListener,
     EventEmitter,
     Output,
-    Renderer, ViewChildren, QueryList
+    Renderer, ViewChildren, QueryList, ViewChild, ViewContainerRef, DoCheck
 } from '@angular/core';
 import {toast} from '../../services/toast.service';
 import {session} from '../../services/session.service';
-import {language} from '../../services/language.service';
+import {layout} from '../../services/layout.service';
 import {ActivationStart, Router} from '@angular/router';
 import {ObjectActionContainerItem} from "../../objectcomponents/components/objectactioncontaineritem";
 
@@ -30,8 +30,11 @@ import {ObjectActionContainerItem} from "../../objectcomponents/components/objec
     templateUrl: './src/globalcomponents/templates/globalheader.html',
     providers: []
 })
-export class GlobalHeader {
-    constructor(private session: session, private router: Router, private toast: toast, private elementRef: ElementRef) {
+export class GlobalHeader implements DoCheck {
+
+    @ViewChild('header', {read: ViewContainerRef}) private header: ViewContainerRef;
+
+    constructor(private session: session, private router: Router, private toast: toast, private elementRef: ElementRef, private layout: layout) {
 
         this.router.events.subscribe((val: any) => {
             if (val instanceof ActivationStart) {
@@ -44,6 +47,18 @@ export class GlobalHeader {
             }
         });
 
+    }
+
+    public ngDoCheck(): void {
+        if (this.header) {
+            this.layout.headerheight = this.header.element.nativeElement.getBoundingClientRect().height;
+        } else {
+            this.layout.headerheight = 0;
+        }
+    }
+
+    get issmall() {
+        return this.layout.screenwidth == 'small';
     }
 }
 

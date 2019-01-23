@@ -65,7 +65,9 @@ export class ObjectListViewFilterPanelFilterItem implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        this.clickListener();
+        if (this.clickListener) {
+            this.clickListener();
+        }
     }
 
     onClick() {

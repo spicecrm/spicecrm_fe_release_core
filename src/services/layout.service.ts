@@ -1,4 +1,4 @@
-<!--
+/*
 SpiceUI 2018.10.001
 
 Copyright (c) 2016-present, aac services.k.s - All rights reserved.
@@ -8,28 +8,18 @@ Redistribution and use in source and binary forms, without modification, are per
 - If used the SpiceCRM Logo needs to be displayed in the upper left corner of the screen in a minimum dimension of 31x31 pixels and be clearly visible, the icon needs to provide a link to http://www.spicecrm.io
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
--->
+*/
 
-<div class="slds-global-header slds-grid slds-grid--align-spread slds-p-left--medium">
-    <div class="slds-show--large slds-large-size--1-of-6">
-        <div class="slds-global-header__item slds-p-left--none">
-            <img class="slds-show--large" style="max-height: 25px;" src="./config/headerimage" alt=""/>
-        </div>
-    </div>
-    <div class="slds-hide--medium slds-x-small-size--1-of-12">
-        <div class="slds-global-header__item slds-p-horizontal--none">
-            <global-navigation-compact></global-navigation-compact>
-        </div>
-    </div>
-    <div *ngIf="showSearch" class="slds-x-small-size--11-of-12 slds-medium-size--4-of-6 slds-large-size--3-of-6">
-        <div class="slds-global-header__item">
-            <global-header-search></global-header-search>
-        </div>
-    </div>
-    <div class="slds-show--medium slds-medium-size--2-of-6 slds-large-size--1-of-6">
-        <div class="slds-global-header__item slds-grid slds-grid--align-end slds-grid--vertical-align-center">
-            <global-header-tools></global-header-tools>
-            <global-user></global-user>
-        </div>
-    </div>
-</div>
+import {Injectable, EventEmitter} from '@angular/core';
+
+@Injectable()
+export class layout {
+    public headerheight = 90;
+
+    get screenwidth() {
+        let width = window.innerWidth;
+        if (width >= 1024) return 'large';
+        if (width >= 768) return 'medium';
+        return 'small';
+    }
+}

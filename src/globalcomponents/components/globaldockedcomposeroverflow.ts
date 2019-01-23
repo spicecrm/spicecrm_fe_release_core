@@ -32,7 +32,9 @@ export class GlobalDockedComposerOverflow implements OnDestroy {
     }
 
     public ngOnDestroy() {
-        this.clickListener();
+        if (this.clickListener) {
+            this.clickListener();
+        }
     }
 
     get hiddenCount() {

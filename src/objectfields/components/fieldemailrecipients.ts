@@ -10,7 +10,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
-import {Component, Renderer2, ViewChild, ViewContainerRef, ElementRef} from '@angular/core';
+import {Component, ElementRef, Renderer2, ViewChild, ViewContainerRef} from '@angular/core';
 import {model} from '../../services/model.service';
 import {view} from '../../services/view.service';
 import {language} from '../../services/language.service';
@@ -25,15 +25,15 @@ import {Router} from '@angular/router';
 })
 export class fieldEmailRecipients extends fieldGeneric {
 
-    isAdding: boolean = false;
-    addAddress: string = '';
-    searchTimeOut: any = undefined;
-    showSearchResults: boolean = false;
-    searchResults: Array<any> = [];
-    searchResultsLoading: boolean = false;
-    clickListener: any;
+    public searchResults: Array<any> = [];
+    private isAdding: boolean = false;
+    private addAddress: string = '';
+    private searchTimeOut: any = undefined;
+    private showSearchResults: boolean = false;
+    private searchResultsLoading: boolean = false;
+    private clickListener: any;
 
-    @ViewChild('addAddressInput', {read: ViewContainerRef}) addAddressInput: ViewContainerRef;
+    @ViewChild('addAddressInput', {read: ViewContainerRef}) private addAddressInput: ViewContainerRef;
 
     constructor(public model: model, public view: view, public language: language, public metadata: metadata, public router: Router, private backend: backend, private renderer: Renderer2, private elementRef: ElementRef) {
         super(model, view, language, metadata, router);
@@ -43,16 +43,30 @@ export class fieldEmailRecipients extends fieldGeneric {
         return this.fieldconfig.addresstype ? this.fieldconfig.addresstype : 'from';
     }
 
+    get inputSize() {
+        if (this.addAddress.length > 20) {
+            return this.addAddress.length < 55 ? this.addAddress.length + 5 : 55;
+        }
+        return 20;
+    }
+
     get addrArray() {
         let addressArray = [];
         if (this.model.data.recipient_addresses) {
             for (let recipient_addresse of this.model.data.recipient_addresses) {
-                if (recipient_addresse.address_type == this.addresstype && recipient_addresse.deleted != '1' ) {
+                if (recipient_addresse.address_type == this.addresstype && recipient_addresse.deleted != '1') {
                     addressArray.push(recipient_addresse);
                 }
             }
         }
         return addressArray;
+    }
+
+    closeSearchDialog() {
+        // close the cliklistener sine the component is gone
+        this.clickListener();
+        this.searchResults = [];
+        this.showSearchResults = false;
     }
 
     private onClick() {
@@ -90,7 +104,7 @@ export class fieldEmailRecipients extends fieldGeneric {
 
                 // if the atring is an email address add it .. else do search
                 if (this.validateEmail(this.addAddress)) {
-                    if(!this.model.data.recipient_addresses){
+                    if (!this.model.data.recipient_addresses) {
                         this.model.data.recipient_addresses = [];
                     }
 
@@ -98,7 +112,7 @@ export class fieldEmailRecipients extends fieldGeneric {
                         id: this.model.generateGuid(),
                         address_type: this.addresstype,
                         email_address: this.addAddress
-                    })
+                    });
 
                     // clear the address string, the resuklts and hide the show dialog
                     this.addAddress = '';
@@ -116,13 +130,6 @@ export class fieldEmailRecipients extends fieldGeneric {
         }
     }
 
-    closeSearchDialog(){
-        // close the cliklistener sine the component is gone
-        this.clickListener();
-        this.searchResults = [];
-        this.showSearchResults = false;
-    }
-
     private doSearch() {
         if (this.addAddress !== '') {
             this.searchResults = [];
@@ -132,7 +139,7 @@ export class fieldEmailRecipients extends fieldGeneric {
             this.clickListener = this.renderer.listen('document', 'click', (event) => this.handleClick(event));
 
             this.backend.postRequest('EmailAddresses/' + this.addAddress).subscribe(results => {
-                if(results.length > 0)
+                if (results.length > 0)
                     this.searchResults = results;
                 else
                     this.closeSearchDialog();
@@ -151,9 +158,9 @@ export class fieldEmailRecipients extends fieldGeneric {
         }
     }
 
-    private selectAddress(address){
+    private selectAddress(address) {
 
-        if(!this.model.data.recipient_addresses){
+        if (!this.model.data.recipient_addresses) {
             this.model.data.recipient_addresses = [];
         }
 
@@ -164,7 +171,7 @@ export class fieldEmailRecipients extends fieldGeneric {
             email_address_id: address.email_address_id,
             parent_type: address.module,
             parent_id: address.id
-        })
+        });
         // lear the search sting
         this.addAddress = '';
 
@@ -172,13 +179,11 @@ export class fieldEmailRecipients extends fieldGeneric {
         this.isAdding = false;
 
         // close the search dropdown
-        this.closeSearchDialog()
+        this.closeSearchDialog();
     }
 
     private validateEmail(email) {
         var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         return re.test(String(email).toLowerCase());
     }
-
-
 }
