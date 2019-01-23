@@ -18,6 +18,9 @@ import {metadata} from '../../../services/metadata.service';
 import {session} from '../../../services/session.service';
 import {broadcast} from '../../../services/broadcast.service';
 import {navigation} from '../../../services/navigation.service';
+import {userpreferences} from "../../../services/userpreferences.service";
+import {language} from "../../../services/language.service";
+import {Router} from "@angular/router";
 
 @Component({
     selector: 'home-dashboard',
@@ -31,7 +34,11 @@ export class HomeDashboard implements AfterViewInit, OnDestroy {
     public dashboardid: string = '';
     public dashboardcontainercomponent: any = undefined;
 
-    constructor(private broadcast: broadcast, private navigation: navigation, private metadata: metadata, private session: session) {
+    constructor(
+        private broadcast: broadcast,
+        private metadata: metadata,
+        private language: language,
+        private userpreferences: userpreferences) {
         this.componentSubscriptions.push(this.broadcast.message$.subscribe(message => {
             this.handleMessage(message);
         }));
@@ -49,14 +56,13 @@ export class HomeDashboard implements AfterViewInit, OnDestroy {
     }
 
     private loadDashboardConfig() {
-        let componentconfig = this.metadata.getComponentConfig('HomeDashboard', 'Home');
-        if (componentconfig.dashboardid) {
-            this.dashboardid = componentconfig.dashboardid;
+        let homeDashboard = this.userpreferences.unchangedPreferences.global.home_dashboard || undefined;
+        let activeRole = this.metadata.getActiveRole();
+        this.dashboardid = homeDashboard || activeRole.default_dashboard || '';
 
             // set it to the component
-            if (this.dashboardcontainercomponent) {
-                this.dashboardcontainercomponent.instance.dashboardid = this.dashboardid;
-            }
+        if (this.dashboardcontainercomponent) {
+            this.dashboardcontainercomponent.instance.dashboardid = this.dashboardid;
         }
     }
 

@@ -24,6 +24,7 @@ import {metadata} from '../../../services/metadata.service';
 })
 export class Home {
     private componentconfig: any = {};
+    private isOpen: boolean = true;
 
     constructor(private broadcast: broadcast, private navigation: navigation, private metadata: metadata) {
         // set theenavigation paradigm
@@ -45,5 +46,9 @@ export class Home {
             return this.componentconfig.HomeAssistant;
         }
         return true;
+    }
+
+    private toggleOpen() {
+        this.isOpen = !this.isOpen;
     }
 }
