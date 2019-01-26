@@ -34,6 +34,7 @@ export class HomeAssistant {
     @ViewChild('itemcontainer', {read: ViewContainerRef}) private  itemcontainer: ViewContainerRef;
 
     constructor(private assistant: assistant, private navigation: navigation, private language: language) {
+        this.navigation.setActiveModule('Home');
         this.assistant.initlaize();
     }
 

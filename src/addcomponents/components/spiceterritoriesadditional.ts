@@ -14,79 +14,78 @@ import {Component, ElementRef, Renderer, OnInit, ViewChild, ViewContainerRef, In
 import {model} from '../../services/model.service';
 import {view} from '../../services/view.service';
 import {popup} from '../../services/popup.service';
-import {Router}   from '@angular/router';
+import {Router} from '@angular/router';
 import {language} from '../../services/language.service';
 import {metadata} from '../../services/metadata.service';
 import {territories} from '../../services/territories.service';
 import {fieldGeneric} from '../../objectfields/components/fieldgeneric';
 
-@Component({
-
-})
+@Component({})
 export class tfieldGeneric {
-    @Input() fieldname: string = '';
-    @Input() fieldconfig: any = {};
-    fieldid: string = '';
-    fielddisplayclass: string = '';
+    @Input() private fieldname: string = '';
+    @Input() private fieldconfig: any = {};
+    private fieldid: string = '';
+    private fielddisplayclass: string = '';
 
     constructor(public model: model, public view: view, public language: language, public metadata: metadata, public router: Router) {
         this.fieldid = this.model.generateGuid();
     }
 
-    isEditable(){
-        if(!this.view.isEditable || this.fieldconfig.readonly || (this.model.data && this.model.data.acl_fieldcontrol && this.model.data.acl_fieldcontrol[this.fieldname] && parseInt(this.model.data.acl_fieldcontrol[this.fieldname]) < 3) )
+    private isEditable() {
+        if (!this.view.isEditable || this.fieldconfig.readonly || (this.model.data && this.model.data.acl_fieldcontrol && this.model.data.acl_fieldcontrol[this.fieldname] && parseInt(this.model.data.acl_fieldcontrol[this.fieldname], 10) < 3)) {
             return false;
-        else
+        } else {
             return true;
+        }
     }
 
-    isEditMode() {
-        if (this.view.mode === 'edit' && this.isEditable())
+    private isEditMode() {
+        if (this.view.isEditMode() && this.isEditable()) {
             return true;
-        else
-            return false;
-    }
-
-    displayLink(){
-        try {
-            return this.fieldconfig.link && this.model.data.acl.detail;
-        } catch(e){
+        } else {
             return false;
         }
     }
 
-    setEditMode() {
+    private displayLink() {
+        try {
+            return this.fieldconfig.link && this.model.data.acl.detail;
+        } catch (e) {
+            return false;
+        }
+    }
+
+    private setEditMode() {
         this.model.startEdit();
         this.view.setEditMode();
     }
 
-    getFieldClass() {
-        let classes: Array<string> = [];
-        //if (this.model.validityStatus[this.fieldname]) classes.push('slds-has-error');
+    private getFieldClass() {
+        let classes: string[] = [];
         return classes;
     }
 
-    setFieldError(error){
-        //this.model.setFieldError(this.fieldname, error);
+    private setFieldError(error) {
+        // this.model.setFieldError(this.fieldname, error);
     }
 
-    getFieldError() {
-        //return this.model.validityStatus[this.fieldname];
-        //return this.model.getFieldError(this.fieldname);
+    private getFieldError() {
+        // return this.model.validityStatus[this.fieldname];
+        // return this.model.getFieldError(this.fieldname);
     }
 
-    clearFieldError(){
-        //this.model.clearFieldError(this.fieldname);
+    private clearFieldError() {
+        // this.model.clearFieldError(this.fieldname);
     }
 
-    fieldHasError() {
-        //if (this.model.validityStatus[this.fieldname])
+    private fieldHasError() {
+        // if (this.model.validityStatus[this.fieldname])
         //    return true;
-        //else
-            return false
+        // else
+        return false
     }
 
-    goRecord(){
+    private goRecord() {
         this.router.navigate(['/module/' + this.model.module + '/' + this.model.id]);
     }
 }
@@ -101,42 +100,44 @@ export class tfieldGeneric {
     }
 })
 export class SpiceTerritorriesPrimary extends tfieldGeneric {
-    @ViewChild('popover', {read: ViewContainerRef}) popover: ViewContainerRef;
+    @ViewChild('popover', {read: ViewContainerRef}) private popover: ViewContainerRef;
 
-    clickListener: any;
+    private clickListener: any;
 
-    relateSearchOpen: boolean = false;
-    objectsearchterm: string = '';
+    private relateSearchOpen: boolean = false;
+    private objectsearchterm: string = '';
 
-    showPopover: boolean = false;
-    showPopoverTimeout: any = {};
+    private showPopover: boolean = false;
+    private showPopoverTimeout: any = {};
 
     constructor(public model: model, public view: view, public popup: popup, public language: language, public metadata: metadata, public router: Router, private elementRef: ElementRef, private renderer: Renderer, private territories: territories) {
         super(model, view, language, metadata, router);
         this.popup.closePopup$.subscribe(() => this.closePopups());
     }
 
-    getTerritorryName() {
-        if (this.model.data.korgobjectmain)
+    private getTerritorryName() {
+        if (this.model.data.korgobjectmain) {
             return this.territories.getTerritoryName(this.model.module, this.model.data.korgobjectmain);
-        else
+        } else {
             return '';
+        }
     }
 
-    canRemove() {
+    private canRemove() {
         return this.territories.isUserTerritory(this.model.module, this.model.data.korgobjectmain);
     }
 
-    getTerritories() {
+    private getTerritories() {
         let territories = [];
         for (let territory of this.territories.userTerritories[this.model.module]) {
-            if (this.objectsearchterm === '' || (this.objectsearchterm !== '' && territory.name.toLowerCase().indexOf(this.objectsearchterm.toLowerCase()) !== -1))
+            if (this.objectsearchterm === '' || (this.objectsearchterm !== '' && territory.name.toLowerCase().indexOf(this.objectsearchterm.toLowerCase()) !== -1)) {
                 territories.push(territory);
+            }
         }
         return territories;
     }
 
-    setTerritory(id) {
+    private setTerritory(id) {
         this.model.data.korgobjectmain = id;
         this.closePopups();
     }
@@ -157,22 +158,22 @@ export class SpiceTerritorriesPrimary extends tfieldGeneric {
         this.relateSearchOpen = false;
     }
 
-    clearField() {
+    private clearField() {
         this.model.data.korgobjectmain = '';
     }
 
-    onFocus() {
+    private onFocus() {
         this.relateSearchOpen = true;
         this.clickListener = this.renderer.listenGlobal('document', 'click', (event) => this.onClick(event));
     }
 
-    relateSearchStyle() {
+    private relateSearchStyle() {
         if (this.relateSearchOpen) {
             let rect = this.elementRef.nativeElement.getBoundingClientRect();
             return {
                 width: rect.width + 'px',
                 display: 'block'
-            }
+            };
         }
     }
 
@@ -180,29 +181,28 @@ export class SpiceTerritorriesPrimary extends tfieldGeneric {
     /*
      * for the popover
      */
-    getPopoverStyle() {
+    private getPopoverStyle() {
         let rect = this.elementRef.nativeElement.getBoundingClientRect();
         let poprect = this.popover.element.nativeElement.getBoundingClientRect();
         return {
             position: 'fixed',
-            top: (rect.top + ( (rect.height - poprect.height) / 2 )) + 'px',
+            top: (rect.top + ((rect.height - poprect.height) / 2)) + 'px',
             left: rect.left < poprect.width ? (rect.left + 100) + 'px' : (rect.left - poprect.width - 15) + 'px',
             display: (this.showPopover ? '' : 'none')
-        }
+        };
     }
 
-    getPopoverSide() {
+    private getPopoverSide() {
         let rect = this.elementRef.nativeElement.getBoundingClientRect();
         let poprect = this.popover.element.nativeElement.getBoundingClientRect();
         return rect.left < poprect.width ? 'right' : 'left';
     }
 
-    onMouseOver() {
+    private onMouseOver() {
         this.showPopoverTimeout = window.setTimeout(() => this.showPopover = true, 500);
-        //this.showPopover = true;
     }
 
-    onMouseOut() {
+    private onMouseOut() {
         if (this.showPopoverTimeout) window.clearTimeout(this.showPopoverTimeout);
         this.showPopover = false;
     }
@@ -303,7 +303,7 @@ export class SpiceTerritoriesAdditional extends tfieldGeneric {
         this.territorySearchOpen = false;
     }
 
-    canRemove(territory){
+    canRemove(territory) {
         return this.territories.isUserTerritory(this.model.module, territory);
     }
 
@@ -366,10 +366,10 @@ export class SpiceTerritoriesAdditional extends tfieldGeneric {
         let poprect = this.popover.element.nativeElement.getBoundingClientRect();
         return {
             position: 'fixed',
-            top: (rect.top + ( (rect.height - poprect.height) / 2 )) + 'px',
+            top: (rect.top + ((rect.height - poprect.height) / 2)) + 'px',
             left: rect.left < poprect.width ? (rect.left + 100) + 'px' : (rect.left - poprect.width - 15) + 'px',
             display: (this.showPopover ? '' : 'none')
-        }
+        };
     }
 
     getPopoverSide() {

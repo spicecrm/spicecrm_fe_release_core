@@ -39,7 +39,7 @@ export class ObjectEditModal implements OnInit {
     private action$: Observable<any> = new Observable<any>();
 
     private doDuplicateCheck: boolean = true;
-    private duplicates: Array<any> = [];
+    private duplicates: any[] = [];
 
     @Input() public preventGoingToRecord = false;
 
