@@ -30,6 +30,7 @@ export class PackageLoaderPackage implements OnInit {
 
     @Input() private package: any;
     @Input() private packages: any[] = [];
+    @Input() private repository: any;
     private extensions: any[] = [];
     private requiredpackages: any[] = [];
     // private disabled: boolean = true;
@@ -61,6 +62,10 @@ export class PackageLoaderPackage implements OnInit {
         return disabled;
     }
 
+    get repositoryaddurl() {
+        return this.repository && this.repository.id ? '/' + this.repository.id : '';
+    }
+
     public ngOnInit() {
         let disabled = false;
         if (this.package.extensions) {
@@ -79,7 +84,7 @@ export class PackageLoaderPackage implements OnInit {
 
     private loadPackage(packagename) {
         this.loading = 'package';
-        this.backend.getRequest('/packages/package/' + packagename).subscribe(
+        this.backend.getRequest('packages/package/' + packagename + this.repositoryaddurl).subscribe(
             response => {
                 this.loading = 'configuration';
                 this.loader.reloadPrimary().subscribe(status => {
@@ -95,7 +100,7 @@ export class PackageLoaderPackage implements OnInit {
 
     private deletePackage(packagename) {
         this.loading = 'package';
-        this.backend.deleteRequest('/packages/package/' + packagename).subscribe(response => {
+        this.backend.deleteRequest('packages/package/' + packagename).subscribe(response => {
             this.loading = 'configuration';
             this.package.installed = false;
             this.loader.reloadPrimary().subscribe(status => {

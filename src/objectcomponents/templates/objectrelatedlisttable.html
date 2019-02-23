@@ -10,7 +10,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 -->
 
-<table class="slds-table slds-table--bordered slds-max-medium-table_stacked-horizontal">
+<table class="slds-table slds-max-medium-table_stacked-horizontal" [ngClass]="{'slds-table--bordered':!isSmall}">
     <thead>
         <tr class="slds-text-title--caps">
             <th *ngFor="let item of listfields" class="slds-is-sortable" scope="col">

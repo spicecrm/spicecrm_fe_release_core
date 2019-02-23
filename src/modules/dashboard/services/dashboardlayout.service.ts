@@ -10,20 +10,20 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
-import {Injectable} from '@angular/core';
+import {Injectable, ViewContainerRef} from '@angular/core';
 import {backend} from '../../../services/backend.service';
-import {modelutilities} from '../../../services/modelutilities.service';
 import {modal} from '../../../services/modal.service';
 import {model} from '../../../services/model.service';
+import {take} from "rxjs/operators";
 
+declare var _;
 
 @Injectable()
 export class dashboardlayout {
     public dashboardData: any = {};
-    public dashboardgrid: any[] = [];
+    public dashboardGrid: any[] = [];
     public dashboardId: string = '';
     public dashboardElements: any[] = [];
-    public expandedRows: any[] = [];
     public elementWidth: number = 100;
     public boxMargin: number = 5;
     public columns: number = 9;
@@ -32,19 +32,9 @@ export class dashboardlayout {
     public mainContainer: any = undefined;
     public isMoving: boolean = false;
     public isloading: boolean = false;
+    public bodyContainerRef: ViewContainerRef;
 
-    constructor(private backend: backend, private modelutilities: modelutilities, public model: model, private modal: modal) {
-    }
-
-    get dashboardGrid() {
-        return this.dashboardgrid;
-    }
-
-    set dashboardGrid(val) {
-        if (this.expandedRows.length > 0) {
-            this.dashboardgrid = this.dashboardgrid.concat(this.expandedRows);
-        }
-        this.dashboardgrid = val;
+    constructor(private backend: backend, public model: model, private modal: modal) {
     }
 
     get elementHeight() {
@@ -55,21 +45,25 @@ export class dashboardlayout {
         return this.mainContainer.width < 768;
     }
 
-    /*
-     * calculate the GRID
-     */
     public calculateGrid() {
-        // rect = container div
+        let bodyContainer = this.bodyContainerRef.element.nativeElement;
+        this.mainContainer = {
+            width: bodyContainer.clientWidth,
+            height: bodyContainer.clientHeight,
+            bottom: bodyContainer.getBoundingClientRect().bottom - bodyContainer.offsetTop,
+        };
         this.elementWidth = this.mainContainer.width / this.columns;
         this.dashboardGrid = [];
         let rowIndex = 0;
-        let mainContainerHeight = this.mainContainer.height;
+        let takenIndices = this.columns;
 
-        if (this.expandedRows.length > 0) {
-            mainContainerHeight = this.mainContainer.height + ((this.elementHeight - 2 * this.boxMargin) * this.expandedRows.length);
+        for (let element of this.dashboardElements) {
+            let elBottom = element.position.top + element.position.height;
+            if (this.mainContainer.height && elBottom > this.columns) {
+                takenIndices = elBottom > takenIndices ? elBottom : takenIndices;
+            }
         }
-
-        while ((rowIndex * this.elementHeight) < mainContainerHeight) {
+        while (rowIndex < takenIndices) {
             let colIndex = 0;
             let dashBoardRow = [];
             while (colIndex < this.columns) {
@@ -84,6 +78,7 @@ export class dashboardlayout {
             this.dashboardGrid.push(dashBoardRow);
             rowIndex++;
         }
+        this.dashboardGrid = this.dashboardGrid.slice();
     }
 
     /*
@@ -99,7 +94,6 @@ export class dashboardlayout {
         return style;
     }
 
-    // function to drop an item
     public dropElement(id, movex, movey, mouseTarget, mouseLast) {
         // item.position count per column
         this.dashboardElements.some(item => {
@@ -142,10 +136,10 @@ export class dashboardlayout {
                         break;
                 }
                 window.dispatchEvent(new Event('resize'));
-                this.handelExpand(item.position.top + (item.position.height - 1));
                 return true;
             }
         });
+        this.calculateGrid();
     }
 
     public canDrop(id, item, movex, movey, mouseLast, mouseTarget) {
@@ -241,52 +235,118 @@ export class dashboardlayout {
         return {top, left};
     }
 
-    public handelExpand(currentElBottom) {
-        let counter = 0;
-        while (counter < (currentElBottom - (this.dashboardGrid.length - 1))) {
-            this.expandedRows.push(this.dashboardGrid[0]);
-            counter++;
-        }
-        let reservedFields = 0;
-        for (let element of this.dashboardElements) {
-            reservedFields += element.position.width * element.position.height;
-        }
-        if (reservedFields >= (+this.dashboardGrid.length * +this.dashboardGrid[0].length)) {
-            this.expandedRows.push(this.dashboardGrid[0]);
+    public applyMove(rect, mouseTarget, mouseStart, mouseLast) {
+        let style = rect;
+        let mainContainer: any = this.mainContainer;
+        let mainContainerRight: number = mainContainer.right - mainContainer.x;
+        let margin: number = this.boxMargin;
+        let boxWidth: number = this.elementWidth - (2 * margin);
+        let boxHeight: number = this.elementHeight - (2 * margin);
+        let movex: number = 0;
+        let movey: number = 0;
+
+        if (mouseLast && mouseStart) {
+            movex = mouseLast.pageX - mouseStart.pageX;
+            movey = mouseLast.pageY - mouseStart.pageY;
         }
 
-        this.calculateGrid();
+        if (mouseStart) {
+            switch (mouseTarget) {
+                case "content":
+                    style.left = style.left + movex;
+                    style.top = style.top + movey;
+                    if (style.left < margin) {
+                        style.left = margin;
+                    }
+                    if (style.top < margin) {
+                        style.top = margin;
+                    }
+                    if ((style.left + style.width) > mainContainerRight) {
+                        style.left = mainContainerRight - style.width - margin;
+                    }
+                    break;
+                case "right":
+                    style.width = style.width + movex;
+                    if ((style.left + style.width) > mainContainerRight) {
+                        style.width = mainContainerRight - style.left - margin;
+                        style.left = mainContainerRight - style.width - margin;
+                    }
+                    if (style.width < boxWidth) {
+                        style.width = boxWidth;
+                    }
+                    break;
+                case "left":
+                    let elRight = style.width + style.left;
+                    style.width = style.width - movex;
+                    style.left = style.left + movex;
+                    if (style.left < margin) {
+                        style.left = margin;
+                        style.width = elRight - margin;
+                    }
+                    if (style.width < boxWidth) {
+                        style.width = boxWidth;
+                        style.left = elRight - style.width;
+                    }
+                    break;
+                case "bottom":
+                    style.height = style.height + movey;
+                    if (style.height < boxHeight) {
+                        style.height = boxHeight;
+                    }
+                    break;
+                case "top":
+                    let elBottom = style.height + style.top;
+                    style.height = style.height - movey;
+                    style.top = style.top + movey;
+                    if (style.top < margin) {
+                        style.top = margin;
+                        style.height = elBottom - margin;
+                    }
+                    if (style.height < boxHeight) {
+                        style.height = boxHeight;
+                        style.top = elBottom - style.height;
+                    }
+                    break;
+            }
+        }
+
+        return style;
     }
+
 
     public addDashlet(position) {
 
-        this.modal.openModal('DashboardAddElement').subscribe(modalRef => {
-            modalRef.instance.addDashlet.subscribe(dashlet => {
-                if (dashlet !== false) {
-                    this.editing = this.modelutilities.generateGuid();
-                    this.dashboardElements.push({
-                        id: this.editing,
-                        name: dashlet.name,
-                        component: dashlet.component,
-                        componentconfig: dashlet.componentconfig,
-                        dashletconfig: dashlet.dashletconfig,
-                        dashlet_id: dashlet.dashlet_id,
-                        module: dashlet.module,
-                        icon: dashlet.icon,
-                        acl_action: dashlet.acl_action,
-                        label: dashlet.label,
-                        sysuidashboard_id: this.dashboardId,
-                        position: {
-                            top: Math.round(position.top / this.elementHeight),
-                            left: Math.round(position.left / this.elementWidth),
-                            width: Math.round(position.width / this.elementWidth),
-                            height: Math.round(position.height / this.elementHeight)
-                        },
-                        is_new: true,
+        this.modal.openModal('DashboardAddElement')
+            .subscribe(modalRef => {
+                modalRef.instance.addDashlet
+                    .pipe(take(1))
+                    .subscribe(dashlet => {
+                        if (dashlet !== false) {
+                            this.editing = this.model.generateGuid();
+                            let element = {
+                                id: this.editing,
+                                name: dashlet.name,
+                                component: dashlet.component,
+                                componentconfig: dashlet.componentconfig,
+                                dashletconfig: dashlet.dashletconfig,
+                                dashlet_id: dashlet.dashlet_id,
+                                module: dashlet.module,
+                                icon: dashlet.icon,
+                                acl_action: dashlet.acl_action,
+                                label: dashlet.label,
+                                sysuidashboard_id: this.dashboardId,
+                                position: {
+                                    top: Math.round(position.top / this.elementHeight),
+                                    left: Math.round(position.left / this.elementWidth),
+                                    width: Math.round(position.width / this.elementWidth),
+                                    height: Math.round(position.height / this.elementHeight)
+                                },
+                                is_new: true,
+                            };
+                            this.dashboardElements = [...this.dashboardElements, element];
+                        }
                     });
-                }
             });
-        });
     }
 
     public deleteDashlet(id) {
@@ -300,6 +360,7 @@ export class dashboardlayout {
 
     public loadDashboard(id, name?) {
         if (id != this.dashboardId) {
+            this.editMode = false;
             this.isloading = true;
             this.dashboardId = id;
             this.model.module = 'Dashboards';
@@ -310,30 +371,41 @@ export class dashboardlayout {
                 this.model.setField('name', name);
             }
 
-            this.model.getData(false).subscribe(loaded => {
-                this.dashboardData = this.model.data;
-                this.dashboardElements = this.model.getField('components');
+            this.model.getData(false)
+                .subscribe(loaded => {
+                    this.dashboardData = this.model.data;
+                    this.dashboardElements = this.model.getField('components');
 
-                // sort the elements for the compact view
-                this.sortElements();
+                    // sort the elements for the compact view
+                    this.sortElements();
 
-                this.isloading = false;
-            });
+                    this.isloading = false;
+                });
         }
     }
 
     public cancelEdit() {
-        this.expandedRows = [];
-        this.calculateGrid();
         this.editMode = false;
-        this.dashboardElements = JSON.parse(JSON.stringify(this.dashboardData.components));
+        this.calculateGrid();
+        this.dashboardElements = this.model.getField('components');
     }
 
     public saveDashboard() {
         this.editMode = false;
-        this.backend.postRequest('dashboards/' + this.dashboardId, {}, this.dashboardElements).subscribe(data => {
-            this.dashboardData.components = this.dashboardElements.slice(0);
-        });
+        this.backend.postRequest('dashboards/' + this.dashboardId, {}, this.dashboardElements)
+            .subscribe(data => {
+                this.dashboardData.components = this.dashboardElements.slice(0);
+            });
+    }
+
+    public prepareStyle(style) {
+        let returnStyle = _.clone(style);
+        for (let prop in returnStyle) {
+            if (returnStyle.hasOwnProperty(prop) && typeof returnStyle[prop] == 'number') {
+                returnStyle[prop] = Math.round(returnStyle[prop]) + 'px';
+            }
+        }
+        return returnStyle;
     }
 
     private sortElements() {

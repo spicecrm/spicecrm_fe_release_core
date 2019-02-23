@@ -35,6 +35,7 @@ interface authDataIf {
     dev: boolean;
     portalOnly: boolean;
     googleToken: string;
+    userimage: string;
 }
 
 @Injectable()
@@ -55,6 +56,7 @@ export class session {
         renewPass: false,
         portalOnly: false,
         googleToken: '',
+        userimage: ''
     };
 
     public footercontainer: any = null;
@@ -113,6 +115,7 @@ export class session {
         this.authData.last_name = '';
         this.authData.display_name = '';
         this.authData.email = '';
+        this.authData.userimage = '';
         this.authData.password = '';
         this.authData.admin = false;
         this.authData.dev = false;

@@ -11,7 +11,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 -->
 
 <div *ngIf="!isEditMode()" class="slds-scrollable--x">
-    <field-generic-display *ngFor="let emailaddress of model.data.emailaddresses" [fielddisplayclass]="fielddisplayclass" [fieldconfig]="fieldconfig" [editable]="isEditable()">
+    <field-generic-display *ngFor="let emailaddress of model.data.emailaddresses; trackBy: trackByFn" [fielddisplayclass]="fielddisplayclass" [fieldconfig]="fieldconfig" [editable]="isEditable()">
         <div class="slds-grid slds-p-vertical--xxx-small">
             <div class="slds-size--1-of-2">
                 <div class="slds-grid slds-grid--vertical-align-center">
@@ -56,14 +56,14 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
     </field-generic-display>
 </div>
 <div *ngIf="isEditMode()" class="slds-scrollable--x">
-    <div *ngFor="let emailaddress of model.data.emailaddresses" class="slds-form-element__control slds-grid slds-grid--align-spread" [ngClass]="getFieldClass()">
+    <div *ngFor="let emailaddress of model.data.emailaddresses; trackBy: trackByFn" class="slds-form-element__control slds-grid slds-grid--align-spread" [ngClass]="getFieldClass()">
         <div class="slds-size--1-of-1">
             <field-email-emailaddress class="slds-size--1-of-1" [emailaddress]="emailaddress" (primaryaddress)="setprimary(emailaddress.id)"></field-email-emailaddress>
         </div>
     </div>
     <div class="slds-grid slds-align-content-center slds-p-vertical--x-small slds-border--top">
-        <button style="border-radius: 50%;" class="slds-button slds-button--icon-small slds-button--neutral slds-p-around--xx-small" title="Add New Email" (click)="addEmailAddress()">
-            <system-button-icon [icon]="'add'"></system-button-icon>
+        <button class="slds-button slds-button--icon-small slds-button--icon-border" title="Add New Email" (click)="addEmailAddress()">
+            <system-button-icon icon="add"></system-button-icon>
         </button>
     </div>
 </div>

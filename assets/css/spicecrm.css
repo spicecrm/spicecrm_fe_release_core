@@ -25,7 +25,7 @@ input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer
     width: 150px;
     height: 150px;
     margin-left: -75px;
-    margin-top: -75px
+    margin-top: -60px;
 }
 
 .loader-text {
@@ -154,12 +154,6 @@ global-user-panel {
     margin-top: -1px;
     border-bottom: 1px solid rgb(216, 221, 230);
     content: ' ';
-}
-
-.spiceActivitiyTimelineHeader .showmorebutton {
-    position: absolute;
-    right: 0px;
-    top: 0px;
 }
 
 
@@ -905,6 +899,11 @@ object-action-container .slds-button-group .slds-button:nth-child(2) {
 
 .slds-illustration .slds-illustration__fill-secondary {
     fill: #eee;
+}
+
+/* override for teh input icon gropup */
+.slds-input__icon-group_right{
+    top: .5rem;
 }
 
 

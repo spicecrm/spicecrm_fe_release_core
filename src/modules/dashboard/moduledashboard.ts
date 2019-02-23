@@ -13,7 +13,8 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 import {CommonModule} from "@angular/common";
 import {FormsModule} from "@angular/forms";
 import {DirectivesModule} from "../../directives/directives";
-
+import {Subject, Observable, of, Subscription, pipe} from "rxjs";
+import {take} from "rxjs/operators";
 import {
     Component,
     Input,

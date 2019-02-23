@@ -13,6 +13,7 @@
             '@angular/platform-browser-dynamic': 'vendor:@angular/platform-browser-dynamic.umd.min.js',
             '@angular/router': 'vendor:@angular/router.umd.min.js',
             '@angular/forms': 'vendor:@angular/forms.umd.min.js',
+            '@angular/upgrade': 'vendor:@angular/upgrade.umd.min.js',
             // '@angular/upgrade': 'vendor:@angular/upgrade/bundles/upgrade.umd.min.js',
             'socket.io-client': 'vendor:socket.io-client/dist/socket.io.js',
             'rxjs': 'vendor:rxjs',

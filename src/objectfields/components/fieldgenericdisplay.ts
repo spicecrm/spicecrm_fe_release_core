@@ -26,6 +26,7 @@ export class fieldGenericDisplay {
     @Input() public editable: boolean = false;
     @Input() public fieldconfig: any = {};
     @Input() public fielddisplayclass: string = '';
+    @Input() public fieldid: string = '';
 
     constructor(
         public model: model,
@@ -54,7 +55,7 @@ export class fieldGenericDisplay {
 
     public setEditMode() {
         this.model.startEdit();
-        this.view.setEditMode();
+        this.view.setEditMode(this.fieldid);
     }
 
     public goRecord() {
@@ -63,6 +64,11 @@ export class fieldGenericDisplay {
         }
     }
 
+    public onClick() {
+        if(this.editable && !this.isEditMode()) {
+            this.setEditMode();
+        }
+    }
 
 }
 

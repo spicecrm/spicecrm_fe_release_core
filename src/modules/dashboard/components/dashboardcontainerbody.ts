@@ -10,15 +10,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
-import {
-    Component,
-    AfterViewInit,
-    ElementRef,
-    Renderer2,
-    ViewChild,
-    ViewContainerRef,
-    AfterViewChecked,
-} from '@angular/core';
+import {AfterViewInit, Component, OnDestroy, Renderer2, ViewChild, ViewContainerRef,} from '@angular/core';
 import {language} from '../../../services/language.service';
 import {dashboardlayout} from '../services/dashboardlayout.service';
 
@@ -36,30 +28,20 @@ import {dashboardlayout} from '../services/dashboardlayout.service';
         }`
     ]
 })
-export class DashboardContainerBody implements AfterViewInit, AfterViewChecked {
+export class DashboardContainerBody implements AfterViewInit, OnDestroy {
     @ViewChild('bodycontainer', {read: ViewContainerRef}) private bodycontainer: ViewContainerRef;
+    private resizeListener: any;
 
-    constructor(private dashboardlayout: dashboardlayout, private language: language, private elementRef: ElementRef, private renderer: Renderer2) {
-        this.renderer.listen('window', 'mousemove', (event) => {
-            if (this.dashboardlayout.editMode && this.dashboardlayout.isMoving) {
-                if (event.pageY < (this.dashboardlayout.mainContainer.top + 20) && this.bodycontainer.element.nativeElement.scrollTop > 0) {
-                    this.bodycontainer.element.nativeElement.scrollTop -= ((this.dashboardlayout.mainContainer.top + 20) - event.pageY) * ((this.dashboardlayout.mainContainer.top + 20) - event.pageY);
-                }
-                if (event.pageY > (this.dashboardlayout.mainContainer.bottom - 20)) {
-                    this.bodycontainer.element.nativeElement.scrollTop += (event.pageY - (this.dashboardlayout.mainContainer.bottom - 20)) * (event.pageY - (this.dashboardlayout.mainContainer.bottom - 20));
-                }
-            }
-        });
+    constructor(private dashboardlayout: dashboardlayout, private language: language, private renderer: Renderer2) {
+        this.resizeListener = this.renderer.listen('window', 'resize',()=> this.calculateGrid());
     }
 
-    public ngAfterViewInit() {
-        this.calculateGrid();
+    get dashboardGrid() {
+        return this.dashboardlayout.dashboardGrid;
     }
 
-    public ngAfterViewChecked() {
-        if (this.bodycontainer.element.nativeElement.clientWidth != this.dashboardlayout.mainContainer.width) {
-            this.calculateGrid();
-        }
+    get dashboardElements() {
+        return this.dashboardlayout.dashboardElements;
     }
 
     get isEditing() {
@@ -73,19 +55,33 @@ export class DashboardContainerBody implements AfterViewInit, AfterViewChecked {
         };
     }
 
+    public ngAfterViewInit() {
+        this.calculateGrid();
+    }
+
+    private trackByGridFn(index, item) {
+        return index;
+    }
+
+    private trackByFn(index, item) {
+        return item.id;
+    }
+
     private calculateGrid() {
-        this.dashboardlayout.mainContainer = {
-            width: this.bodycontainer.element.nativeElement.clientWidth,
-            height: this.bodycontainer.element.nativeElement.clientHeight
-        };
         if (window.innerWidth < 1024) {
-            this.dashboardlayout.editing = '';
             this.dashboardlayout.editMode = false;
         }
+        this.dashboardlayout.bodyContainerRef = this.bodycontainer;
         this.dashboardlayout.calculateGrid();
     }
 
     private addDashlet(column) {
         this.dashboardlayout.addDashlet(column);
+    }
+
+    ngOnDestroy() {
+        if (this.resizeListener) {
+            this.resizeListener();
+        }
     }
 }

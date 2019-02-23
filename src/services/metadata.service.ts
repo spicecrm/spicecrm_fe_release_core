@@ -1372,9 +1372,17 @@ export class metadata {
         script.loading = true;
         script.loading$ = new EventEmitter();
 
-        let element: any = document.createElement("script");
-        element.type = "text/javascript";
-        element.src = script.src;
+        let element: any = {};
+
+        if (script.src.endsWith('.css')) {
+            element = document.createElement("link");
+            element.rel = "stylesheet";
+            element.href = script.src;
+        } else {
+            element = document.createElement("script");
+            element.type = "text/javascript";
+            element.src = script.src;
+        }
         if (element.readyState) {
             // IE
             element.onreadystatechange = () => {
@@ -1397,6 +1405,7 @@ export class metadata {
                 script.loading$.emit("loaded");
             };
         }
+
         element.onerror = (error: any) => {
             script.loading = false;
             sub.error({script: script.src, loaded: false, status: "Failed"});

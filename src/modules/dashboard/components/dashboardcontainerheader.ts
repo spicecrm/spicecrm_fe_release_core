@@ -10,12 +10,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
-import {
-    Component,
-    Input,
-    Output,
-    EventEmitter
-} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {language} from '../../../services/language.service';
 import {dashboardlayout} from '../services/dashboardlayout.service';
 import {userpreferences} from "../../../services/userpreferences.service";
@@ -28,6 +23,7 @@ export class DashboardContainerHeader {
 
     @Input() private showdashboardselector: boolean = false;
     @Output() private showselect: EventEmitter<boolean> = new EventEmitter<boolean>();
+
     constructor(private dashboardlayout: dashboardlayout, private language: language, private userpreferences: userpreferences) {
     }
 

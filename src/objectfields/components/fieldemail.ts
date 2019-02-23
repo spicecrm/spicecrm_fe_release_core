@@ -59,7 +59,7 @@ export class fieldEmail extends fieldGeneric {
             this.invalid = false;
         }
 
-        if (!this.model.getFieldValue('emailaddresses')) {
+        if (!this.model.getFieldValue('emailaddresses') || this.model.getFieldValue('emailaddresses').length == 0) {
             let newEmail = {
                 id: '',
                 primary_address: '1',
@@ -81,7 +81,11 @@ export class fieldEmail extends fieldGeneric {
     }
 
     private changed() {
-        if (this.value && this.value.length && this.validation.test(this.value)) {
+
+        if (!this.value || this.value == '') {
+            this.model.resetFieldMessages(this.fieldname, 'error', this.mark);
+            this.invalid = false;
+        } else if (this.validation.test(this.value)) {
             this.model.resetFieldMessages(this.fieldname, 'error', this.mark);
             this.invalid = false;
         } else {

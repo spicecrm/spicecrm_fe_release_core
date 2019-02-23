@@ -10,7 +10,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
-import {Component, AfterViewInit, OnInit, ViewChild, ViewContainerRef, ElementRef} from "@angular/core";
+import {Component, ElementRef, OnInit, ViewChild, ViewContainerRef} from "@angular/core";
 import {model} from "../../../services/model.service";
 import {view} from "../../../services/view.service";
 import {metadata} from "../../../services/metadata.service";
@@ -41,15 +41,6 @@ export class DashboardGenericDashlet implements OnInit {
 
     }
 
-    public ngOnInit() {
-        // set the module on the model
-        this.model.module = this.dashletModule;
-        this.loadLimit = this.dashletconfig.limit || this.loadLimit;
-
-        // load the dashlet records
-        this.loadRecords();
-    }
-
     get dashletTitle() {
         return this.language.getLabel(this.dashletLabel);
     }
@@ -60,23 +51,9 @@ export class DashboardGenericDashlet implements OnInit {
 
     get tableContainerStyle() {
         return {
-          width: '100%',
-          height: `calc(100% - ${this.headercontainer.element.nativeElement.getBoundingClientRect().height}px)`
+            width: '100%',
+            height: `calc(100% - ${this.headercontainer.element.nativeElement.getBoundingClientRect().height}px)`
         };
-    }
-
-    private loadRecords() {
-        let params = this.params;
-        if (this.dashletModule) {
-            this.backend.getRequest("module/" + this.dashletModule, params).subscribe((records: any) => {
-                this.records = records.list;
-                this.recordcount = +records.list.length;
-                this.loading = false;
-                if (records.list.length < this.loadLimit) {
-                    this.canLoadMore = false;
-                }
-            });
-        }
     }
 
     get params() {
@@ -111,6 +88,34 @@ export class DashboardGenericDashlet implements OnInit {
 
     }
 
+    public ngOnInit() {
+        // set the module on the model
+        this.model.module = this.dashletModule;
+        this.loadLimit = this.dashletconfig.limit || this.loadLimit;
+
+        // load the dashlet records
+        this.loadRecords();
+    }
+
+    private loadRecords() {
+        let params = this.params;
+        if (this.dashletModule) {
+            this.backend.getRequest("module/" + this.dashletModule, params)
+                .subscribe((records: any) => {
+                    this.records = records.list;
+                    this.recordcount = +records.list.length;
+                    this.loading = false;
+                    if (records.list.length < this.loadLimit) {
+                        this.canLoadMore = false;
+                    }
+                });
+        }
+    }
+
+    private trackByFn(index, item) {
+        return item.id;
+    }
+
     private onScroll() {
         let element = this.tablecontainer.element.nativeElement;
         if (element.scrollTop + element.clientHeight >= element.scrollHeight) {
@@ -123,14 +128,15 @@ export class DashboardGenericDashlet implements OnInit {
             this.loading = true;
             let params: any = this.params;
             params.offset = this.records.length;
-            this.backend.getRequest("module/" + this.dashletModule, params).subscribe((records: any) => {
-                this.records = this.records.concat(records.list);
-                this.recordcount += +records.list.length;
-                if (records.list.length < this.loadLimit) {
-                    this.canLoadMore = false;
-                }
-                this.loading = false;
-            });
+            this.backend.getRequest("module/" + this.dashletModule, params)
+                .subscribe((records: any) => {
+                    this.records = this.records.concat(records.list);
+                    this.recordcount += +records.list.length;
+                    if (records.list.length < this.loadLimit) {
+                        this.canLoadMore = false;
+                    }
+                    this.loading = false;
+                });
         }
     }
 

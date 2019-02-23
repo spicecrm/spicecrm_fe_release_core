@@ -38,6 +38,8 @@ export class SystemCheckboxGroup implements ControlValueAccessor
     private onTouched: (m: any) => void;
     public model$ = new EventEmitter();
     private _model: any;
+
+    /*
     get model() {
         return this._model;
     }
@@ -46,9 +48,11 @@ export class SystemCheckboxGroup implements ControlValueAccessor
         this.onChange(this._model);
         this.model$.emit(this._model);
     }
+   */
 
     public writeValue(value: any): void {
         this._model = value;
+        this.model$.emit(this._model);
     }
 
     public registerOnChange(fn: any): void {

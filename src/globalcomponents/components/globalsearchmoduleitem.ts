@@ -15,7 +15,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
  */
 import {ElementRef, Component, Input, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
-import {fts} from '../../services/fts.service';
+import {layout} from '../../services/layout.service';
 import {language} from '../../services/language.service';
 import {view} from '../../services/view.service';
 import {model} from '../../services/model.service';
@@ -30,7 +30,9 @@ export class GlobalSearchModuleItem implements OnInit {
     @Input() private listfields: string = '';
     @Input() private listitem: any = {};
 
-    constructor(private elementref: ElementRef, private router: Router, private view: view, private model: model, private language: language) {
+    private expanded: boolean = false;
+
+    constructor(private elementref: ElementRef, private router: Router, private view: view, private model: model, private language: language, private layout: layout) {
         this.view.isEditable = false;
     }
 
@@ -53,5 +55,17 @@ export class GlobalSearchModuleItem implements OnInit {
         if (this.model.data.acl.detail) {
             this.model.goDetail();
         }
+    }
+
+    private toggleexpanded() {
+        this.expanded = !this.expanded;
+    }
+
+    get isexpanded() {
+        return this.layout.screenwidth != 'small' || this.expanded;
+    }
+
+    get expandicon() {
+        return this.expanded ? 'chevronup' : 'chevrondown';
     }
 }

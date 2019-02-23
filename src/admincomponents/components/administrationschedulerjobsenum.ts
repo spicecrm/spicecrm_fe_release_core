@@ -23,7 +23,6 @@ import {Router} from "@angular/router";
     templateUrl: './src/admincomponents/templates/administrationschedulerjobsenum.html'
 })
 export class AdministrationSchedulerJobsEnum {
-    expanded: boolean = true;
     jobsList: any[] = [];
 
     constructor(public model: model,
@@ -33,5 +32,9 @@ export class AdministrationSchedulerJobsEnum {
                 public router: Router,
                 public backend: backend) {
         this.backend.getRequest('module/Scheduler/jobslist').subscribe(jobslist => this.jobsList = Object.keys(jobslist));
+    }
+
+    private trackByFn(index, item) {
+        return index;
     }
 }

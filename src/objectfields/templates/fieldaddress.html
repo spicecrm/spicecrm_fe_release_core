@@ -12,7 +12,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 <div *ngIf="!isEditMode()">
     <field-label fieldname="field" [fieldconfig]="fieldconfig"></field-label>
-    <field-generic-display  [fielddisplayclass]="fielddisplayclass" [fieldconfig]="fieldconfig" [editable]="isEditable()">
+    <field-generic-display  [fielddisplayclass]="fielddisplayclass" [fieldconfig]="fieldconfig" [editable]="isEditable()" [fieldid]="fieldid">
         {{value}}
     </field-generic-display>
 </div>
@@ -20,7 +20,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
     <fieldset>
         <legend class="slds-form-element__label slds-text-title--caps slds-p-bottom--x-small">{{getAddressLabel()}}</legend>
         <div class="slds-form-element__group">
-                <system-googleplaces-search (address)="addressSelected($event)"></system-googleplaces-search>
+                <system-googleplaces-autocomplete (address)="addressSelected($event)"></system-googleplaces-autocomplete>
                 <div class="slds-form-element slds-size--1-of-1">
                     <label class="slds-form-element__label">{{language.getLabel('LBL_ATTN')}}</label>
                     <div class="slds-form-element__control">
@@ -30,7 +30,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
                 <div class="slds-form-element slds-size--1-of-1">
                     <label class="slds-form-element__label">{{language.getLabel('LBL_STREET')}}</label>
                     <div class="slds-form-element__control">
-                        <input type="text" class="slds-input" [(ngModel)]="street"/>
+                        <input #focus type="text" class="slds-input" [(ngModel)]="street"/>
                     </div>
                 </div>
             <div class="slds-grid">

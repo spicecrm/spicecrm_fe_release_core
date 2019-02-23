@@ -10,7 +10,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
-import {Component, Input, Renderer2, ViewChild, ViewContainerRef} from "@angular/core";
+import {Component, Input} from "@angular/core";
 import {model} from "../../../services/model.service";
 import {userpreferences} from "../../../services/userpreferences.service";
 
@@ -25,7 +25,9 @@ export class CalendarEventSummary {
     @Input("ismulti") private isMulti: boolean = false;
     @Input("isabsence") private isAbsence: boolean = false;
     @Input("isschedulesheet") private isScheduleSheet: boolean = false;
-    constructor(private model: model, private userpreferences: userpreferences) {}
+
+    constructor(private model: model, private userpreferences: userpreferences) {
+    }
 
     get startHour() {
         return this.model.data.date_start ? moment(this.model.data.date_start).tz(moment.tz.guess())
