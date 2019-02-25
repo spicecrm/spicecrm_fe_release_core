@@ -10,6 +10,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module globalcomponents
+ */
 import {CommonModule} from "@angular/common";
 import {FormsModule}   from "@angular/forms";
 import {DirectivesModule} from "../directives/directives";
@@ -103,7 +106,9 @@ import {VersionManagerService} from "../services/versionmanager.service";
 
 import /*embed*/ {GlobalLoginGoogle} from "./components/globallogingoogle";
 
-
+/**
+ * GlobalComponents holds records that are rendered in the global header and footer parts of the application. This includes e.g. the header menu and other components
+ */
 @NgModule({
     imports: [
         CommonModule,

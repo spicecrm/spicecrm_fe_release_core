@@ -32,6 +32,7 @@ export class GlobalHeaderSearchRecentItems {
     }
 
     private goRecent() {
+        this.selected.emit(false);
         this.router.navigate(['/recent']);
     }
 }

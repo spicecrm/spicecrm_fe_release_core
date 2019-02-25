@@ -11,13 +11,10 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 */
 
 import {
-    AfterViewInit,
     Component,
     Input,
     OnInit,
-    QueryList,
     ViewChild,
-    ViewChildren,
     ViewContainerRef
 } from '@angular/core';
 import {model} from '../../services/model.service';
@@ -25,8 +22,6 @@ import {view} from '../../services/view.service';
 import {language} from '../../services/language.service';
 import {metadata} from '../../services/metadata.service';
 import {Router} from '@angular/router';
-import {ObjectRelatedlistHeader} from "../../objectcomponents/components/objectrelatedlistheader";
-import {fieldGenericDisplay} from "./fieldgenericdisplay";
 
 @Component({
     selector: 'field-generic',
@@ -52,7 +47,7 @@ export class fieldGeneric implements OnInit {
 
         this.view.mode$.subscribe(mode => {
             if (mode == 'edit' && this.view.editfieldid && this.view.editfieldid == this.fieldid) {
-                this.setFocus();
+               this.setFocus();
             }
         });
     }
