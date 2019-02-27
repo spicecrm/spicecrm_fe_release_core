@@ -245,7 +245,7 @@ export class UserAddModal implements OnInit, AfterViewChecked {
                 }
 
                 if (goDetail) {
-                    this.model.goToDetail();
+                    this.model.goDetail();
                 }
                 this.self.destroy();
             } else {
