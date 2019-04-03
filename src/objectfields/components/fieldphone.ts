@@ -10,6 +10,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module ObjectFields
+ */
 import {Component} from '@angular/core';
 import {model} from '../../services/model.service';
 import {view} from '../../services/view.service';
@@ -34,7 +37,7 @@ export class fieldPhone extends fieldGeneric {
 
     private makeCall() {
         if (this.model.data[this.fieldname] != '') {
-            console.log('placing call to ' + this.value);
+            // console.log('placing call to ' + this.value);
             this.backend.postRequest('asterisk/outgoingcall', {}, {msisdn: this.value}).subscribe(result => {
                 console.log(result);
             });

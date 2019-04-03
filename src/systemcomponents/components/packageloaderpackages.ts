@@ -10,6 +10,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module SystemComponents
+ */
 import {
     Component, Input
 } from '@angular/core';
@@ -26,6 +29,7 @@ export class PackageLoaderPackages {
     private packagefilterterm: string = '';
 
     @Input() private packages = [];
+    @Input() private repository: any;
 
     constructor(
         private language: language

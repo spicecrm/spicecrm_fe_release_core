@@ -10,7 +10,10 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
-import {Component, Input, HostBinding} from '@angular/core';
+/**
+ * @module ModuleCampaigns
+ */
+import {Component} from '@angular/core';
 
 import {metadata} from '../../../services/metadata.service';
 import {model} from '../../../services/model.service';

@@ -10,6 +10,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module SystemComponents
+ */
 import {Component, Input} from '@angular/core';
 
 @Component({
@@ -17,18 +20,18 @@ import {Component, Input} from '@angular/core';
     templateUrl: './src/systemcomponents/templates/systemtooltip.html'
 })
 export class SystemTooltip {
-    @Input() tooltiptext: string = '';
-    displayHelp: boolean = false;
+    @Input() private tooltiptext: string = '';
+    private displayHelp: boolean = false;
 
-    toggleHelp(){
+    private toggleHelp(){
         this.displayHelp = !this.displayHelp;
     }
 
-    openHelp(){
+    private openHelp(){
         this.displayHelp = true;
     }
 
-    closeHelp(){
+    private closeHelp(){
         this.displayHelp = false;
     }
 }

@@ -10,6 +10,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module GlobalComponents
+ */
 import {ElementRef, Component, NgModule, ViewChild, ViewContainerRef, OnDestroy} from '@angular/core';
 import {Router, ActivatedRoute} from '@angular/router';
 import {fts} from '../../services/fts.service';

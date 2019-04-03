@@ -10,17 +10,21 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module ObjectComponents
+ */
 import {
-    AfterViewInit, ComponentFactoryResolver, Component, NgModule, ViewChild, ViewContainerRef,
-    Input, OnInit, OnDestroy
+    Component,  ViewChild, ViewContainerRef,
+    Input, OnInit
 } from '@angular/core';
-import {HttpClient, HttpHeaders, HttpResponse} from "@angular/common/http";
-import {ActivatedRoute} from '@angular/router';
 import {metadata} from '../../services/metadata.service';
 import {model} from '../../services/model.service';
 import {language} from '../../services/language.service';
 import {activitiyTimeLineService} from '../../services/activitiytimeline.service';
 
+/**
+* @ignore
+*/
 declare var moment: any;
 
 @Component({

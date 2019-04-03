@@ -10,16 +10,21 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module SystemComponents
+ */
 import {
     Component, Input, OnInit
 } from '@angular/core';
 import {backend} from '../../services/backend.service';
 import {language} from '../../services/language.service';
 import {configurationService} from '../../services/configuration.service';
-import {toast} from '../../services/toast.service';
 import {loader} from '../../services/loader.service';
 import {broadcast} from '../../services/broadcast.service';
 
+/**
+ * @ignore
+ */
 declare var _;
 
 @Component({
@@ -29,6 +34,7 @@ declare var _;
 export class PackageLoaderLanguage {
 
     @Input() private package: any;
+    @Input() private repository: any;
 
     private loading: boolean = false;
 
@@ -49,6 +55,9 @@ export class PackageLoaderLanguage {
     get deletedisabled() {
         return this.isDefault || this.package.language_code == this.language.currentlanguage;
     }
+    get repositoryaddurl() {
+        return this.repository && this.repository.id ? '/' + this.repository.id : '';
+    }
 
     private setDefault() {
         if (!this.isDefault) {
@@ -59,7 +68,7 @@ export class PackageLoaderLanguage {
     private loadLanguage(languagecode) {
 
         this.loading = true;
-        this.backend.getRequest('/packages/language/' + languagecode).subscribe(response => {
+        this.backend.getRequest('/packages/language/' + languagecode + this.repositoryaddurl).subscribe(response => {
             this.loading = false;
             if (response.success) {
                 this.package.installed = true;

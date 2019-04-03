@@ -11,18 +11,16 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 */
 
 /**
- * Created by christian on 08.11.2016.
+ * @module ObjectComponents
  */
+
 import {
     AfterViewInit,
-    ComponentFactoryResolver,
     Component,
     Input,
-    NgModule,
     ViewChild,
     ViewContainerRef
 } from '@angular/core';
-import {HttpClient, HttpHeaders, HttpResponse} from "@angular/common/http";
 import {model} from '../../services/model.service';
 import {metadata} from '../../services/metadata.service';
 

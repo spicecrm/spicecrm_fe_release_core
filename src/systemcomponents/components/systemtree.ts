@@ -10,8 +10,14 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module SystemComponents
+ */
 import {Component, EventEmitter, Input, Output, SimpleChanges} from "@angular/core";
 
+/**
+* @ignore
+*/
 declare var _: any;
 /*
 * -- @INPUT PARAMS --

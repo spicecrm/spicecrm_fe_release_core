@@ -10,19 +10,22 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module ObjectComponents
+ */
 import {
-    Component, OnInit,
-    ViewChild,
-    ViewContainerRef,
+    Component,
     Input
 } from '@angular/core';
-import {Subject, Observable} from 'rxjs';
 
 import {model} from '../../services/model.service';
 import {language} from '../../services/language.service';
 import {view} from '../../services/view.service';
 import {userpreferences} from '../../services/userpreferences.service';
 
+/**
+* @ignore
+*/
 declare var moment: any;
 
 @Component({

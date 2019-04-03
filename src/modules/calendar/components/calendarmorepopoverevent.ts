@@ -10,13 +10,20 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
-import {Component, EventEmitter, Input, OnInit, Output, ViewChild, ViewContainerRef} from '@angular/core';
+/**
+ * @module ModuleCalendar
+ */
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild, ViewContainerRef} from '@angular/core';
 import {model} from '../../../services/model.service';
 import {view} from "../../../services/view.service";
 import {session} from '../../../services/session.service';
 import {userpreferences} from '../../../services/userpreferences.service';
 import {Router} from "@angular/router";
+import {Subscription} from "rxjs";
 
+/**
+* @ignore
+*/
 declare var moment: any;
 
 @Component({
@@ -26,20 +33,25 @@ declare var moment: any;
 
 })
 
-export class CalendarMorePopoverEvent implements OnInit {
+export class CalendarMorePopoverEvent implements OnInit, OnDestroy {
 
     @ViewChild('calendarcontent', {read: ViewContainerRef}) calendarcontent: ViewContainerRef;
     @Input() public event: any = {};
     @Output() public action$: EventEmitter<any> = new EventEmitter<any>();
+    private modeSubscriber: Subscription = new Subscription();
 
     constructor(private model: model, private session: session, private userpreferences: userpreferences, private router: Router) {
-        this.model.mode$.subscribe(mode => this.action$.emit(mode));
+        this.modeSubscriber = this.model.mode$.subscribe(mode => this.action$.emit(mode));
     }
 
     public ngOnInit() {
         this.model.module = this.event.module;
         this.model.id = this.event.id;
         this.model.data = this.event.data;
+    }
+
+    public ngOnDestroy() {
+        this.modeSubscriber.unsubscribe();
     }
 
     private goDetails(id, module) {

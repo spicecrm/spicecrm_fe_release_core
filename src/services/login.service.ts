@@ -10,7 +10,10 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
-import {HttpClient, HttpHeaders, HttpResponse} from "@angular/common/http";
+/**
+ * @module services
+ */
+import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {Injectable} from '@angular/core';
 import {CanActivate, Router} from '@angular/router';
 import {Observable, Subject} from 'rxjs';
@@ -88,6 +91,7 @@ export class loginService {
                     this.session.authData.sessionId = response.id;
                     this.session.authData.userId = response.userid;
                     this.session.authData.userName = response.user_name;
+                    this.session.authData.userimage = response.user_image;
                     this.session.authData.first_name = response.first_name;
                     this.session.authData.last_name = response.last_name;
                     this.session.authData.display_name = response.display_name;

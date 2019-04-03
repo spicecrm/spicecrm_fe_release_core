@@ -10,8 +10,10 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
-import {Component, OnInit,ViewChild, ViewContainerRef, EventEmitter, AfterViewInit} from "@angular/core";
-import {toast} from "../../services/toast.service";
+/**
+ * @module SystemComponents
+ */
+import {Component, ViewChild, ViewContainerRef, EventEmitter, AfterViewInit} from "@angular/core";
 
 @Component({
     selector: "system-component-container",

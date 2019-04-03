@@ -10,15 +10,14 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module ObjectComponents
+ */
 import {
-    Component, ElementRef, Renderer, Input, Output, OnDestroy, EventEmitter, ViewChild,
-    ViewContainerRef, OnInit, AfterViewInit
+    Component
 } from '@angular/core';
-import {metadata} from '../../services/metadata.service';
 import {language} from '../../services/language.service';
 import {model} from '../../services/model.service';
-import {popup} from '../../services/popup.service';
-import {view} from '../../services/view.service';
 import {helper} from '../../services/helper.service';
 
 @Component({
@@ -30,15 +29,12 @@ export class ObjectActionsetMenuContainerDelete {
 
     }
 
-
-
-    doAction(){
-        if(!this.model.checkAccess('delete'))
-            return;
+    private doAction() {
+        if (!this.model.checkAccess('delete')) return;
 
         // this.showDialog = true;
-        this.helper.confirm(this.language.getLabel('LBL_DELETE_RECORD'), this.language.getLabel('MSG_DELETE_CONFIRM')).subscribe(answer =>{
-            if(answer){
+        this.helper.confirm(this.language.getLabel('LBL_DELETE_RECORD'), this.language.getLabel('MSG_DELETE_CONFIRM')).subscribe(answer => {
+            if (answer) {
                 this.model.delete();
             }
         });

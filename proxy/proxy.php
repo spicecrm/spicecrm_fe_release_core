@@ -130,12 +130,16 @@ switch ($_SERVER['REQUEST_METHOD']) {
 
         break;
     default:
-        header('Content-type: application/json');
+        header("Content-Type: application/json");
         echo json_encode(array('result' => 'failure', 'message' => 'There was an error executing your request'));
         break;
 }
 
 header('Content-type: ' . curl_getinfo($ch, CURLINFO_CONTENT_TYPE));
+// CORS
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: POST, GET, OPTIONS, DELETE, PUT');
+header('Access-Control-Allow-Headers: authorization,content-type');
 
 // pass throught eh return code
 $http_response = curl_getinfo($ch, CURLINFO_HTTP_CODE);

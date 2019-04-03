@@ -10,6 +10,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module services
+ */
 import {Injectable, EventEmitter} from "@angular/core";
 import {Title} from "@angular/platform-browser";
 import {broadcast} from "./broadcast.service";

@@ -10,10 +10,11 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module ModuleLeads
+ */
 import {
     Component,
-    Input,
-    HostBinding,
     Output,
     EventEmitter,
     OnInit,
@@ -21,7 +22,6 @@ import {
     ViewChild,
     AfterViewInit
 } from '@angular/core';
-import {Router} from '@angular/router';
 import {metadata} from '../../../services/metadata.service';
 import {model} from '../../../services/model.service';
 import {modal} from '../../../services/modal.service';

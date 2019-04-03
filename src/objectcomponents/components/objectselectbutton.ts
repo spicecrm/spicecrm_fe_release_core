@@ -10,19 +10,16 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module ObjectComponents
+ */
 import {
-    AfterViewInit,
-    ComponentFactoryResolver,
     Component,
     Input,
     Output,
     EventEmitter,
-    NgModule,
-    ViewChild,
-    ViewContainerRef,
     OnInit
 } from '@angular/core';
-import {HttpClient, HttpHeaders, HttpResponse} from "@angular/common/http";
 import {metadata} from '../../services/metadata.service';
 import {model} from '../../services/model.service';
 import {popup} from '../../services/popup.service';

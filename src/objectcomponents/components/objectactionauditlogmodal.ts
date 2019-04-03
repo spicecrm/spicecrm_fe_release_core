@@ -10,11 +10,17 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
-import {Component, Input, OnInit, Optional} from "@angular/core";
+/**
+ * @module ObjectComponents
+ */
+import {Component, OnInit, Optional} from "@angular/core";
 import {metadata} from "../../services/metadata.service";
 import {model} from "../../services/model.service";
 import {language} from "../../services/language.service";
 
+/**
+ * renders the modal with the audiot log
+ */
 @Component({
     selector: "object-action-auditlog-modal",
     templateUrl: "./src/objectcomponents/templates/objectactionauditlogmodal.html"
@@ -73,6 +79,9 @@ export class ObjectActionAuditlogModal implements OnInit {
         this.self.destroy();
     }
 
+    /**
+     * load ths audit log for the bean
+     */
     private loadAuditLog() {
         if (this.model) {
             this.auditLog = [];

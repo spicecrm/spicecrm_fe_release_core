@@ -10,25 +10,25 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module SystemComponents
+ */
+
 // from https://github.com/kolkov/angular-editor
 import {
-    AfterContentInit,
     Component, ElementRef,
-    EventEmitter,
     forwardRef,
-    Inject,
-    Input,
-    OnInit,
     OnDestroy,
-    Output,
-    Renderer2,
-    ViewChild
+    Renderer2
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from "@angular/forms";
 
 import {language} from "../../services/language.service";
 import {userpreferences} from "../../services/userpreferences.service";
 
+/**
+* @ignore
+*/
 declare var moment: any;
 
 @Component({

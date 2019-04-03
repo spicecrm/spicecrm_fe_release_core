@@ -10,28 +10,15 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module ModuleUsers
+ */
 import {CommonModule} from "@angular/common";
-import {NgModule, Renderer2, AfterViewChecked, ChangeDetectorRef, Output, Component, Injectable, EventEmitter, OnInit, AfterViewInit, OnDestroy, OnChanges, ViewChild, ViewContainerRef, Input} from "@angular/core";
+import {NgModule} from "@angular/core";
 import {FormsModule} from "@angular/forms";
-
-import {Observable, Subject} from "rxjs";
 
 import {VersionManagerService} from "../../services/versionmanager.service";
 import {DirectivesModule} from "../../directives/directives";
-
-import {language} from "../../services/language.service";
-import {view} from "../../services/view.service";
-import {metadata} from "../../services/metadata.service";
-import {backend} from "../../services/backend.service";
-import {model} from "../../services/model.service";
-import {toast} from "../../services/toast.service";
-import {relatedmodels} from "../../services/relatedmodels.service";
-import {modal} from "../../services/modal.service";
-import {session} from "../../services/session.service";
-import {broadcast} from "../../services/broadcast.service";
-import {userpreferences} from "../../services/userpreferences.service";
-import {modelutilities} from "../../services/modelutilities.service";
-import {currency} from '../../services/currency.service';
 
 import {ObjectFields} from "../../objectfields/objectfields";
 import {GlobalComponents} from "../../globalcomponents/globalcomponents";
@@ -50,6 +37,7 @@ import /*embed*/ {UserAddModal} from "./components/useraddmodal";
 import /*embed*/ {UserPreferencesItem} from "./components/userpreferencesitem";
 import /*embed*/ {UserPreferencesItemDisplay} from "./components/userpreferencesitemdisplay";
 import /*embed*/ {UserPreferencesItemEdit} from "./components/userpreferencesitemedit";
+import /*embed*/ {UserPopoverHeader} from "./components/userpopoverheader";
 
 @NgModule({
     imports: [
@@ -73,7 +61,8 @@ import /*embed*/ {UserPreferencesItemEdit} from "./components/userpreferencesite
         UserAddModal,
         UserPreferencesItem,
         UserPreferencesItemDisplay,
-        UserPreferencesItemEdit
+        UserPreferencesItemEdit,
+        UserPopoverHeader
     ]
 })
 export class ModuleUsers {

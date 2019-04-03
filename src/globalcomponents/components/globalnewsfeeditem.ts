@@ -10,8 +10,14 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module GlobalComponents
+ */
 import {Component, Input, OnInit} from '@angular/core';
 
+/**
+* @ignore
+*/
 declare var moment: any;
 
 @Component({

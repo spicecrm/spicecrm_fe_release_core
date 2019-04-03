@@ -10,6 +10,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module ObjectComponents
+ */
 import {AfterViewInit, ChangeDetectorRef, Component, ViewChild, ViewContainerRef} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {metadata} from '../../services/metadata.service';
@@ -21,6 +24,9 @@ import {toast} from '../../services/toast.service';
 
 import {objectimport} from '../services/objectimport.service';
 
+/**
+* @ignore
+*/
 declare var _: any;
 
 @Component({
@@ -94,7 +100,7 @@ export class ObjectImport implements AfterViewInit {
                     // check if file can be imported
                     if (thisField.type !== 'link' && thisField.type !== 'relate' && thisField.source !== 'non-db' && thisField.name != 'id') {
                         if (thisField.vname)
-                            thisField.displayname = this.language.getModuleLabel(this.model.module, thisField.vname) + ' (' + thisField.name + ')';
+                            thisField.displayname = this.language.getLabel(this.model.module, thisField.vname) + ' (' + thisField.name + ')';
                         else
                             thisField.displayname = thisField.name;
 

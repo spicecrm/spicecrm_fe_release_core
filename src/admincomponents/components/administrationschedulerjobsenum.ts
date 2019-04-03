@@ -10,6 +10,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module AdminComponentsModule
+ */
 import {Component} from '@angular/core';
 import {metadata} from '../../services/metadata.service';
 import {language} from '../../services/language.service';
@@ -23,7 +26,6 @@ import {Router} from "@angular/router";
     templateUrl: './src/admincomponents/templates/administrationschedulerjobsenum.html'
 })
 export class AdministrationSchedulerJobsEnum {
-    expanded: boolean = true;
     jobsList: any[] = [];
 
     constructor(public model: model,
@@ -33,5 +35,9 @@ export class AdministrationSchedulerJobsEnum {
                 public router: Router,
                 public backend: backend) {
         this.backend.getRequest('module/Scheduler/jobslist').subscribe(jobslist => this.jobsList = Object.keys(jobslist));
+    }
+
+    private trackByFn(index, item) {
+        return index;
     }
 }

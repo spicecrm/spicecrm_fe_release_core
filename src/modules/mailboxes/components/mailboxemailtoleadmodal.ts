@@ -10,11 +10,13 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module ModuleMailboxes
+ */
 import {AfterViewInit, Component, HostBinding, Input, OnInit, ViewChild, ViewContainerRef} from "@angular/core";
 import {language} from "../../../services/language.service";
 import {metadata} from "../../../services/metadata.service";
 import {model} from "../../../services/model.service";
-import {toast} from "../../../services/toast.service";
 import {view} from "../../../services/view.service";
 
 @Component({

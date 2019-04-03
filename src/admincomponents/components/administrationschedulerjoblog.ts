@@ -10,7 +10,10 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
-import {Component, OnDestroy, ViewChild, ViewContainerRef} from '@angular/core';
+/**
+ * @module AdminComponentsModule
+ */
+import {Component, ElementRef, OnDestroy, OnInit} from '@angular/core';
 import {metadata} from '../../services/metadata.service';
 import {language} from '../../services/language.service';
 import {model} from "../../services/model.service";
@@ -18,8 +21,15 @@ import {backend} from "../../services/backend.service";
 import {relatedmodels} from "../../services/relatedmodels.service";
 import {broadcast} from "../../services/broadcast.service";
 import {userpreferences} from "../../services/userpreferences.service";
+import {Subscription} from "rxjs";
 
+/**
+* @ignore
+*/
 declare var _;
+/**
+* @ignore
+*/
 declare var moment;
 
 @Component({
@@ -27,19 +37,19 @@ declare var moment;
     templateUrl: './src/admincomponents/templates/administrationschedulerjoblog.html',
     providers: [relatedmodels]
 })
-export class AdministrationSchedulerJobLog implements OnDestroy{
-    @ViewChild('logcontainer', {read: ViewContainerRef}) private logContainer: ViewContainerRef;
+export class AdministrationSchedulerJobLog implements OnInit, OnDestroy {
     public schedulerLogs: any[] = [];
-    private expanded: boolean = true;
-    private subscriber: any;
+    private isLoading: boolean = false;
+    private subscription: Subscription = new Subscription();
 
     constructor(public model: model,
                 public language: language,
                 public metadata: metadata,
                 public broadcast: broadcast,
+                public elementRef: ElementRef,
                 public userpreferences: userpreferences,
                 public backend: backend) {
-        this.subscriber = this.broadcast.message$.subscribe(res => {
+        this.subscription = this.broadcast.message$.subscribe(res => {
             if (res.messagetype == 'scheduler.run') {
                 this.getData();
             }
@@ -50,8 +60,42 @@ export class AdministrationSchedulerJobLog implements OnDestroy{
         this.getData();
     }
 
-    get logContainerStyle() {
-        return {'max-height': `calc(100vh - ${this.logContainer.element.nativeElement.offsetTop}px`};
+    public getData() {
+        let params = {
+            start: 0,
+            limit: 10
+        };
+        this.isLoading = true;
+        this.backend.getRequest("module/Schedulers/" + this.model.id + "/related/schedulers_times", params)
+            .subscribe(
+                (response: any) => {
+                    this.schedulerLogs = _.values(response);
+                    this.schedulerLogs.sort((a, b) => {
+                        return a.execute_time > b.execute_time ? -1 : 0;
+                    });
+                    this.isLoading = false;
+                }, err => this.isLoading = false);
+    }
+
+    public getMoreData() {
+        let params = {
+            start: this.schedulerLogs.length,
+            limit: 10
+        };
+        this.isLoading = true;
+        this.backend.getRequest("module/Schedulers/" + this.model.id + "/related/schedulers_times", params)
+            .subscribe(
+                (response: any) => {
+                    this.schedulerLogs = [...this.schedulerLogs, ..._.values(response)];
+                    this.schedulerLogs.sort((a, b) => {
+                        return a.execute_time > b.execute_time ? -1 : 0;
+                    });
+                    this.isLoading = false;
+                }, err => this.isLoading = false);
+    }
+
+    public ngOnDestroy() {
+        this.subscription.unsubscribe();
     }
 
     private getResolutionClass(status) {
@@ -65,30 +109,16 @@ export class AdministrationSchedulerJobLog implements OnDestroy{
         }
     }
 
-    public getData() {
-        this.backend.getRequest("module/Schedulers/" + this.model.id + "/related/schedulers_times", {limit: -1}).subscribe(
-            (response: any) => {
-                this.schedulerLogs = _.values(response);
-                this.schedulerLogs.sort((a, b) => {
-                    if (a.execute_time > b.execute_time) {
-                        return -1;
-                    }
-                    return 0;
-                });
-            }
-        );
-    }
-
     private displayDateValue(date) {
-        if (!date) {return ''}
+        if (!date) {
+            return '';
+        }
         date = moment(date).tz(moment.tz.guess());
         date.add(date.utcOffset(), "m");
         return date.format(this.userpreferences.getDateFormat() + ' ' + this.userpreferences.getTimeFormat());
     }
 
-    public ngOnDestroy() {
-        if (this.subscriber) {
-            this.subscriber.unsubscribe();
-        }
+    private trackByFn(index, item) {
+        return item.id;
     }
 }

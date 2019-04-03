@@ -10,6 +10,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module ObjectFields
+ */
 import {Component, Input, ViewChild, ViewContainerRef, AfterViewInit} from '@angular/core';
 import {model} from '../../services/model.service';
 import {metadata} from '../../services/metadata.service';

@@ -10,7 +10,10 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
-import {Component, Input} from '@angular/core';
+/**
+ * @module SystemComponents
+ */
+import {Component} from '@angular/core';
 
 @Component({
     selector: 'system-component-missing',
@@ -18,10 +21,6 @@ import {Component, Input} from '@angular/core';
 })
 export class SystemComponentMissing {
 
-    component: string = '';
-
-    constructor() {
-
-    }
+    private component: string = '';
 
 }

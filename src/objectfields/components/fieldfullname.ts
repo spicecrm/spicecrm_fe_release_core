@@ -10,6 +10,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module ObjectFields
+ */
 import {Component} from '@angular/core';
 import {model} from '../../services/model.service';
 import {view} from '../../services/view.service';
@@ -52,6 +55,47 @@ export class fieldFullName extends fieldGeneric {
 
     get value() {
         return this.filterUndefined(this.language.getFieldDisplayOptionValue(this.model.module, this.fieldsalutation, this.model.data[this.fieldsalutation])) + ' ' + this.filterUndefined(this.model.data[this.fielddegree]) + ' ' + this.filterUndefined(this.model.data[this.fieldfirstname]) + ' ' + this.filterUndefined(this.model.data[this.fieldlastname]) + ' ' + this.filterUndefined(this.model.data[this.fieldlasttitle]);
+    }
+
+
+    get salutation() {
+        return this.model.getField(this.fieldsalutation);
+    }
+
+    set salutation(value) {
+        this.model.setField(this.fieldsalutation, value);
+    }
+
+    get degree1() {
+        return this.model.getField(this.fielddegree);
+    }
+
+    set degree1(value) {
+        this.model.setField(this.fielddegree, value);
+    }
+
+    get first_name() {
+        return this.model.getField(this.fieldfirstname);
+    }
+
+    set first_name(value) {
+        this.model.setField(this.fieldfirstname, value);
+    }
+
+    get last_name() {
+        return this.model.getField(this.fieldlastname);
+    }
+
+    set last_name(value) {
+        this.model.setField(this.fieldlastname, value);
+    }
+
+    get degree2() {
+        return this.model.getField(this.fieldlasttitle);
+    }
+
+    set degree2(value) {
+        this.model.setField(this.fieldlasttitle, value);
     }
 
     private filterUndefined(value) {

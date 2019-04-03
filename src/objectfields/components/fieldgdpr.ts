@@ -10,6 +10,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module ObjectFields
+ */
 import {Component, OnInit} from '@angular/core';
 import {model} from '../../services/model.service';
 import {modal} from '../../services/modal.service';

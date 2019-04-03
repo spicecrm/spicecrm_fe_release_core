@@ -10,14 +10,15 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * a set of system specific directives
+ *
+ * @module directives
+ */
 import {CommonModule} from "@angular/common";
-import {NgModule,Directive, Renderer2, Input, HostListener, HostBinding, OnDestroy, ElementRef, OnInit, DoCheck, TemplateRef, ViewContainerRef, Pipe, PipeTransform, Optional, AfterViewInit} from "@angular/core";
-import {Router}   from '@angular/router';
+import {NgModule} from "@angular/core";
 
 import {metadata} from '../services/metadata.service';
-import {footer} from '../services/footer.service';
-import {model} from '../services/model.service';
-import {view} from '../services/view.service';
 import {VersionManagerService} from '../services/versionmanager.service';
 
 import /*embed*/ {ModelPopOverDirective} from "./directives/modelpopover";
@@ -29,8 +30,11 @@ import /*embed*/ {FirstUpperCasePipe} from "./directives/firstuppercase";
 import /*embed*/ {DropdownTriggerDirective} from "./directives/dropdowntrigger";
 import /*embed*/ {ToBottomDirective} from "./directives/tobottom";
 import /*embed*/ {TrimInputDirective} from './directives/triminput';
-import /*embed*/ {ViewProviderDirective} from './directives/viewProvider';
+import /*embed*/ {ViewProviderDirective} from './directives/viewprovider';
 
+/**
+ * the angular module that collects all teh directives and can be imported by other modules to use the set of directives
+ */
 @NgModule({
     imports: [
         CommonModule,

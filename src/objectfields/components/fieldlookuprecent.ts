@@ -10,7 +10,10 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
-import {Component, ElementRef, Input, Output, OnInit, EventEmitter} from '@angular/core';
+/**
+ * @module ObjectFields
+ */
+import {Component, Input, Output, OnInit, EventEmitter} from '@angular/core';
 import {model} from '../../services/model.service';
 import {popup} from '../../services/popup.service';
 import {language} from '../../services/language.service';

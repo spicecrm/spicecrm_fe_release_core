@@ -10,6 +10,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module GlobalComponents
+ */
 import {Component, EventEmitter, Output} from '@angular/core';
 import {configurationService} from '../../services/configuration.service';
 import {toast} from '../../services/toast.service';

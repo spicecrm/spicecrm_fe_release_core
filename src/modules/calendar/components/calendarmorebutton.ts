@@ -10,11 +10,17 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module ModuleCalendar
+ */
 import {Component, ElementRef, HostListener, Input, OnDestroy} from '@angular/core';
 import {footer} from "../../../services/footer.service";
 import {metadata} from "../../../services/metadata.service";
 import {language} from "../../../services/language.service";
 
+/**
+* @ignore
+*/
 declare var moment: any;
 
 @Component({
@@ -23,7 +29,7 @@ declare var moment: any;
 
 })
 
-export class CalendarMoreButton implements OnDestroy{
+export class CalendarMoreButton implements OnDestroy {
 
     @Input("moreevents") private events: any[] = [];
     @Input("ismobileview") private isMobileView: boolean = false;
@@ -37,6 +43,11 @@ export class CalendarMoreButton implements OnDestroy{
                 private metadata: metadata) {
     }
 
+    public ngOnDestroy() {
+        if (this.popoverCmp) {
+            this.popoverCmp.closePopover(true);
+        }
+    }
 
     @HostListener('mouseenter')
     private onMouseOver() {
@@ -54,20 +65,15 @@ export class CalendarMoreButton implements OnDestroy{
     }
 
     private renderPopover() {
-        this.metadata.addComponent('CalendarMorePopover', this.footer.modalcontainer).subscribe(
-            popover => {
-                popover.instance.events = this.events;
-                popover.instance.isMobileView = this.isMobileView;
-                popover.instance.sheetDay = this.sheetDay;
-                popover.instance.parentElementRef = this.elementRef;
-                this.popoverCmp = popover.instance;
-            }
-        );
-    }
-
-    public ngOnDestroy() {
-        if (this.popoverCmp) {
-            this.popoverCmp.closePopover(true);
-        }
+        this.metadata.addComponent('CalendarMorePopover', this.footer.modalcontainer)
+            .subscribe(
+                popover => {
+                    popover.instance.events = this.events;
+                    popover.instance.isMobileView = this.isMobileView;
+                    popover.instance.sheetDay = this.sheetDay;
+                    popover.instance.parentElementRef = this.elementRef;
+                    this.popoverCmp = popover.instance;
+                }
+            );
     }
 }

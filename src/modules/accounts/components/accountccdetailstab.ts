@@ -10,6 +10,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module ModuleAccounts
+ */
 import {Component, Input, ViewChild, ViewContainerRef} from '@angular/core';
 import {metadata} from '../../../services/metadata.service';
 import {model} from '../../../services/model.service';
@@ -18,6 +21,9 @@ import {language} from '../../../services/language.service';
 import {toast} from '../../../services/toast.service';
 import {backend} from '../../../services/backend.service';
 
+/**
+* @ignore
+*/
 declare var moment: any;
 
 @Component({

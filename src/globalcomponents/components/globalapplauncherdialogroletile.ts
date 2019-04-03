@@ -10,6 +10,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module GlobalComponents
+ */
 import {Component, ElementRef, ViewChild, Input, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {broadcast} from '../../services/broadcast.service';

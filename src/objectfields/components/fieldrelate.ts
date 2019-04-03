@@ -10,6 +10,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module ObjectFields
+ */
 import {Component, ElementRef, OnInit} from '@angular/core';
 import {model} from '../../services/model.service';
 import {view} from '../../services/view.service';
@@ -56,18 +59,18 @@ export class fieldRelate extends fieldGeneric implements OnInit {
     }
 
     get disableadd() {
-        return this.fieldconfig.disableadd ? true : false;
+        return this.fieldconfig.disableadd;
     }
 
     private closePopups() {
-        if (this.model.data[this.relateIdField]) {
+        if (this.model.getField(this.relateIdField)) {
             this.relateSearchTerm = '';
         }
         this.relateSearchOpen = false;
     }
 
     private clearField() {
-        this.model.data[this.relateNameField] = '';
+        this.model.setField(this.relateNameField, '') ;
         this.model.setField(this.relateIdField, '');
     }
 
@@ -76,8 +79,8 @@ export class fieldRelate extends fieldGeneric implements OnInit {
     }
 
     private setRelated(related) {
-        this.model.data[this.relateIdField] = related.id;
-        this.model.data[this.relateNameField] = related.text;
+        this.model.setField(this.relateIdField, related.id);
+        this.model.setField(this.relateNameField, related.text) ;
         if (this.fieldconfig.executeCopyRules == 2) {
             this.executeCopyRules(related.id);
         } else if (this.fieldconfig.executeCopyRules == 1) {

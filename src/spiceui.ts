@@ -10,33 +10,31 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module SpiceUI
+ */
 import {platformBrowserDynamic} from "@angular/platform-browser-dynamic";
 import {BrowserModule, Title} from "@angular/platform-browser";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {
     NgModule,
     Component,
     SystemJsNgModuleLoader,
-    Injectable,
-    NgModuleFactory,
-    NgModuleFactoryLoader,
-    Compiler
+    Renderer2,
+    enableProdMode
 } from "@angular/core";
 import {FormsModule} from "@angular/forms";
 import {RouterModule} from "@angular/router";
 import {HttpClientModule} from "@angular/common/http";
-
+import {LocationStrategy, HashLocationStrategy} from "@angular/common";
 
 // spicecrm generic modules
 import {SystemComponents} from "./systemcomponents/systemcomponents";
 import {GlobalComponents} from "./globalcomponents/globalcomponents";
 import {ObjectComponents} from "./objectcomponents/objectcomponents";
 
-
-// support browser location strategy
-import {LocationStrategy, HashLocationStrategy} from "@angular/common";
-// import {AdminComponentsModule, AdministrationMain} from "./admincomponents/admincomponents.module";
-
 // various services we need on global app level
+import {loggerService} from './services/logger.service';
 import {configurationService} from "./services/configuration.service";
 import {loginService, loginCheck} from "./services/login.service";
 import {session} from "./services/session.service";
@@ -66,25 +64,45 @@ import {modal} from "./services/modal.service";
 import {layout} from "./services/layout.service";
 
 // declarations for TS
+/**
+ * @ignore
+ */
 declare var System: any;
+/**
+* @ignore
+*/
 declare var moment: any;
 declare global {
     interface Date {
         format(format): string;
     }
 }
-;
 
 moment.defaultFormat = "YYYY-MM-DD HH:mm:ss";
 
+/**
+ * the main component that gets bootstrapped withthe main module
+ */
 @Component({
     selector: "spicecrm",
     template: "<global-header></global-header><div [ngStyle]='outletstyle'><router-outlet></router-outlet></div><global-footer></global-footer>"
 })
 export class SpiceUI {
-    constructor(private layout: layout) {
+    constructor(private layout: layout, private render: Renderer2) {
+        // stop just dropping files on the app
+        this.render.listen('window', 'dragover', e => {
+            e.preventDefault();
+            e.dataTransfer.effectAllowed = "none";
+            e.dataTransfer.dropEffect = "none";
+        });
+        this.render.listen('window', 'drop', e => {
+            e.preventDefault();
+        });
     }
 
+    /**
+     * sets the top margin the headers that is set static requires
+     */
     get outletstyle() {
         return {
             'margin-top': this.layout.headerheight + 'px'
@@ -92,9 +110,13 @@ export class SpiceUI {
     }
 }
 
+/**
+ * the main module
+ */
 @NgModule({
     imports: [
         BrowserModule,
+        BrowserAnimationsModule,
         HttpClientModule,
         FormsModule,
         SystemComponents,
@@ -141,7 +163,8 @@ export class SpiceUI {
         assistant,
         VersionManagerService,
         modal,
-        Title
+        Title,
+        loggerService
     ]
 })
 export class SpiceUIModule {
@@ -156,13 +179,14 @@ export class SpiceUIModule {
     }
 }
 
-// set prod mode
-/*
- import {enableProdMode} from "@angular/core";
- enableProdMode();
+/**
+ * sets the prod mode. THis is enabled in the build workflow for production build
  */
+// enableProdMode();
 
-// browser detection to display mesaeg when we have IE
+/**
+ * browser detection .. IE is not supported
+ */
 declare global {
     interface Document {
         documentMode?: any;
@@ -177,9 +201,12 @@ if (/*@cc_on!@*/false || !!document.documentMode) {
     platformBrowserDynamic().bootstrapModule(SpiceUIModule);
 }
 
+/**
+ * a handler for using an existing window if a link is clicked e.g. in an email so SpiceCRM is not started for a second time but the existing one navigates properly to the requested ressource
+ */
 window.name = 'SpiceCRM';
 (() => {
-    if (window.BroadcastChannel) { // Does the browser know the Broadcast API?
+    if (window.hasOwnProperty('BroadcastChannel')) { // Does the browser know the Broadcast API?
         let bc = new BroadcastChannel('spiceCRM_channel');
         bc.onmessage = e => {
             if (e.data.url && e.data.url.startsWith(window.location.origin + window.location.pathname)) {

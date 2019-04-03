@@ -10,12 +10,19 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module GlobalComponents
+ */
 import {ElementRef, Component, Input, Output, EventEmitter, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {fts} from '../../services/fts.service';
 import {language} from '../../services/language.service';
 import {metadata} from '../../services/metadata.service';
+import {layout} from '../../services/layout.service';
 
+/**
+ * @ignore
+ */
 declare var _;
 
 @Component({
@@ -27,8 +34,12 @@ export class GlobalSearchModule implements OnInit {
     @Output() private scope: EventEmitter<string> = new EventEmitter<string>();
     private listfields: any[] = [];
 
-    constructor(private metadata: metadata, private elementref: ElementRef, router: Router, private fts: fts, private language: language) {
+    constructor(private metadata: metadata, private elementref: ElementRef, router: Router, private fts: fts, private language: language, private layout: layout) {
 
+    }
+
+    get issmall() {
+        return this.layout.screenwidth == 'small';
     }
 
     public ngOnInit() {

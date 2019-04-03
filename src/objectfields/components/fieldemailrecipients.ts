@@ -10,6 +10,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module ObjectFields
+ */
 import {Component, ElementRef, Renderer2, ViewChild, ViewContainerRef} from '@angular/core';
 import {model} from '../../services/model.service';
 import {view} from '../../services/view.service';
@@ -64,7 +67,9 @@ export class fieldEmailRecipients extends fieldGeneric {
 
     closeSearchDialog() {
         // close the cliklistener sine the component is gone
-        this.clickListener();
+        if (this.clickListener) {
+            this.clickListener();
+        }
         this.searchResults = [];
         this.showSearchResults = false;
     }

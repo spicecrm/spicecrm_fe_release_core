@@ -10,6 +10,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module ModuleCalendar
+ */
 import {
     Component,
     ElementRef,
@@ -28,7 +31,13 @@ import {session} from '../../../services/session.service';
 import {backend} from '../../../services/backend.service';
 import {calendar} from '../services/calendar.service';
 
+/**
+* @ignore
+*/
 declare var moment: any;
+/**
+* @ignore
+*/
 declare var _: any;
 
 @Component({
@@ -37,15 +46,13 @@ declare var _: any;
 })
 export class CalendarSheetSchedule implements OnChanges {
 
+    @Output() public navigateday: EventEmitter<any> = new EventEmitter<any>();
+    @Output() public untildate$: EventEmitter<any> = new EventEmitter<any>();
     @ViewChild('calendarsheet', {read: ViewContainerRef}) private calendarsheet: ViewContainerRef;
-
     @Input() private setdate: any = {};
     @Input('userscalendars') private usersCalendars: any[] = [];
     @Input('othercalendars') private otherCalendars: any[] = [];
     @Input('googleisvisible') private googleIsVisible: boolean = true;
-    @Output() public navigateday: EventEmitter<any> = new EventEmitter<any>();
-    @Output() public untildate$: EventEmitter<any> = new EventEmitter<any>();
-
     private allevents: any[] = [];
     private ownerEvents: any[] = [];
     private otherEvents: any[] = [];
@@ -61,6 +68,24 @@ export class CalendarSheetSchedule implements OnChanges {
                 private session: session,
                 private calendar: calendar) {
         this.untilDate = new moment().hour(0).minute(0).second(0).add(1, "M");
+    }
+
+    get allEvents() {
+        return this.allevents;
+    }
+
+    get showNoneMsg() {
+        return this.allEvents.length == 0 && this.calendar.isDashlet;
+    }
+
+    set allEvents(value) {
+        let events = this.groupByDay(this.ownerEvents.concat(this.userEvents, this.otherEvents, this.googleEvents));
+        events.sort((a, b) => a.date - b.date);
+        this.allevents = events;
+    }
+
+    get startDate() {
+        return new moment(this.setdate).hour(0).minute(0).second(0);
     }
 
     public ngOnChanges(changes: SimpleChanges) {
@@ -80,22 +105,16 @@ export class CalendarSheetSchedule implements OnChanges {
         }
     }
 
-    set allEvents(value) {
-        let events = this.groupByDay(this.ownerEvents.concat(this.userEvents, this.otherEvents, this.googleEvents));
-        events.sort((a, b) => a.date - b.date);
-        this.allevents = events;
+    private trackByFn(index, item) {
+        return item.id;
     }
 
-    get allEvents() {
-        return this.allevents;
-    }
-
-    get startDate() {
-        return new moment(this.setdate).hour(0).minute(0).second(0);
+    private trackByFnDate(index, item) {
+        return index;
     }
 
     private setUntilDate() {
-        this.untilDate =  moment(this.setdate).add(1, "M");
+        this.untilDate = moment(this.setdate).add(1, "M");
         this.untildate$.emit(this.untilDate);
     }
 
@@ -114,11 +133,17 @@ export class CalendarSheetSchedule implements OnChanges {
                 let sameDay = date.year() == eventDay.year() && date.month() == eventDay.month() && date.date() == eventDay.date();
 
                 if (eventDay.isAfter(date) || sameDay) {
-                    let day = {year: eventDay.year(), month: eventDay.month(), day: eventDay.date(), date: moment(eventDay), events: [event]};
+                    let day = {
+                        year: eventDay.year(),
+                        month: eventDay.month(),
+                        day: eventDay.date(),
+                        date: moment(eventDay),
+                        events: [event]
+                    };
                     let dayIndex = -1;
 
                     days.some((day, index) => {
-                        if (day.year == eventDay.year() && day.month == eventDay.month() &&  day.day == eventDay.date()) {
+                        if (day.year == eventDay.year() && day.month == eventDay.month() && day.day == eventDay.date()) {
                             dayIndex = index;
                             return true;
                         }
@@ -139,12 +164,13 @@ export class CalendarSheetSchedule implements OnChanges {
         this.ownerEvents = [];
         this.allEvents = this.allevents.slice();
 
-        this.calendar.loadEvents(this.startDate, this.untilDate).subscribe(events => {
-            if (events.length > 0) {
-                this.ownerEvents = events;
-            }
-            this.allEvents = this.allevents.slice();
-        });
+        this.calendar.loadEvents(this.startDate, this.untilDate)
+            .subscribe(events => {
+                if (events.length > 0) {
+                    this.ownerEvents = events;
+                }
+                this.allEvents = this.allevents.slice();
+            });
     }
 
     private getGoogleEvents() {
@@ -155,63 +181,70 @@ export class CalendarSheetSchedule implements OnChanges {
             return;
         }
 
-        this.calendar.loadGoogleEvents(this.startDate, this.untilDate).subscribe(events => {
-            this.googleEvents = events;
-            this.allEvents = this.allevents.slice();
-        });
+        this.calendar.loadGoogleEvents(this.startDate, this.untilDate)
+            .subscribe(events => {
+                this.googleEvents = events;
+                this.allEvents = this.allevents.slice();
+            });
     }
 
     private getUsersEvents() {
         this.userEvents = [];
         this.allEvents = this.allevents.slice();
-        if (this.calendar.isMobileView) {return}
+        if (this.calendar.isMobileView) {
+            return;
+        }
 
         for (let i = 0; i < this.calendar.usersCalendars.length; i++) {
             let calendar = this.calendar.usersCalendars[i];
             let last = this.calendar.usersCalendars.length == (i + 1);
-            this.calendar.loadEvents(this.startDate, this.untilDate, calendar.id).subscribe(events => {
-                if (events.length > 0) {
-                    events.forEach(event => {
-                        event.color = calendar.color;
-                        event.visible = calendar.visible;
-                        if (calendar.visible) {
-                            this.userEvents.push(event);
-                        }
-                        if (last) {
-                            this.allEvents = this.allevents.slice();
-                        }
-                    });
-                } else if (last) {
-                    this.allEvents = this.allevents.slice();
-                }
-            });
+            this.calendar.loadEvents(this.startDate, this.untilDate, calendar.id)
+                .subscribe(events => {
+                    if (events.length > 0) {
+                        events.forEach(event => {
+                            event.color = calendar.color;
+                            event.visible = calendar.visible;
+                            if (calendar.visible) {
+                                this.userEvents.push(event);
+                            }
+                            if (last) {
+                                this.allEvents = this.allevents.slice();
+                            }
+                        });
+                    } else if (last) {
+                        this.allEvents = this.allevents.slice();
+                    }
+                });
         }
     }
 
     private getOtherEvents() {
         this.otherEvents = [];
         this.allEvents = this.allevents.slice();
-        if (this.calendar.isMobileView) {return}
+        if (this.calendar.isMobileView) {
+            return;
+        }
 
         for (let i = 0; i < this.calendar.otherCalendars.length; i++) {
             let calendar = this.calendar.otherCalendars[i];
             let last = this.calendar.otherCalendars.length == (i + 1);
-            this.calendar.loadEvents(this.startDate, this.untilDate, calendar.id, true).subscribe(events => {
-                if (events.length > 0) {
-                    events.forEach(event => {
-                        event.color = calendar.color;
-                        event.visible = calendar.visible;
-                        if (calendar.visible) {
-                            this.otherEvents.push(event);
-                        }
-                        if (last) {
-                            this.allEvents = this.allevents.slice();
-                        }
-                    });
-                } else if (last) {
-                    this.allEvents = this.allevents.slice();
-                }
-            });
+            this.calendar.loadEvents(this.startDate, this.untilDate, calendar.id, true)
+                .subscribe(events => {
+                    if (events.length > 0) {
+                        events.forEach(event => {
+                            event.color = calendar.color;
+                            event.visible = calendar.visible;
+                            if (calendar.visible) {
+                                this.otherEvents.push(event);
+                            }
+                            if (last) {
+                                this.allEvents = this.allevents.slice();
+                            }
+                        });
+                    } else if (last) {
+                        this.allEvents = this.allevents.slice();
+                    }
+                });
         }
     }
 
@@ -238,5 +271,5 @@ export class CalendarSheetSchedule implements OnChanges {
         this.getGoogleEvents();
         this.getUsersEvents();
         this.getOtherEvents();
-        }
+    }
 }

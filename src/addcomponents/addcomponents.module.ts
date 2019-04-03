@@ -10,44 +10,19 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module AddComponentsModule
+ */
 import {CommonModule} from "@angular/common";
 import {FormsModule}   from "@angular/forms";
-import {NgModule, NgZone, Component, Pipe, ElementRef, Renderer, Input, AfterViewInit, OnDestroy, ViewChild, ViewContainerRef, OnInit, Injectable, EventEmitter} from "@angular/core";
+import {NgModule} from "@angular/core";
 
-import { metadata } from "../services/metadata.service";
-import { model } from "../services/model.service";
-import { relatedmodels } from "../services/relatedmodels.service";
-import { modellist } from "../services/modellist.service";
-import { modelutilities } from "../services/modelutilities.service";
-import { broadcast } from "../services/broadcast.service";
-import { configurationService } from "../services/configuration.service";
-import { session } from "../services/session.service";
-import { language } from "../services/language.service";
-import { view } from "../services/view.service";
-import { popup } from "../services/popup.service";
-import { territories } from "../services/territories.service";
-import { backend } from "../services/backend.service";
-import { userpreferences } from "../services/userpreferences.service";
-import { footer } from "../services/footer.service";
 import { VersionManagerService } from "../services/versionmanager.service";
-import { LibLoaderService } from '../services/libloader.service';
-
-import {HttpClient, HttpHeaders, HttpResponse} from "@angular/common/http";
-
-import {Router}   from "@angular/router";
-import {Observable} from "rxjs";
-
-import /*embed*/ {spiceprocess} from "./services/spiceprocess";
 
 import  { ObjectFields }      from "../objectfields/objectfields";
 import  { SystemComponents}      from "../systemcomponents/systemcomponents";
 import  { ObjectComponents}      from "../objectcomponents/objectcomponents";
 
-import /*embed*/ { SpiceProcess } from "./components/spiceprocess";
-import /*embed*/ { SpiceKanban, SpiceKanbanStagePipe } from "./components/spicekanban";
-import /*embed*/ { SpiceKanbanTile } from "./components/spicekanbantile";
-
-import /*embed*/ { SpiceMap } from "./components/spicemap";
 import /*embed*/ { DhtmlxDiagram } from "./components/dhtmlxdiagram";
 
 import /*embed*/ { SpiceTimestream } from "./components/spicetimestream";
@@ -68,11 +43,6 @@ import /*embed*/ { SpiceTerritorriesPrimary, SpiceTerritoriesAdditional } from "
         SystemComponents
     ],
     declarations: [
-        SpiceProcess,
-        SpiceKanban,
-        SpiceKanbanStagePipe,
-        SpiceKanbanTile,
-        SpiceMap,
         DhtmlxDiagram,
         SpiceTimestream,
         SpiceTimestreamHeader,
@@ -83,15 +53,9 @@ import /*embed*/ { SpiceTerritorriesPrimary, SpiceTerritoriesAdditional } from "
         SpiceTerritoriesAdditional
     ],
     entryComponents: [
-        SpiceProcess,
-        SpiceKanban,
-        SpiceMap,
         SpiceTerritorriesDetail
     ],
     exports: [
-        SpiceProcess,
-        SpiceKanban,
-        SpiceMap,
         DhtmlxDiagram
     ]
 })
@@ -100,7 +64,6 @@ export class AddComponentsModule {
     public readonly build_date = "/*build_date*/";
 
     constructor(
-        public metadata: metadata,
         private vms: VersionManagerService,
     ) {
         this.vms.registerModule(this);

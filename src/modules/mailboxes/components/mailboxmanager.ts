@@ -10,8 +10,10 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module ModuleMailboxes
+ */
 import {Component, Input, ViewChild, ViewContainerRef} from "@angular/core";
-import {Subject} from "rxjs";
 import {backend} from "../../../services/backend.service";
 import {language} from "../../../services/language.service";
 import {navigation} from "../../../services/navigation.service";

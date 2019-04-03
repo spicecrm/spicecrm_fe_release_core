@@ -11,14 +11,16 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 */
 
 /**
- * Created by christian on 08.11.2016.
+ * @module ObjectComponents
  */
 import {
-    AfterViewInit, ComponentFactoryResolver, Component, NgModule, ViewChild, ViewContainerRef,
-    ElementRef, OnInit, OnDestroy, Input
+    Component, OnInit, Input
 } from '@angular/core';
 import {objectnote} from '../services/objectnote.service';
 
+/**
+* @ignore
+*/
 declare var moment: any;
 
 @Component({

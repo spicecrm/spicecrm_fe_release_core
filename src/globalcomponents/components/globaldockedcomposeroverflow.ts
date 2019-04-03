@@ -10,6 +10,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module GlobalComponents
+ */
 import {
     Component,
     Renderer2,
@@ -66,7 +69,7 @@ export class GlobalDockedComposerOverflow implements OnDestroy {
     }
 
     private displayLabel(composer) {
-        // return composer.model.data.name ? composer.model.data.name : this.language.getModuleLabel(composer.module, 'LBL_NEW_FORM_TITLE');
+        // return composer.model.data.name ? composer.model.data.name : this.language.getLabel(composer.module, 'LBL_NEW_FORM_TITLE');
         return composer.model.data.name ? composer.model.data.name : this.language.getModuleName(composer.model.module, true);
     }
 

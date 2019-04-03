@@ -10,11 +10,11 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
-import {AfterViewInit, Component, OnInit, Input, ViewChild, ViewContainerRef} from '@angular/core';
+/**
+ * @module ObjectComponents
+ */
+import {Component, OnInit, Input, ViewChild, ViewContainerRef} from '@angular/core';
 import {metadata} from '../../services/metadata.service';
-import {model} from '../../services/model.service';
-import {language} from '../../services/language.service';
-import {activitiyTimeLineService} from '../../services/activitiytimeline.service';
 
 @Component({
     selector: 'object-activitiytimeline-add-tabcontainer',

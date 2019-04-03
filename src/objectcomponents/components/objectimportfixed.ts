@@ -10,6 +10,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module ObjectComponents
+ */
 import {Component, Input} from '@angular/core';
 import {metadata} from '../../services/metadata.service';
 import {model} from '../../services/model.service';
@@ -18,6 +21,9 @@ import {view} from '../../services/view.service';
 
 import {objectimport} from '../services/objectimport.service';
 
+/**
+* @ignore
+*/
 declare var _: any;
 
 @Component({

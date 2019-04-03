@@ -10,39 +10,26 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module GlobalComponents
+ */
 import {CommonModule} from "@angular/common";
 import {FormsModule}   from "@angular/forms";
 import {DirectivesModule} from "../directives/directives";
-import {AfterViewInit, ComponentFactoryResolver, Component, NgModule, ViewChild, ViewContainerRef, Injectable, Renderer, Renderer2, Input, ElementRef, OnDestroy, OnInit, OnChanges, EventEmitter, Output, ChangeDetectorRef, DoCheck} from "@angular/core";
-import {HttpClient, HttpHeaders, HttpResponse} from "@angular/common/http";
-import {RouterModule, Routes, Router, ActivationStart, NavigationStart, ActivatedRoute} from "@angular/router";
-import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
+import {NgModule} from "@angular/core";
+import {RouterModule,} from "@angular/router";
 
+/**
+* @ignore
+*/
 declare var _: any;
+/**
+ * @ignore
+ */
 declare var gapi: any;
 
 import {loginService, loginCheck} from "../services/login.service";
-import {session} from "../services/session.service";
-import {backend} from "../services/backend.service";
-import {language} from "../services/language.service";
-import {configurationService} from "../services/configuration.service";
-import {popup} from "../services/popup.service";
-import {broadcast} from "../services/broadcast.service";
-import {fts} from "../services/fts.service";
-import {model} from "../services/model.service";
-import {modellist} from "../services/modellist.service";
-import {recent} from "../services/recent.service";
-import {favorite} from "../services/favorite.service";
 import {metadata} from "../services/metadata.service";
-import {navigation} from "../services/navigation.service";
-import {dockedComposer} from "../services/dockedcomposer.service";
-import {view} from "../services/view.service";
-import {toast} from "../services/toast.service";
-import {footer} from "../services/footer.service";
-import {cookie} from "../services/cookie.service";
-import { modal } from "../services/modal.service";
-import { loader } from "../services/loader.service";
-import { layout } from "../services/layout.service";
 
 import {ObjectFields}      from "../objectfields/objectfields";
 import {SystemComponents}      from "../systemcomponents/systemcomponents";
@@ -87,6 +74,7 @@ import /*embed*/ {GlobalAppLauncherDialogRoleTile} from "./components/globalappl
 
 import /*embed*/ {GlobalUser} from "./components/globaluser";
 import /*embed*/ {GlobaUserPanel} from "./components/globaluserpanel";
+import /*embed*/ {GlobaUserPanelIcon} from "./components/globauserpanelicon";
 
 import /*embed*/ {GlobalRecentItems} from "./components/globalrecentitems";
 import /*embed*/ {GlobalSearch} from "./components/globalsearch";
@@ -100,7 +88,9 @@ import {VersionManagerService} from "../services/versionmanager.service";
 
 import /*embed*/ {GlobalLoginGoogle} from "./components/globallogingoogle";
 
-
+/**
+ * GlobalComponents holds records that are rendered in the global header and footer parts of the application. This includes e.g. the header menu and other components
+ */
 @NgModule({
     imports: [
         CommonModule,
@@ -146,6 +136,7 @@ import /*embed*/ {GlobalLoginGoogle} from "./components/globallogingoogle";
         GlobalLoginResetPassword,
         GlobalUser,
         GlobaUserPanel,
+        GlobaUserPanelIcon,
         GlobalAppLauncher,
         GlobalAppLauncherDialog,
         GlobalAppLauncherDialogRoleTile,

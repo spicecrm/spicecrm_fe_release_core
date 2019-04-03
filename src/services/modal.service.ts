@@ -10,6 +10,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module services
+ */
 import {EventEmitter, Injectable, Injector} from "@angular/core";
 import {metadata} from "./metadata.service";
 import {Observable, Subject, of} from "rxjs";
@@ -20,8 +23,8 @@ import {modelutilities} from "./modelutilities.service";
 @Injectable()
 export class modal {
 
-    private modalsArray: Array<any> = [];
-    private modalsObject: Object = {};
+    private modalsArray: any[] = [];
+    private modalsObject = {};
 
     constructor(private metadata: metadata, private footer: footer, private toast: toast, private utils: modelutilities) {
         window.addEventListener("keyup", (event) => {
@@ -35,7 +38,7 @@ export class modal {
     }
 
     /*
-    * tries to oopen a modal and if the component is not found or no componentfactory is found returns an erro as the subject and prompts a toast.
+    * tries to open a modal and if the component is not found or no componentfactory is found returns an error as the subject and prompts a toast.
     */
     public openModal(componentName, escKey = true, injector?: Injector) {
         // SPICEUI-35
@@ -116,15 +119,15 @@ export class modal {
         return this.modalsArray.length * 2;
     }
 
-    public prompt(type: string, text: string, headertext: string = null, theme: string, defaultvalue: string = null): Observable<any> {
+    public prompt( type: string, text: string, headertext: string = null, theme: string = 'shade', defaultvalue: string|number = null, options: string[] = null ): Observable<any> {
         let responseSubject = new Subject();
         this.openModal("SystemPrompt").subscribe(component => {
-            // todo: abhängig von type: esc ein/aus via component.instance["wrapper"]
             component.instance.type = type;
             component.instance.text = text;
             component.instance.headertext = headertext;
             component.instance.theme = theme;
-            component.instance.defaultvalue = defaultvalue;
+            component.instance.value = defaultvalue;
+            component.instance.options = options;
             component.instance.answer.subscribe(answervalue => {
                 responseSubject.next(answervalue); // return the answer
                 responseSubject.complete();
@@ -134,20 +137,20 @@ export class modal {
     }
 
     public confirm(text: string, headertext: string = null, theme: string = null): Observable<any> {
-        return this.prompt("confirm", text, headertext, theme);
+        return this.prompt('confirm', text, headertext, theme);
     }
 
     public input(text: string, headertext: string = null, defaultvalue: string = null, theme: string = null): Observable<any> {
-        return this.prompt("input", text, headertext, defaultvalue, theme);
+        return this.prompt('input', text, headertext, defaultvalue, theme);
     }
 
     public info(text: string, headertext: string = null, theme: string = null): Observable<any> {
-        return this.prompt("info", text, headertext, theme);
+        return this.prompt('info', text, headertext, theme);
     }
 
     public await(messagelabel: string = null): EventEmitter<boolean> {
         let stopper = new EventEmitter<boolean>();
-        this.openModal("SystemLoadingModal").subscribe(component => {
+        this.openModal('SystemLoadingModal', false ).subscribe(component => {
             component.instance.messagelabel = messagelabel;
             stopper.subscribe(() => {
                 component.instance.self.destroy();

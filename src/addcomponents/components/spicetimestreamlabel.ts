@@ -10,16 +10,12 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module AddComponentsModule
+ */
 import {
     Component,
-    Injectable,
-    Pipe,
-    PipeTransform,
     Input,
-    AfterViewInit,
-    ViewChild,
-    ViewContainerRef,
-    OnDestroy,
     ElementRef,
     OnInit
 } from '@angular/core';
@@ -27,13 +23,6 @@ import {metadata} from '../../services/metadata.service';
 import {model} from '../../services/model.service';
 import {view} from '../../services/view.service';
 import {footer} from '../../services/footer.service';
-import {modellist} from '../../services/modellist.service';
-import {modelutilities} from '../../services/modelutilities.service';
-import {broadcast} from '../../services/broadcast.service';
-import {userpreferences} from '../../services/userpreferences.service';
-import {spiceprocess} from '../services/spiceprocess';
-
-declare var moment: any;
 
 @Component({
     selector: '[spice-timestream-label]',

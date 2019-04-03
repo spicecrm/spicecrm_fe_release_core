@@ -11,11 +11,10 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 */
 
 /**
- * Created by christian on 08.11.2016.
+ * @module ObjectComponents
  */
-import {Component, Output, EventEmitter} from '@angular/core';
-import {popup} from '../../services/popup.service';
-import {modellist} from '../../services/modellist.service';
+
+import {Component} from '@angular/core';
 import {language} from '../../services/language.service';
 
 @Component({

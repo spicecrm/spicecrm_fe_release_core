@@ -13,7 +13,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 <div [ngClass]="fielddisplayclass">
     <system-stencil *ngIf="model.isLoading; else displaycontent"></system-stencil>
     <ng-template #displaycontent>
-        <div class="slds-grid slds-grid--vertical-align-center slds-grid--align-spread" style="min-height: 20px;">
+        <div class="slds-grid slds-grid--vertical-align-center slds-grid--align-spread" style="min-height: 19px;">
             <div class="slds-truncate" style="width:100%">
                 <ng-container *ngIf="link;else nolink">
                     <a href="javascript:void(0);" (click)="goRecord()"><ng-container *ngTemplateOutlet="content"></ng-container> </a>

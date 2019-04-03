@@ -11,7 +11,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 */
 
 /**
- * Created by christian on 08.11.2016.
+ * @module AdminComponentsModule
  */
 import {Component} from '@angular/core';
 import {metadata} from '../../services/metadata.service';

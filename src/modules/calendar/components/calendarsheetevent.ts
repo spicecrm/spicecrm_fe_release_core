@@ -10,28 +10,40 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
-import {Component, ElementRef, EventEmitter, Input, OnInit, Output, Renderer2} from '@angular/core';
+/**
+ * @module ModuleCalendar
+ */
+import {
+    Component,
+    ElementRef,
+    EventEmitter,
+    HostBinding,
+    HostListener,
+    Input,
+    OnDestroy,
+    OnInit,
+    Output,
+    Renderer2
+} from '@angular/core';
 import {model} from '../../../services/model.service';
 import {metadata} from '../../../services/metadata.service';
 import {language} from '../../../services/language.service';
 import {view} from '../../../services/view.service';
 import {broadcast} from '../../../services/broadcast.service';
 import {calendar} from '../services/calendar.service';
+import {Subscription} from "rxjs";
 
+/**
+* @ignore
+*/
 declare var moment: any;
 
 @Component({
     selector: 'calendar-sheet-event',
     templateUrl: './src/modules/calendar/templates/calendarsheetevent.html',
-    providers: [model, view],
-    host: {
-        'class': 'slds-is-absolute slds-p-bottom--xxx-small',
-        '(dragstart)': 'this.dragStart($event)',
-        '(dragend)': 'this.dragEnd($event)',
-        '[class.slds-hidden]': 'this.hidden'
-    }
+    providers: [model, view]
 })
-export class CalendarSheetEvent implements OnInit {
+export class CalendarSheetEvent implements OnInit, OnDestroy {
     @Output() public rearrange: EventEmitter<any> = new EventEmitter<any>();
     public fields: any[] = [];
     @Input() public event: any = {};
@@ -42,7 +54,7 @@ export class CalendarSheetEvent implements OnInit {
     private mouseStart: any = undefined;
     private mouseLast: any = undefined;
     private hidden: boolean = false;
-
+    private subscription: Subscription = new Subscription();
     private lastMoveTimeSpan: number = 0;
 
     constructor(private language: language,
@@ -52,11 +64,42 @@ export class CalendarSheetEvent implements OnInit {
                 private elementRef: ElementRef,
                 private model: model,
                 private renderer: Renderer2) {
-        this.calendar.color$.subscribe(calendar => {
+        this.subscription = this.calendar.color$.subscribe(calendar => {
             if (this.calendar.calendars[calendar.id] && this.calendar.calendars[calendar.id].some(event => this.event.id == event.id)) {
                 this.event.color = calendar.color;
             }
         });
+    }
+
+    get isAbsense() {
+        return this.event.type == 'absence' || this.event.module == 'UserAbsences';
+    }
+
+    get isDraggable() {
+        return this.canEdit && !this.event.isMulti && !this.isMonthSheet;
+    }
+
+    @HostBinding('class')
+    get eventClass() {
+        return 'slds-is-absolute slds-p-bottom--xxx-small' + (this.hidden ? ' slds-hidden' : '');
+    }
+
+
+    get canEdit() {
+        return this.owner == this.event.data.assigned_user_id && !this.isScheduleSheet &&
+            (this.event.type == 'event' || this.event.type == 'absence') && !this.calendar.asPicker && !this.calendar.isMobileView && !this.calendar.isDashlet;
+    }
+
+    get owner() {
+        return this.calendar.owner;
+    }
+
+    get eventStyle() {
+        return {
+            'height': '100%',
+            'border-radius': '2px',
+            'background-color': !this.isScheduleSheet ? this.event.color : 'transparent',
+        };
     }
 
     public ngOnInit() {
@@ -68,32 +111,26 @@ export class CalendarSheetEvent implements OnInit {
         }
     }
 
-    get canEdit() {
-        return this.owner == this.event.data.assigned_user_id && !this.isScheduleSheet &&
-            (this.event.type == 'event' || this.event.type == 'absence') && !this.calendar.asPicker && !this.calendar.isMobileView;
+    public ngOnDestroy() {
+        this.subscription.unsubscribe();
     }
 
-    get owner() {
-       return this.calendar.owner;
-    }
-
-    get eventStyle() {
-       return {
-           'height': '100%',
-           'border-radius': '2px',
-           'background-color': !this.isScheduleSheet ? this.event.color : 'transparent',
-       };
-    }
-
+    @HostListener('dragstart', ['$event'])
     private dragStart(event) {
-        if (!this.canEdit) {return}
-        setTimeout(()=> this.hidden = true, 0);
+        event.stopPropagation();
+        if (!this.canEdit) {
+            event.preventDefault();
+            return;
+        }
+        event.dataTransfer.effectAllowed = 'move';
+        event.dataTransfer.setData("event", 'cross browser dumb');
         this.event.dragging = true;
+        setTimeout(() => this.hidden = true, 0);
     }
 
-    private dragEnd(event) {
+    @HostListener('dragend')
+    private dragEnd() {
         this.hidden = false;
-        this.event.dragging = false;
     }
 
     private onMouseDown(e) {
@@ -117,7 +154,9 @@ export class CalendarSheetEvent implements OnInit {
     }
 
     private onMouseMove(e) {
-        if (!this.canEdit) {return}
+        if (!this.canEdit) {
+            return;
+        }
         this.mouseLast = e;
         let moved = (this.mouseLast.pageY - this.mouseStart.pageY);
         let span = Math.floor(moved / 15);
@@ -135,9 +174,12 @@ export class CalendarSheetEvent implements OnInit {
     }
 
     private onMouseUp() {
-        if (!this.canEdit) {return}
         this.mouseUpListener();
         this.mouseMoveListener();
+
+        if (!this.canEdit) {
+            return;
+        }
 
         if (this.mouseLast.pageY != this.mouseStart.pageY) {
             let durationMinutes = +this.event.data.duration_hours * 60 + +this.event.data.duration_minutes + this.lastMoveTimeSpan * 15;
@@ -148,9 +190,10 @@ export class CalendarSheetEvent implements OnInit {
 
             // save the event
             this.event.saving = true;
-            this.model.save().subscribe(data => {
-                this.event.saving = false;
-            });
+            this.model.save()
+                .subscribe(data => {
+                    this.event.saving = false;
+                });
 
             // emit to rearrange on the sheet
             this.rearrange.emit();

@@ -10,6 +10,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module ModuleAccounts
+ */
 import {Component, ViewChild, ViewContainerRef, Input, Output, EventEmitter} from '@angular/core';
 import {relatedmodels} from '../../../services/relatedmodels.service';
 import {model} from '../../../services/model.service';
@@ -41,8 +44,8 @@ export class AccountsContactsManagerList {
     }
 
     ngOnInit(){
-        let componentConfig = this.metadata.getComponentConfig('AccountsContactsManagerList', 'Accounts');
-        this.listfields = this.metadata.getFieldSetFields(componentConfig.fieldset);
+        let componentConfig = this.metadata.getComponentConfig('AccountsContactsManager', 'Accounts');
+        this.listfields = this.metadata.getFieldSetFields(componentConfig.listfieldset);
     }
 
     setActiveContactId(id){

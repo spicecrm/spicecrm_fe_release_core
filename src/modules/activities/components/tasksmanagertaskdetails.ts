@@ -10,6 +10,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module ModuleActivities
+ */
 import {Component, ElementRef, ViewChild, ViewContainerRef, Input, OnChanges, AfterViewInit, OnDestroy} from '@angular/core';
 import {HttpClient, HttpHeaders, HttpResponse} from "@angular/common/http";
 import {model} from '../../../services/model.service';

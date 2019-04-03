@@ -10,6 +10,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module ObjectComponents
+ */
 import {Component, Input, Output, EventEmitter} from '@angular/core';
 
 import {metadata} from '../../services/metadata.service';

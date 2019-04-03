@@ -10,12 +10,13 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module ObjectComponents
+ */
 import {
     AfterViewInit,
-    ComponentFactoryResolver,
     Component,
     Input,
-    NgModule,
     ViewChild,
     ViewContainerRef, OnDestroy, OnInit, EventEmitter, Output
 } from '@angular/core';

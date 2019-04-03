@@ -10,6 +10,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module ModuleMediaFiles
+ */
 import { Component, OnInit, OnChanges, Input, ElementRef } from '@angular/core';
 import {mediafiles} from '../../../services/mediafiles.service';
 

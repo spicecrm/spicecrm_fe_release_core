@@ -10,6 +10,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module ObjectComponents
+ */
 import {Component, Input, Output, EventEmitter, Renderer, ElementRef, OnInit} from '@angular/core';
 import { ActivatedRoute }   from '@angular/router';
 import { modellist } from '../../services/modellist.service';

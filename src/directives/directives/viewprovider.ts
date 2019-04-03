@@ -10,14 +10,15 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module directives
+ */
 import {
     Directive,
-    HostListener,
-    HostBinding,
     OnDestroy,
     ElementRef,
     Renderer2,
-    AfterViewInit
+    AfterViewInit, Input
 } from '@angular/core';
 import {view} from "../../services/view.service";
 
@@ -36,11 +37,17 @@ export class ViewProviderDirective implements AfterViewInit, OnDestroy {
 
     }
 
-    public ngAfterViewInit() {
+    @Input('viewprovider')
+    set viewSettings(viewSettings: { editable: boolean }) {
+        if (viewSettings.editable) {
+            this.view.isEditable = true;
+        }
+    }
 
+    public ngAfterViewInit() {
         // set the view size
         this.setviewSize();
-        this.resizeHandler = this.renderer.listen('window', 'resize', () => this.setviewSize())
+        this.resizeHandler = this.renderer.listen('window', 'resize', () => this.setviewSize());
     }
 
     public ngOnDestroy(): void {

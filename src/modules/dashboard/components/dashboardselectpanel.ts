@@ -10,16 +10,14 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
-import {
-    Component,
-    Output,
-    EventEmitter
-} from '@angular/core';
+/**
+ * @module ModuleDashboard
+ */
+import {Component, EventEmitter, Output} from '@angular/core';
 import {metadata} from '../../../services/metadata.service';
 import {model} from '../../../services/model.service';
 import {modellist} from '../../../services/modellist.service';
 import {language} from '../../../services/language.service';
-import {navigation} from '../../../services/navigation.service';
 import {userpreferences} from '../../../services/userpreferences.service';
 import {dashboardlayout} from '../services/dashboardlayout.service';
 
@@ -68,5 +66,9 @@ export class DashboardSelectPanel {
 
     private hidepanel() {
         this.hide.emit(true);
+    }
+
+    private trackByFn(index, item) {
+        return item.id;
     }
 }

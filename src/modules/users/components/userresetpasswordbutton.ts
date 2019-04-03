@@ -10,6 +10,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module ModuleUsers
+ */
 import {Component} from "@angular/core";
 import {modal} from "../../../services/modal.service";
 import {model} from "../../../services/model.service";

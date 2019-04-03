@@ -10,6 +10,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module ModuleSpiceImports
+ */
 import {EventEmitter, Injectable} from "@angular/core";
 import {backend} from '../../../services/backend.service';
 

@@ -10,12 +10,13 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module services
+ */
 import {Injectable} from '@angular/core';
-// import {metadata} from './metadata.service';
-// import {footer} from './footer.service';
+
 import {Subject, Observable} from 'rxjs';
 import {modal} from './modal.service';
-//import any = jasmine.any;
 
 @Injectable()
 export class helper {

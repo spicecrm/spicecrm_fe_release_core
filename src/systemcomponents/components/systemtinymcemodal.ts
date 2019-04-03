@@ -10,11 +10,15 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module SystemComponents
+ */
 import { Component, EventEmitter, OnInit } from '@angular/core';
-import { metadata } from '../../services/metadata.service';
 import {language} from '../../services/language.service';
-import { toast } from '../../services/toast.service';
 
+/**
+ * @ignore
+ */
 declare var window: any;
 
 @Component({

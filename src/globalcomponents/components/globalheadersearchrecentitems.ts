@@ -10,6 +10,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module GlobalComponents
+ */
 import {
     Component,
     Output,
@@ -32,6 +35,7 @@ export class GlobalHeaderSearchRecentItems {
     }
 
     private goRecent() {
+        this.selected.emit(false);
         this.router.navigate(['/recent']);
     }
 }

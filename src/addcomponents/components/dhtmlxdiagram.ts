@@ -10,16 +10,11 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module AddComponentsModule
+ */
 import {
-    Component,
-    Injectable,
-    Pipe,
-    PipeTransform,
-    Input,
-    AfterViewInit,
-    ViewChild,
-    ViewContainerRef,
-    OnDestroy
+    Component
 } from '@angular/core';
 import {metadata} from '../../services/metadata.service';
 import {LibLoaderService} from '../../services/libloader.service';

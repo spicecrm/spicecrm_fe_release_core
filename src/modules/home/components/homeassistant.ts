@@ -10,18 +10,11 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
-import {
-    AfterViewInit,
-    ComponentFactoryResolver,
-    Component,
-    NgModule,
-    ViewChild,
-    ViewContainerRef,
-    ElementRef
-} from '@angular/core';
-import {HttpClient, HttpHeaders, HttpResponse} from "@angular/common/http";
+/**
+ * @module ModuleHome
+ */
+import {Component,ViewChild, ViewContainerRef} from '@angular/core';
 import {language} from '../../../services/language.service';
-import {broadcast} from '../../../services/broadcast.service';
 import {navigation} from '../../../services/navigation.service';
 import {assistant} from '../../../services/assistant.service';
 

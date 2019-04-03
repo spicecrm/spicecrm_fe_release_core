@@ -10,45 +10,41 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module ObjectComponents
+ */
 
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {model} from '../../services/model.service';
-import {relatedmodels} from '../../services/relatedmodels.service';
 import {view} from '../../services/view.service';
 import {language} from '../../services/language.service';
 import { metadata } from '../../services/metadata.service';
-import {Router, ActivatedRoute}   from '@angular/router';
 
 @Component({
-    selector: '[object-related-duplicate-tile]',
+    selector: 'object-related-duplicate-tile',
     templateUrl: './src/objectcomponents/templates/objectrelatedduplicatetile.html',
-    providers: [model, view]
+    providers: [view]
 })
 export class ObjectRelatedDuplicateTile implements OnInit{
 
-    @Input() duplicate : any = {};
-    @Input() parent : any = {};
-    fieldset: string = '';
+    private fieldset: string = '';
 
     constructor(private model: model, private view: view, private language: language, private metadata: metadata) {
 
     }
 
-    ngOnInit() {
-        this.model.module = this.parent.module;
+    public ngOnInit() {
 
         let componentconfig = this.metadata.getComponentConfig('ObjectRelatedDuplicateTile', this.model.module);
         this.fieldset = componentconfig.fieldset;
 
-        this.model.id = this.duplicate.id;
-        this.model.data = this.duplicate;
     }
 
-    getFields(){
+    private getFields(){
          return this.metadata.getFieldSetFields(this.fieldset)
     }
 
-    navgiateDetail(){
+    private navgiateDetail(){
         this.model.goDetail();
     }
 

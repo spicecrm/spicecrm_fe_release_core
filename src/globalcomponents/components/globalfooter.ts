@@ -10,6 +10,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module GlobalComponents
+ */
 import {Component, ViewContainerRef, ViewChild, AfterViewInit} from '@angular/core';
 import {toast} from '../../services/toast.service';
 import {session} from '../../services/session.service';

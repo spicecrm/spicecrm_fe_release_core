@@ -10,11 +10,15 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
-import {Component, EventEmitter, OnInit} from '@angular/core';
+/**
+ * @module ObjectComponents
+ */
+import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {metadata} from '../../services/metadata.service';
 import {model} from '../../services/model.service';
 import {language} from '../../services/language.service';
+import {layout} from '../../services/layout.service';
 
 @Component({
     selector: 'object-action-import-button',
@@ -22,18 +26,20 @@ import {language} from '../../services/language.service';
 })
 export class ObjectActionImportButton implements OnInit {
 
-    public disabled: boolean = true;
-
-    constructor(private language: language, private metadata: metadata, private model: model, private router: Router) {
+    constructor(private language: language, private metadata: metadata, private model: model, private router: Router, private layout: layout) {
 
     }
 
     public ngOnInit() {
-        this.disabled = this.metadata.checkModuleAcl(this.model.module, 'import') ? false : true;
+        // this.disabled = this.metadata.checkModuleAcl(this.model.module, 'import') ? false : true;
     }
 
     public execute() {
         this.router.navigate(['/module/' + this.model.module + '/import']);
+    }
+
+    get disabled(): boolean {
+        return !this.metadata.checkModuleAcl(this.model.module, 'import') || this.layout.screenwidth == 'small';
     }
 
 }

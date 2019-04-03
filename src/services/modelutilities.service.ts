@@ -10,11 +10,20 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module services
+ */
 import {Injectable} from "@angular/core";
 import {metadata} from "./metadata.service";
 import {MathExpressionCompilerService} from "./mathexpressioncompiler";
 
+/**
+* @ignore
+*/
 declare var moment: any;
+/**
+* @ignore
+*/
 declare var _: any;
 moment.defaultFormat = "YYYY-MM-DD HH:mm:ss";
 
@@ -66,7 +75,7 @@ export class modelutilities {
             case "date":
                 // return new Date(Date.parse(value));
                 let pDate = moment.utc(value);
-                return pDate;
+                return pDate.isValid() ? pDate : null;
             case "datetime":
             case "datetimecombo":
                 // return new Date(Date.parse(value));
@@ -101,7 +110,7 @@ export class modelutilities {
     }
 
     public spiceModel2backend(module: string, modelData: any) {
-        let retData = {};
+        let retData = {...modelData};
         let moduleFields = this.metadata.getModuleFields(module);
         for (let field in moduleFields) {
             if (modelData.hasOwnProperty(field)) {
@@ -120,17 +129,17 @@ export class modelutilities {
 
         switch(fieldDefs.type) {
             case "date":
-                if(value._isAMomentObject) {
+                if ( _.isObject( value ) && value._isAMomentObject ) {
                     if ( !value.isValid() ) { return "";} // quick and dirty workaround, still something todo!
                     return value.format("YYYY-MM-DD");
                 } else {
                     let pDate = new moment.utc(value);
-                    return pDate.format("YYYY-MM-DD");
+                    return pDate.isValid() ? pDate.format("YYYY-MM-DD") : '';
                 }
             case "datetime":
             case "datetimecombo":
                 if ( typeof value === "string" && value.trim() === "" ) { return "";}; // quick and dirty workaround, still something todo!
-                if ( value._isAMomentObject && !value.isValid() ) { return ""; }; // quick and dirty workaround, still something todo!
+                if ( _.isObject( value ) && value._isAMomentObject && !value.isValid() ) { return ""; }; // quick and dirty workaround, still something todo!
                 let pDateTime = new moment(value).tz(moment.tz.guess());
                 pDateTime.subtract(pDateTime.utcOffset(), "m");
                 return pDateTime.format("YYYY-MM-DD HH:mm:ss");

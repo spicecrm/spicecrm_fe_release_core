@@ -10,10 +10,11 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module services
+ */
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders, HttpResponse} from "@angular/common/http";
-import {Subject, Observable} from 'rxjs';
-import {CanActivate} from '@angular/router';
+import {Subject} from 'rxjs';
 
 import {configurationService} from './configuration.service';
 import {session} from './session.service';
