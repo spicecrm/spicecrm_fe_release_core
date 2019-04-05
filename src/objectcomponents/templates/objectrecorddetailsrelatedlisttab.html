@@ -10,7 +10,8 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 -->
 
-<div style="height: 100%;" class="slds-p-around--medium slds-theme--shade" [ngClass]="getContainerClass()">
-    <system-spinner *ngIf="isLoading"></system-spinner>
-    <global-newsfeed-item *ngFor="let newsitem of news" [item]="newsitem"></global-newsfeed-item>
-</div>
+<system-collapsable-tab [title]="componentconfig.name">
+    <div class="slds-p-horizontal--xx-small">
+        <object-related-list [componentconfig]="componentconfig"></object-related-list>
+    </div>
+</system-collapsable-tab>

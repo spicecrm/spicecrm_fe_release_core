@@ -173,15 +173,15 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
                 </div>
             </div>
             <div class="slds-form-element">
-                <label class="slds-form-element__label">Analyzer</label>
+                <label class="slds-form-element__label">Analyzer [defines how to index content]</label>
                 <div class="slds-form-element__control">
                     <div class="slds-select_container">
                         <select class="slds-select" [(ngModel)]="fieldDetails.analyzer">
-                            <option value=''>standard</option>
-                            <option value='spice_ngram'>NGram</option>
-                            <option value='spice_html'>HTML</option>
-                            <option value='spice_edgengram'>Edge NGram</option>
-                            <option value='spice_email'>email Address</option>
+                            <option value=''>standard (Divides text into terms on word boundaries. Removes most punctuation symbols.)</option>
+                            <option value='spice_ngram'>NGram (chunks into same length pieces: quick → [qu, ui, ic, ck])</option>
+                            <option value='spice_html'>HTML (strips html tags , uses NGram)</option>
+                            <option value='spice_edgengram'>Edge NGram (chunks into pieces starting from the beginning: quick → [q, qu, qui, quic, quick])</option>
+                            <option value='spice_email'>email Address (like standard + recognises URLs and email)</option>
                         </select>
                     </div>
                 </div>
@@ -190,7 +190,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
                 </div-->
             </div>
             <div class="slds-form-element">
-                <label class="slds-form-element__label">Search Analyzer</label>
+                <label class="slds-form-element__label">Search Analyzer [defines how to handle search text]</label>packa
                 <div class="slds-form-element__control">
                     <div class="slds-select_container">
                         <select class="slds-select" [(ngModel)]="fieldDetails.search_analyzer">
