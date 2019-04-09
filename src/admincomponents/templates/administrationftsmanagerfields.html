@@ -52,7 +52,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
                 </div>
             </div>
             <div class="slds-form-element">
-                <label class="slds-form-element__label">IndexType</label>
+                <label class="slds-form-element__label">IndexType [the kind of data that is stored]</label>
                 <div class="slds-form-element__control">
                     <div class="slds-select_container">
                         <select class="slds-select" [(ngModel)]="fieldDetails.indextype">
@@ -69,7 +69,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
                 </div>
             </div>
             <div class="slds-form-element">
-                <label class="slds-form-element__label">Aggregate</label>
+                <label class="slds-form-element__label">Aggregate [aggregated data based on a search query]</label>
                 <div class="slds-form-element__control">
                     <div class="slds-select_container">
                         <select class="slds-select" [(ngModel)]="fieldDetails.aggregate">
@@ -85,13 +85,13 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
                 </div>
             </div>
             <div class="slds-form-element" *ngIf="fieldDetails.aggregate">
-                <label class="slds-form-element__label">Aggregate Params</label>
+                <label class="slds-form-element__label">Aggregate Params [json string defining ranges]</label>
                 <div class="slds-form-element__control">
                     <textarea class="slds-textarea" [(ngModel)]="aggregateaddparams"></textarea>
                 </div>
             </div>
             <div class="slds-form-element">
-                <label class="slds-form-element__label">Aggregate Size</label>
+                <label class="slds-form-element__label">Aggregate Size [defines how many term buckets should be returned out of the overall terms list]</label>
                 <div class="slds-form-element__control">
                     <input type="text" class="slds-input" [(ngModel)]="fieldDetails.aggregatesize"/>
                 </div>
@@ -103,7 +103,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
                 </div>
             </div>
             <div class="slds-form-element">
-                <label class="slds-form-element__label">Boost</label>
+                <label class="slds-form-element__label">Boost [increase weight of a match for that field. Default 1.]</label>
                 <div class="slds-form-element__control">
                     <input type="text" class="slds-input" [(ngModel)]="fieldDetails.boost"/>
                 </div>
@@ -147,7 +147,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
                   <input type="checkbox" name="options" id="duplicatecheck" [(ngModel)]="fieldDetails.duplicatecheck"/>
                   <label class="slds-checkbox__label" for="duplicatecheck">
                     <span class="slds-checkbox--faux"></span>
-                    <span class="slds-form-element__label">Duplicate Check</span>
+                    <span class="slds-form-element__label">Duplicate Check  [turn on this field for duplicate check]</span>
                   </label>
                 </span>
                 </div>
@@ -190,7 +190,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
                 </div-->
             </div>
             <div class="slds-form-element">
-                <label class="slds-form-element__label">Search Analyzer [defines how to handle search text]</label>packa
+                <label class="slds-form-element__label">Search Analyzer [defines how to handle search text]</label>
                 <div class="slds-form-element__control">
                     <div class="slds-select_container">
                         <select class="slds-select" [(ngModel)]="fieldDetails.search_analyzer">
