@@ -52,7 +52,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
                 </div>
             </div>
             <div class="slds-form-element">
-                <label class="slds-form-element__label">IndexType [the kind of data that is stored]</label>
+                <label class="slds-form-element__label">IndexType</label>
                 <div class="slds-form-element__control">
                     <div class="slds-select_container">
                         <select class="slds-select" [(ngModel)]="fieldDetails.indextype">
@@ -69,7 +69,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
                 </div>
             </div>
             <div class="slds-form-element">
-                <label class="slds-form-element__label">Aggregate [aggregated data based on a search query]</label>
+                <label class="slds-form-element__label">Aggregate</label>
                 <div class="slds-form-element__control">
                     <div class="slds-select_container">
                         <select class="slds-select" [(ngModel)]="fieldDetails.aggregate">
@@ -85,13 +85,13 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
                 </div>
             </div>
             <div class="slds-form-element" *ngIf="fieldDetails.aggregate">
-                <label class="slds-form-element__label">Aggregate Params [json string defining ranges]</label>
+                <label class="slds-form-element__label">Aggregate Params</label>
                 <div class="slds-form-element__control">
                     <textarea class="slds-textarea" [(ngModel)]="aggregateaddparams"></textarea>
                 </div>
             </div>
             <div class="slds-form-element">
-                <label class="slds-form-element__label">Aggregate Size [defines how many term buckets should be returned out of the overall terms list]</label>
+                <label class="slds-form-element__label">Aggregate Size</label>
                 <div class="slds-form-element__control">
                     <input type="text" class="slds-input" [(ngModel)]="fieldDetails.aggregatesize"/>
                 </div>
@@ -103,7 +103,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
                 </div>
             </div>
             <div class="slds-form-element">
-                <label class="slds-form-element__label">Boost [increase weight of a match for that field. Default 1.]</label>
+                <label class="slds-form-element__label">Boost</label>
                 <div class="slds-form-element__control">
                     <input type="text" class="slds-input" [(ngModel)]="fieldDetails.boost"/>
                 </div>
@@ -147,7 +147,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
                   <input type="checkbox" name="options" id="duplicatecheck" [(ngModel)]="fieldDetails.duplicatecheck"/>
                   <label class="slds-checkbox__label" for="duplicatecheck">
                     <span class="slds-checkbox--faux"></span>
-                    <span class="slds-form-element__label">Duplicate Check  [turn on this field for duplicate check]</span>
+                    <span class="slds-form-element__label">Duplicate Check</span>
                   </label>
                 </span>
                 </div>
@@ -173,15 +173,15 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
                 </div>
             </div>
             <div class="slds-form-element">
-                <label class="slds-form-element__label">Analyzer [defines how to index content]</label>
+                <label class="slds-form-element__label">Analyzer</label>
                 <div class="slds-form-element__control">
                     <div class="slds-select_container">
                         <select class="slds-select" [(ngModel)]="fieldDetails.analyzer">
-                            <option value=''>standard (Divides text into terms on word boundaries. Removes most punctuation symbols.)</option>
-                            <option value='spice_ngram'>NGram (chunks into same length pieces: quick → [qu, ui, ic, ck])</option>
-                            <option value='spice_html'>HTML (strips html tags , uses NGram)</option>
-                            <option value='spice_edgengram'>Edge NGram (chunks into pieces starting from the beginning: quick → [q, qu, qui, quic, quick])</option>
-                            <option value='spice_email'>email Address (like standard + recognises URLs and email)</option>
+                            <option value=''>standard</option>
+                            <option value='spice_ngram'>NGram</option>
+                            <option value='spice_html'>HTML</option>
+                            <option value='spice_edgengram'>Edge NGram</option>
+                            <option value='spice_email'>email Address</option>
                         </select>
                     </div>
                 </div>
@@ -190,7 +190,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
                 </div-->
             </div>
             <div class="slds-form-element">
-                <label class="slds-form-element__label">Search Analyzer [defines how to handle search text]</label>
+                <label class="slds-form-element__label">Search Analyzer</label>
                 <div class="slds-form-element__control">
                     <div class="slds-select_container">
                         <select class="slds-select" [(ngModel)]="fieldDetails.search_analyzer">
