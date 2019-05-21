@@ -10,6 +10,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module directives
+ */
 import {Directive, Input, HostListener, OnDestroy, ElementRef, OnInit, Optional} from '@angular/core';
 import {Router} from '@angular/router';
 

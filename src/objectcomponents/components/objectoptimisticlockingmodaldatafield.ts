@@ -10,14 +10,12 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module ObjectComponents
+ */
 import {Component, Input, OnInit} from '@angular/core';
-import {Router} from '@angular/router';
-import {metadata} from '../../services/metadata.service';
 import {model} from '../../services/model.service';
 import {view} from '../../services/view.service';
-import {modellist} from '../../services/modellist.service';
-import {language} from '../../services/language.service';
-import {popup} from '../../services/popup.service';
 
 @Component({
     selector: 'object-optimisitclocking-modal-data-field',

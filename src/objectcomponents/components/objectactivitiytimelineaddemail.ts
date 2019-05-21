@@ -10,6 +10,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module ObjectComponents
+ */
 import {Component, OnInit, ViewContainerRef} from '@angular/core';
 import {metadata} from '../../services/metadata.service';
 import {language} from '../../services/language.service';
@@ -94,7 +97,7 @@ export class ObjectActivitiyTimelineAddEmail implements OnInit {
     private getFields() {
         let conf = this.metadata.getComponentConfig('ObjectActivitiyTimelineAddEmail', this.model.module);
         this.formFieldSet = conf.fieldset;
-        this.formFields = this.metadata.getFieldSetFields(conf.fieldset);
+        this.formFields = this.metadata.getFieldSetItems(conf.fieldset);
     }
 
     private onFocus() {

@@ -10,7 +10,10 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
-import {Component, Input, Output, EventEmitter} from '@angular/core';
+/**
+ * @module SystemComponents
+ */
+import {Component, Output, EventEmitter} from '@angular/core';
 
 @Component({
     selector: 'system-link',
@@ -18,13 +21,9 @@ import {Component, Input, Output, EventEmitter} from '@angular/core';
 })
 export class SystemLink {
 
-    @Output() click: EventEmitter<any> = new EventEmitter<any>();
+    @Output() private click: EventEmitter<any> = new EventEmitter<any>();
 
-    constructor() {
-
-    }
-
-    clicked(event){
+    private clicked(event) {
         this.click.emit(event);
     }
 

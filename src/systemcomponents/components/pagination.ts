@@ -10,6 +10,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module SystemComponents
+ */
 import {Component, EventEmitter, Input, OnChanges, Output, Pipe} from '@angular/core';
 import {language} from "../../services/language.service";
 

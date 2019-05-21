@@ -10,6 +10,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module ObjectFields
+ */
 import {Component, ElementRef, Renderer} from '@angular/core';
 import {model} from '../../services/model.service';
 import {popup} from '../../services/popup.service';
@@ -19,6 +22,12 @@ import {metadata} from '../../services/metadata.service';
 import {fieldGeneric} from './fieldgeneric';
 import {Router}   from '@angular/router';
 
+/**
+* @ignore
+*/
+/**
+* @ignore
+*/
 declare var moment: any;
 
 @Component({

@@ -10,11 +10,12 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module SystemComponents
+ */
 import {
     Component, Input
 } from '@angular/core';
-import {language} from '../../services/language.service';
-
 
 @Component({
     selector: 'package-loader-languages',

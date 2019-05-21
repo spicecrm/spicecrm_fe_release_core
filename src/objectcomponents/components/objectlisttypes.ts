@@ -10,10 +10,10 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
-import {AfterViewInit, ComponentFactoryResolver, Component, HostListener, ElementRef, Input, NgModule, ViewChild, ViewContainerRef, Renderer2} from '@angular/core';
-import {HttpClient, HttpHeaders, HttpResponse} from "@angular/common/http";
-import {Router, ActivatedRoute}   from '@angular/router';
-import {metadata} from '../../services/metadata.service';
+/**
+ * @module ObjectComponents
+ */
+import { Component, ElementRef, Renderer2} from '@angular/core';
 import { modellist } from '../../services/modellist.service';
 import { language } from '../../services/language.service';
 

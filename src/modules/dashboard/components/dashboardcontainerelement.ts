@@ -10,6 +10,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module ModuleDashboard
+ */
 import {
     AfterViewInit,
     Component,
@@ -179,9 +182,10 @@ export class DashboardContainerElement implements AfterViewInit {
         item = this.dashboardlayout.getElementStyle(item.top, item.left, item.width, item.height);
         let itemHeight = this.mouseTarget == 'bottom' ? (item.height + moveY) : item.height;
         let itemBottom = this.mouseTarget == 'content' ? ((item.top + moveY) + itemHeight) : (item.top + itemHeight);
-
-        if (itemBottom > (this.dashboardlayout.mainContainer.bottom - 50)) {
-            this.dashboardlayout.bodyContainerRef.element.nativeElement.scrollTop += 5;
+        let container = this.dashboardlayout.bodyContainerRef;
+        let containerBottom = container.getBoundingClientRect().bottom - container.offsetTop;
+        if (itemBottom > (containerBottom - 50)) {
+            container.scrollTop += 5;
         }
     }
 

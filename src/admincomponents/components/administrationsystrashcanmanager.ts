@@ -10,6 +10,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module AdminComponentsModule
+ */
 import {
     AfterViewInit,
     ComponentFactoryResolver,
@@ -26,6 +29,9 @@ import {backend} from '../../services/backend.service';
 import {userpreferences} from '../../services/userpreferences.service';
 import {footer} from '../../services/footer.service';
 
+/**
+* @ignore
+*/
 declare var moment: any;
 
 @Component({

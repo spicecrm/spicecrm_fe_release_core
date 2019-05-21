@@ -10,6 +10,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module SystemComponents
+ */
 import { ApplicationRef, Component, OnDestroy, ViewChild, ViewContainerRef } from '@angular/core';
 import { modal } from '../../services/modal.service';
 

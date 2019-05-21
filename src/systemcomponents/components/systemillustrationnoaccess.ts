@@ -10,7 +10,10 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
-import {Component, Input} from '@angular/core';
+/**
+ * @module SystemComponents
+ */
+import {Component} from '@angular/core';
 import {language} from '../../services/language.service';
 
 @Component({

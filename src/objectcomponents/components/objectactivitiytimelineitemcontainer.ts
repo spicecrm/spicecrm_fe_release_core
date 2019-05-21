@@ -10,10 +10,12 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module ObjectComponents
+ */
 import {OnInit, Component, Input, ViewContainerRef, ViewChild} from '@angular/core';
 import {metadata} from '../../services/metadata.service';
-import {language} from '../../services/language.service';
-import { activitiyTimeLineService } from '../../services/activitiytimeline.service';
+
 
 @Component({
     selector: 'object-activitiytimeline-item-container',

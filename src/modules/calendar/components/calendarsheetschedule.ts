@@ -10,6 +10,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module ModuleCalendar
+ */
 import {
     Component,
     ElementRef,
@@ -28,7 +31,13 @@ import {session} from '../../../services/session.service';
 import {backend} from '../../../services/backend.service';
 import {calendar} from '../services/calendar.service';
 
+/**
+* @ignore
+*/
 declare var moment: any;
+/**
+* @ignore
+*/
 declare var _: any;
 
 @Component({

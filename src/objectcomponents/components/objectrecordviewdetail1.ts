@@ -10,16 +10,15 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module ObjectComponents
+ */
 import {
-    AfterViewInit, ComponentFactoryResolver, Component, NgModule, ViewChild, ViewContainerRef,
-    ElementRef, OnInit, OnDestroy
+     Component, ViewChild, ViewContainerRef,
+    ElementRef, OnInit
 } from '@angular/core';
-import {Title} from '@angular/platform-browser';
-import {ActivatedRoute} from '@angular/router';
 import {metadata} from '../../services/metadata.service';
 import {model} from '../../services/model.service';
-import {broadcast} from '../../services/broadcast.service';
-import {navigation} from '../../services/navigation.service';
 
 @Component({
     selector: 'object-recordview-detail-1',

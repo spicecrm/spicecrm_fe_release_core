@@ -16,7 +16,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
  * @module services
  */
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders, HttpResponse, HttpParams} from "@angular/common/http";
+import { HttpClient, HttpEventType, HttpHeaders, HttpParams } from "@angular/common/http";
 import {DomSanitizer} from '@angular/platform-browser';
 import {Subject, Observable} from 'rxjs';
 import {Router} from '@angular/router';
@@ -28,6 +28,7 @@ import {toast} from './toast.service';
 import {modelutilities} from './modelutilities.service';
 import {modal} from './modal.service';
 import {language} from './language.service';
+
 
 /**
  * @ignore
@@ -206,6 +207,48 @@ export class backend {
         return responseSubject.asObservable();
     }
 
+    /**
+     * generic request function for a POST request to the backend, with upload progress reporting
+     *
+     * @param route  the route to be called on the backend e.g. 'modules/Account/<guid>'
+     * @param params an object with additonal params to be sent to the backend with the get request
+     * @param body an object being sent as body/payload with the request
+     * @param httpErrorReport a boolen indicator to specify if the erro is one occurs shoudl be logged, defaults to true
+     * @param progress: A subject where the upload progress will be reported.
+     *
+     * @return an Observable that is resolved with the JSON decioded response from the request. If an error occurs the error is returnes as error from the Observable
+     */
+    public postRequestWithProgress(route: string = "", params: any = {}, body: any = {}, httpErrorReport = true, progress: Subject<number> = null ): Observable<any> {
+        let responseSubject = new Subject<any>();
+
+        this.resetTimeOut();
+
+        let headers = this.getHeaders();
+        if (body) {
+            headers = headers.set("Content-Type", "application/json");
+        } else {
+            headers = headers.set("Content-Type", "application/x-www-form-urlencoded");
+        }
+
+        let reportProgress = progress !== null;
+        if ( reportProgress ) progress.next(0);
+        this.http.post( this.configurationService.getBackendUrl() + "/" + encodeURI(route), body, { headers: headers, observe: 'events', params: this.prepareParams(params), reportProgress: true }).subscribe(
+            event => {
+                if ( event.type === HttpEventType.UploadProgress ) {
+                    progress.next( 100 * event.loaded / event.total );
+                } else if ( event.type === HttpEventType.Response ) {
+                    responseSubject.next( event.body );
+                    responseSubject.complete();
+                }
+            },
+            err => {
+                this.handleError(err, route, 'POST', {getParams: params, body: body}, httpErrorReport);
+                responseSubject.error(err);
+            }
+        );
+        return responseSubject.asObservable();
+    }
+
 
     /**
      * @ignore
@@ -242,7 +285,11 @@ export class backend {
             },
             err => {
                 this.handleError(err, route, 'POST', {getParams: params, body: body});
-                responseSubject.error(err);
+                let blobReader = new FileReader();
+                blobReader.readAsText( err.error );
+                blobReader.onloadend = (e) => {
+                    responseSubject.error( JSON.parse( blobReader.result.toString() ));
+                };
             }
         );
 
@@ -262,7 +309,7 @@ export class backend {
      *
      * @return an Observable for the request. If the response is successful the observable will return an objecturl to the dowlnoaded file in the browser
      */
-    private getLinkToDownload(
+    public getLinkToDownload(
         route: string,
         method: 'GET' | 'POST' = 'GET',
         params = null,
@@ -305,6 +352,26 @@ export class backend {
     }
 
     /**
+     * Determines the charset of a http response.
+     *
+     * @param response
+     *
+     * @return The string defining the character set.
+     */
+    private getCharsetOfResponse( response: any ): string {
+        if ( !response.headers ) return null;
+        response.headers.lazyInit();
+        let dummy = response.headers.headers.get('content-type');
+        if ( !dummy ) return null;
+        dummy = dummy[0];
+        dummy = dummy.split(';');
+        if ( !dummy[1] ) return null;
+        dummy = dummy[1].split('=');
+        if ( !dummy[1] ) return null;
+        return dummy[1];
+    }
+
+    /**
      * a generic wrapper function for [[getLinkToDownload]] that will wrap the request and automatically trigger the download in the browser
      *
      * @param request_params an object of type [[backendRequestParams]]
@@ -314,7 +381,8 @@ export class backend {
      */
     public downloadFile(
         request_params: backendRequestParams,
-        file_name: string = null
+        file_name: string = null,
+        file_type: string = null
     ): Observable<any> {
         let sub = new Subject<any>();
 
@@ -329,7 +397,9 @@ export class backend {
                 let downloadUrl = res;
                 // window.open(downloadUrl);
                 let a = document.createElement("a");
+                document.body.appendChild(a);
                 a.href = downloadUrl;
+                if(file_type) a.type = file_type;
                 a.download = file_name;
                 // start download
                 a.click();
@@ -420,6 +490,7 @@ export class backend {
                     "error",
                     null,
                     false,
+                    'sessionexpired'
                 );
                 this.modalservice.closeAllModals();
                 this.session.endSession();
@@ -506,8 +577,8 @@ export class backend {
     /*
      * Model functions
      */
-    public get(module: string, id: string, trackAction: string = ''): Observable<Array<any>> {
-        let responseSubject = new Subject<Array<any>>();
+    public get(module: string, id: string, trackAction: string = ''): Observable<any[]> {
+        let responseSubject = new Subject<any[]>();
 
         let params: any = {};
         if (trackAction) {
@@ -556,8 +627,8 @@ export class backend {
      *       }
      * @returns {Observable<Array<any>>}
      */
-    public all(module: string, params: any = {}): Observable<Array<any>> {
-        let responseSubject = new Subject<Array<any>>();
+    public all(module: string, params: any = {}): Observable<any[]> {
+        let responseSubject = new Subject<any[]>();
         // defaults...
         if (!params.limit) {
             params.limit = -99;
@@ -583,8 +654,14 @@ export class backend {
         return responseSubject.asObservable();
     }
 
-    public getDuplicates(module: string, id: string): Observable<Array<any>> {
-        let responseSubject = new Subject<Array<any>>();
+    /**
+     * checks the backend for potential duplicates for the record with the given module and id. This requires that the reccord exists on teh database and is properly indexed
+     *
+     * @param module the modul the reocrd shodul be checked for, e.g. 'Contacts'
+     * @param id the id of the record to be checked for
+     */
+    public getDuplicates(module: string, id: string): Observable<any[]> {
+        let responseSubject = new Subject<any[]>();
 
         this.getRequest("module/" + module + "/" + id + "/duplicates")
             .subscribe((response: any) => {
@@ -594,8 +671,14 @@ export class backend {
         return responseSubject.asObservable();
     }
 
-    public checkDuplicates(module: string, modeldata: any): Observable<Array<any>> {
-        let responseSubject = new Subject<Array<any>>();
+    /**
+     * checks with the backend if for the given module and mopdeldata instance any duplicates exist. This is used when new records are created or changed and during the process a record duplicate check shoudl be triggered, the data is yet not stored ont eh backend
+     *
+     * @param module the module of the record e.g. 'Accounts'
+     * @param modeldata a json object with the values of the model. this is the typical model.data instance
+     */
+    public checkDuplicates(module: string, modeldata: any): Observable<any[]> {
+        let responseSubject = new Subject<any[]>();
 
         this.postRequest("module/" + module + "/duplicates", {}, modeldata)
             .subscribe((response: any) => {
@@ -606,7 +689,7 @@ export class backend {
     }
 
     public getAudit(module: string, id: string, filters: any = {}): Observable<any> {
-        let responseSubject = new Subject<Array<any>>();
+        let responseSubject = new Subject<any[]>();
         this.getRequest("module/" + module + "/" + id + "/auditlog", filters)
             .subscribe(response => {
                     responseSubject.next(response);
@@ -635,10 +718,10 @@ export class backend {
         module: string,
         sortfield: string,
         sortdirection: string,
-        fields: Array<any> = [],
+        fields: any[] = [],
         params: any = {},
-    ): Observable<Array<any>> {
-        let responseSubject = new Subject<Array<any>>();
+    ): Observable<any[]> {
+        let responseSubject = new Subject<any[]>();
 
         let start: number = params.start ? params.start : 0;
         let limit: number = params.limit ? params.limit : 25;
@@ -684,8 +767,8 @@ export class backend {
         return responseSubject.asObservable();
     }
 
-    public save(module: string, id: string, cdata: any): Observable<Array<any>> {
-        let responseSubject = new Subject<Array<any>>();
+    public save(module: string, id: string, cdata: any): Observable<any[]> {
+        let responseSubject = new Subject<any[]>();
         this.postRequest("module/" + module + "/" + id, {}, this.modelutilities.spiceModel2backend(module, cdata))
             .subscribe(
                 (response: any) => {
@@ -710,8 +793,8 @@ export class backend {
         return responseSubject.asObservable();
     }
 
-    public getRecent(module: string = "", limit: number = 0): Observable<Array<any>> {
-        let responseSubject = new Subject<Array<any>>();
+    public getRecent(module: string = "", limit: number = 0): Observable<any[]> {
+        let responseSubject = new Subject<any[]>();
 
         let params: any = {};
         if (module) {
@@ -722,7 +805,7 @@ export class backend {
             params.limit = limit;
         }
 
-        this.getRequest("spiceui/core/recent", params)
+        this.getRequest("modules/Trackers/recent", params)
             .subscribe((response) => {
                 responseSubject.next(response);
                 responseSubject.complete();
@@ -733,8 +816,8 @@ export class backend {
     /*
      handling of listtypes
      */
-    public addListType(module, listdata): Observable<Array<any>> {
-        let responseSubject = new Subject<Array<any>>();
+    public addListType(module, listdata): Observable<any[]> {
+        let responseSubject = new Subject<any[]>();
 
         this.postRequest(
             "spiceui/core/modules/" + module + "/listtypes",
@@ -747,8 +830,8 @@ export class backend {
         return responseSubject.asObservable();
     }
 
-    public setListType(id, module, listdata): Observable<Array<any>> {
-        let responseSubject = new Subject<Array<any>>();
+    public setListType(id, module, listdata): Observable<any[]> {
+        let responseSubject = new Subject<any[]>();
 
         this.postRequest(
             "spiceui/core/modules/" + module + "/listtypes/" + id,

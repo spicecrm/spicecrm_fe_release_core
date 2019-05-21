@@ -10,6 +10,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module ModuleAccounts
+ */
 import {Component, Input, OnInit, ViewChild, ViewContainerRef} from '@angular/core';
 import {language} from '../../../services/language.service';
 import {view} from '../../../services/view.service';
@@ -18,6 +21,9 @@ import {backend} from '../../../services/backend.service';
 import {model} from '../../../services/model.service';
 import {ACManagerService} from '../services/acmanager.service';
 
+/**
+ * @ignore
+ */
 declare var _;
 
 @Component({

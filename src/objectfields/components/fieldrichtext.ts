@@ -10,7 +10,10 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
-import {AfterViewInit, Component, OnDestroy, Input, NgZone, OnInit, ViewContainerRef, ViewChild} from '@angular/core';
+/**
+ * @module ObjectFields
+ */
+import { Component,  NgZone, ViewContainerRef, ViewChild} from '@angular/core';
 import {DomSanitizer} from '@angular/platform-browser';
 import {model} from '../../services/model.service';
 import {modal} from '../../services/modal.service';

@@ -10,31 +10,43 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
-import {AfterViewInit, Component, OnInit, Input, ViewChild, ViewContainerRef} from '@angular/core';
+/**
+ * @module ObjectComponents
+ */
+import {Component, OnInit, Input, ViewChild, ViewContainerRef} from '@angular/core';
 import {metadata} from '../../services/metadata.service';
-import {model} from '../../services/model.service';
-import {language} from '../../services/language.service';
-import {activitiyTimeLineService} from '../../services/activitiytimeline.service';
 
+/**
+ * the container as part of the activitiy stream that holds the add items
+ */
 @Component({
     selector: 'object-activitiytimeline-add-tabcontainer',
     templateUrl: './src/objectcomponents/templates/objectactivitytimelineaddtabcontainer.html'
 })
-export class ObjectActivitiyTimelineAddTabContainer implements OnInit{
+export class ObjectActivitiyTimelineAddTabContainer implements OnInit {
 
-    @ViewChild('container', {read: ViewContainerRef}) container: ViewContainerRef;
+    /**
+     * the ref to the container wher the items are added
+     */
+    @ViewChild('container', {read: ViewContainerRef}) private container: ViewContainerRef;
 
-    @Input()tabcomponent: string = '';
-    @Input()componentconfig: any = {};
+    /**
+     * the component to be added
+     */
+    @Input() private tabcomponent: string = '';
 
-    constructor( private metadata: metadata) {
+    /**
+     * the componentconfig for the added component
+     */
+    @Input() private componentconfig: any = {};
+
+    constructor(private metadata: metadata) {
 
     }
 
-    ngOnInit(){
+    public ngOnInit() {
         this.metadata.addComponent(this.tabcomponent, this.container).subscribe(componentRef => {
             componentRef.instance.componentconfig = this.componentconfig;
-        })
+        });
     }
-
 }

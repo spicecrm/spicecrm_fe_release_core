@@ -10,7 +10,10 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
-import { Component, ElementRef, OnInit, Input, ViewContainerRef, Renderer, ViewChild, AfterViewInit, ChangeDetectorRef  } from '@angular/core';
+/**
+ * @module ObjectFields
+ */
+import { Component, ElementRef, OnInit, Renderer, ViewChild, AfterViewInit, ChangeDetectorRef  } from '@angular/core';
 import { model } from '../../services/model.service';
 import { view } from '../../services/view.service';
 import { Router } from '@angular/router';

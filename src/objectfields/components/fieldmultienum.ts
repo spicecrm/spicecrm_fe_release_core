@@ -10,6 +10,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module ObjectFields
+ */
 import {Component, OnInit} from '@angular/core';
 import {model} from '../../services/model.service';
 import {view} from '../../services/view.service';
@@ -63,7 +66,10 @@ export class fieldMultienum extends fieldGeneric implements OnInit {
 
     private getValueArray(): any[] {
         try {
-            return this.model.data[this.fieldname].substring(1, this.model.data[this.fieldname].length - 1).split('^,^');
+            let value = this.model.getFieldValue(this.fieldname);
+            // delete leading and trailing ^ if there is any
+            if(value.substr(0, 1) == '^') value = value.substr(1, value.length - 2);
+            return value.split('^,^');
         } catch (e) {
             return [];
         }

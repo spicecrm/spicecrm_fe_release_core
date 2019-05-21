@@ -10,6 +10,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module ModuleDashboard
+ */
 import {Component, EventEmitter} from '@angular/core';
 import {language} from '../../../services/language.service';
 import {model} from '../../../services/model.service';

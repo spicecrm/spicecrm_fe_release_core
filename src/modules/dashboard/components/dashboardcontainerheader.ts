@@ -10,6 +10,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module ModuleDashboard
+ */
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {language} from '../../../services/language.service';
 import {dashboardlayout} from '../services/dashboardlayout.service';
@@ -32,7 +35,7 @@ export class DashboardContainerHeader {
     }
 
     get isHomeDashboard() {
-        return this.userpreferences.unchangedPreferences.global.home_dashboard == this.dashboardlayout.dashboardId;
+        return this.userpreferences.toUse.home_dashboard == this.dashboardlayout.dashboardId;
     }
 
     private toggleEditMode() {

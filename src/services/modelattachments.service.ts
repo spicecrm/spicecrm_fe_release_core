@@ -10,8 +10,10 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module services
+ */
 import {Injectable} from "@angular/core";
-import {HttpClient, HttpHeaders, HttpResponse} from "@angular/common/http";
 import {Subject, Observable} from "rxjs";
 
 import {configurationService} from "./configuration.service";
@@ -20,6 +22,9 @@ import {backend} from "./backend.service";
 import {toast} from "./toast.service";
 import {language} from "./language.service";
 
+/**
+* @ignore
+*/
 declare var moment: any;
 
 @Injectable()
@@ -34,7 +39,6 @@ export class modelattachments {
     private serviceSubscriptions: any[] = [];
 
     constructor(
-        private http: HttpClient,
         private backend: backend,
         private configurationService: configurationService,
         private session: session,
@@ -48,9 +52,9 @@ export class modelattachments {
         this.loading = true;
         this.backend.getRequest("module/" + this.module + "/" + this.id + "/attachment/ui").subscribe(
             response => {
-                for (let file of response) {
-                    file.date = new moment(file.date);
-                    this.files.push(file);
+                for (let attId in response) {
+                    response[attId].date = new moment(response[attId].date);
+                    this.files.push(response[attId]);
                 }
                 this.loading = false;
                 // this.files = response;
@@ -232,8 +236,10 @@ export class modelattachments {
             let blob = this.b64toBlob(fileData.file, fileData.file_mime_type);
             let blobUrl = URL.createObjectURL(blob);
             let a = document.createElement("a");
+            document.body.appendChild(a);
             a.href = blobUrl;
             a.download = fileData.filename;
+            a.type = fileData.file_mime_type;
             a.click();
             a.remove();
         });

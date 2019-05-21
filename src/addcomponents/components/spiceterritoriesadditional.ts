@@ -10,7 +10,10 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
-import {Component, ElementRef, Renderer, OnInit, ViewChild, ViewContainerRef, Input} from '@angular/core';
+/**
+ * @module AddComponentsModule
+ */
+import {Component, ElementRef, Renderer, ViewChild, ViewContainerRef, Input} from '@angular/core';
 import {model} from '../../services/model.service';
 import {view} from '../../services/view.service';
 import {popup} from '../../services/popup.service';
@@ -18,7 +21,6 @@ import {Router} from '@angular/router';
 import {language} from '../../services/language.service';
 import {metadata} from '../../services/metadata.service';
 import {territories} from '../../services/territories.service';
-import {fieldGeneric} from '../../objectfields/components/fieldgeneric';
 
 @Component({})
 export class tfieldGeneric {

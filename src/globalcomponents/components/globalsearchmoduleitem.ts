@@ -11,7 +11,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 */
 
 /**
- * Created by christian on 08.11.2016.
+ * @module GlobalComponents
  */
 import {ElementRef, Component, Input, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
@@ -34,6 +34,7 @@ export class GlobalSearchModuleItem implements OnInit {
 
     constructor(private elementref: ElementRef, private router: Router, private view: view, private model: model, private language: language, private layout: layout) {
         this.view.isEditable = false;
+        this.view.displayLabels = false;
     }
 
     public ngOnInit() {

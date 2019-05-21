@@ -10,9 +10,11 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
-import {Component, Input, Output, OnInit, EventEmitter} from '@angular/core';
-import {Router, ActivatedRoute}   from '@angular/router';
-import {metadata} from '../../services/metadata.service';
+/**
+ * @module ObjectComponents
+ */
+import {Component, Input, OnInit} from '@angular/core';
+import {Router}   from '@angular/router';
 import {language} from '../../services/language.service';
 import {model} from '../../services/model.service';
 import {modelutilities} from '../../services/modelutilities.service';
@@ -41,6 +43,7 @@ export class ObjectListItem implements OnInit {
     @Input() private showActionMenu: boolean = true;
 
     constructor(private model: model, private modelutilities: modelutilities, private modellist: modellist, private view: view, private router: Router, private language: language) {
+        this.view.displayLabels = false;
     }
 
     public ngOnInit() {

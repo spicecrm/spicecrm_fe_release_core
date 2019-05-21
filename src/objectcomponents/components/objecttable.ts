@@ -10,15 +10,20 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module ObjectComponents
+ */
 import {
     Attribute,
-    Component, EventEmitter, HostBinding,
+    Component, EventEmitter,
     Input, OnInit, Output,
 } from '@angular/core';
 import {language} from '../../services/language.service';
 import {metadata} from '../../services/metadata.service';
-import {modelutilities} from "../../services/modelutilities.service";
 
+/**
+ * @ignore
+ */
 declare var _;
 
 /**

@@ -10,6 +10,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module GlobalComponents
+ */
 import {Component, Renderer2, ElementRef} from '@angular/core';
 import {favorite} from '../../services/favorite.service';
 import {language} from '../../services/language.service';

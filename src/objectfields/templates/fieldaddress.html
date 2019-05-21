@@ -10,40 +10,39 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 -->
 
+<field-label *ngIf="displayLabel" [fieldname]="fieldname" [fieldconfig]="fieldconfig"></field-label>
 <div *ngIf="!isEditMode()">
-    <field-label fieldname="field" [fieldconfig]="fieldconfig"></field-label>
     <field-generic-display  [fielddisplayclass]="fielddisplayclass" [fieldconfig]="fieldconfig" [editable]="isEditable()" [fieldid]="fieldid">
         {{value}}
     </field-generic-display>
 </div>
 <div *ngIf="isEditable() && isEditMode()" class="slds-form-element__control" [ngClass]="getFieldClass()">
     <fieldset>
-        <legend class="slds-form-element__label slds-text-title--caps slds-p-bottom--x-small">{{getAddressLabel()}}</legend>
         <div class="slds-form-element__group">
                 <system-googleplaces-autocomplete (address)="addressSelected($event)"></system-googleplaces-autocomplete>
                 <div class="slds-form-element slds-size--1-of-1">
                     <label class="slds-form-element__label">{{language.getLabel('LBL_ATTN')}}</label>
                     <div class="slds-form-element__control">
-                        <input type="text" class="slds-input" [(ngModel)]="attn"/>
+                        <input type="text" class="slds-input" [(ngModel)]="attn" [ngModelOptions]="modelOptions"/>
                     </div>
                 </div>
                 <div class="slds-form-element slds-size--1-of-1">
                     <label class="slds-form-element__label">{{language.getLabel('LBL_STREET')}}</label>
                     <div class="slds-form-element__control">
-                        <input #focus type="text" class="slds-input" [(ngModel)]="street"/>
+                        <input #focus type="text" class="slds-input" [(ngModel)]="street" [ngModelOptions]="modelOptions"/>
                     </div>
                 </div>
             <div class="slds-grid">
                 <div class="slds-form-element slds-size--1-of-2 slds-p-right--xx-small">
                     <label class="slds-form-element__label">{{language.getLabel('LBL_POSTALCODE')}}</label>
                     <div class="slds-form-element__control">
-                        <input type="text" class="slds-input" [(ngModel)]="postalcode"/>
+                        <input type="text" class="slds-input" [(ngModel)]="postalcode" [ngModelOptions]="modelOptions"/>
                     </div>
                 </div>
                 <div class="slds-form-element slds-size--1-of-2 slds-p-left--xx-small">
                     <label class="slds-form-element__label">{{language.getLabel('LBL_CITY')}}</label>
                     <div class="slds-form-element__control">
-                        <input type="text" class="slds-input" [(ngModel)]="city"/>
+                        <input type="text" class="slds-input" [(ngModel)]="city" [ngModelOptions]="modelOptions"/>
                     </div>
                 </div>
             </div>
@@ -51,13 +50,13 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
                 <div class="slds-form-element slds-size--1-of-2 slds-p-right--xx-small">
                     <label class="slds-form-element__label">{{language.getLabel('LBL_STATE')}}</label>
                     <div class="slds-form-element__control">
-                        <input type="text" class="slds-input" [(ngModel)]="state"/>
+                        <input type="text" class="slds-input" [(ngModel)]="state" [ngModelOptions]="modelOptions"/>
                     </div>
                 </div>
                 <div class="slds-form-element slds-size--1-of-2 slds-p-left--xx-small">
                     <label class="slds-form-element__label">{{language.getLabel('LBL_COUNTRY')}}</label>
                     <div class="slds-form-element__control">
-                        <input type="text" class="slds-input" [(ngModel)]="country"/>
+                        <input type="text" class="slds-input" [(ngModel)]="country" [ngModelOptions]="modelOptions"/>
                     </div>
                 </div>
             </div>

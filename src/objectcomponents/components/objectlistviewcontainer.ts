@@ -10,15 +10,16 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module ObjectComponents
+ */
 import {
-    AfterViewInit, ComponentFactoryResolver, Component, NgModule, ViewChild, ViewContainerRef,
+    AfterViewInit,  Component,  ViewChild, ViewContainerRef,
     OnDestroy
 } from '@angular/core';
-import {HttpClient, HttpHeaders, HttpResponse} from "@angular/common/http";
-import {Router, ActivatedRoute}   from '@angular/router';
+import { ActivatedRoute}   from '@angular/router';
 import {metadata} from '../../services/metadata.service';
 import {broadcast} from '../../services/broadcast.service';
-import {modellist} from '../../services/modellist.service';
 
 @Component({
     selector: 'object-listview-container',

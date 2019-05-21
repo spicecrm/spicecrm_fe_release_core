@@ -10,6 +10,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module ModuleMailboxes
+ */
 import {Injectable, EventEmitter, Output} from '@angular/core';
 import {backend} from '../../../services/backend.service';
 import {modelutilities} from '../../../services/modelutilities.service';
@@ -17,6 +20,9 @@ import {modelutilities} from '../../../services/modelutilities.service';
 import {Subject, Observable} from 'rxjs';
 
 
+/**
+* @ignore
+*/
 declare var moment: any;
 
 @Injectable()

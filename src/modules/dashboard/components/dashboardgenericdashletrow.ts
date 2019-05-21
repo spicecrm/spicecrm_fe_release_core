@@ -10,6 +10,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module ModuleDashboard
+ */
 import {Component, Input, OnInit} from '@angular/core';
 import {model} from '../../../services/model.service';
 import {modelutilities} from '../../../services/modelutilities.service';

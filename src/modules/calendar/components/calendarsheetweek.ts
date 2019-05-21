@@ -10,6 +10,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module ModuleCalendar
+ */
 import {
     AfterViewInit,
     ChangeDetectorRef,
@@ -29,6 +32,9 @@ import {navigation} from '../../../services/navigation.service';
 import {calendar} from '../services/calendar.service';
 import {backend} from "../../../services/backend.service";
 
+/**
+* @ignore
+*/
 declare var moment: any;
 
 @Component({

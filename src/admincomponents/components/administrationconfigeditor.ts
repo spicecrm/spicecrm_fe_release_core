@@ -10,6 +10,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module AdminComponentsModule
+ */
 import {
     AfterViewInit,
     ComponentFactoryResolver,
@@ -68,7 +71,7 @@ export class AdministrationConfigEditor implements OnInit {
         return items;
     }
 
-    save(){
+    save() {
         this.loading = true;
         this.modal.openModal('SystemLoadingModal').subscribe(modalRef => {
             modalRef.instance.messagelabel = 'LBL_SAVING_DATA';

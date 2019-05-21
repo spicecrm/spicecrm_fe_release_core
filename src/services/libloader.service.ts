@@ -10,6 +10,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module services
+ */
 import {Subject, Observable, of} from "rxjs";
 import {Injectable} from "@angular/core";
 import {backend} from "./backend.service";

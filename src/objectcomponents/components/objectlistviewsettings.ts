@@ -10,6 +10,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module ObjectComponents
+ */
 import {Component, ElementRef, Renderer2} from '@angular/core';
 import {modellist} from '../../services/modellist.service';
 import {modal} from '../../services/modal.service';

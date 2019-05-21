@@ -10,26 +10,23 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module SystemComponents
+ */
 import {
     Component,
     Input,
     OnInit,
     Output,
     EventEmitter,
-    ElementRef,
-    ViewChild,
-    forwardRef,
     OnChanges
 } from '@angular/core';
-import {ControlValueAccessor, NG_VALUE_ACCESSOR} from "@angular/forms";
-
-import {model} from '../../services/model.service';
-import {popup} from '../../services/popup.service';
-import {view} from '../../services/view.service';
 import {language} from '../../services/language.service';
-import {metadata} from '../../services/metadata.service';
 import {userpreferences} from "../../services/userpreferences.service";
 
+/**
+* @ignore
+*/
 declare var moment: any;
 
 @Component({
@@ -54,7 +51,7 @@ export class SystemInputDatePicker implements OnInit, OnChanges {
 
     constructor(private language: language, private userPreferences: userpreferences) {
         let preferences = this.userPreferences.unchangedPreferences.global;
-        this.weekStartDay = preferences['week_day_start'] == "Monday" ? 1 : 0 || this.weekStartDay;
+        this.weekStartDay = preferences.week_day_start == "Monday" ? 1 : 0 || this.weekStartDay;
     }
 
     public ngOnInit() {

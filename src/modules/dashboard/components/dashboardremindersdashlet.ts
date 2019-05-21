@@ -10,12 +10,18 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module ModuleDashboard
+ */
 import {Component} from '@angular/core';
 import {Router} from '@angular/router';
 import {metadata} from '../../../services/metadata.service';
 import {language} from '../../../services/language.service';
 import {reminder} from '../../../services/reminder.service';
 
+/**
+* @ignore
+*/
 declare var moment: any;
 
 @Component({

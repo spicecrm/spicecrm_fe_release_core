@@ -10,7 +10,10 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
-import {Component, AfterViewInit, OnInit, ViewChild, ViewContainerRef, Renderer} from "@angular/core";
+/**
+ * @module ObjectComponents
+ */
+import {Component, AfterViewInit, ViewChild, ViewContainerRef, Renderer} from "@angular/core";
 import {model} from "../../services/model.service";
 import {language} from "../../services/language.service";
 import {toast} from "../../services/toast.service";

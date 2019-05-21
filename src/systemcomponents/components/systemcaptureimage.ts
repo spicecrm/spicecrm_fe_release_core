@@ -10,6 +10,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module SystemComponents
+ */
 import {Component, Input, AfterViewInit, ViewChild, ViewContainerRef, EventEmitter} from '@angular/core';
 import {backend} from '../../services/backend.service';
 

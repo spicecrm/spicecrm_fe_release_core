@@ -10,9 +10,11 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
-import {Component, Input, ElementRef} from "@angular/core";
+/**
+ * @module ModuleUsers
+ */
+import {Component} from "@angular/core";
 import {modal} from "../../../services/modal.service";
-import {model} from "../../../services/model.service";
 import {language} from "../../../services/language.service";
 import {UserChangePasswordModal} from "./userchangepasswordmodal";
 

@@ -10,11 +10,17 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module ModuleCalendar
+ */
 import {Component, EventEmitter, HostBinding, HostListener, Input, Output} from '@angular/core';
 import {model} from '../../../services/model.service';
 import {calendar} from '../services/calendar.service';
 import {take} from "rxjs/operators";
 
+/**
+* @ignore
+*/
 declare var moment: any;
 
 @Component({

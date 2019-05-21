@@ -10,6 +10,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module services
+ */
 import {Injectable, EventEmitter} from '@angular/core';
 
 import {cookie} from './cookie.service';
@@ -18,6 +21,9 @@ import {session} from './session.service';
 import {Router} from '@angular/router';
 import {HttpClient} from "@angular/common/http";
 
+/**
+* @ignore
+*/
 declare var _: any;
 
 @Injectable()

@@ -10,16 +10,16 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module services
+ */
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders, HttpResponse} from "@angular/common/http";
-
 import {configurationService} from './configuration.service';
 import {session} from './session.service';
 import {modelutilities} from './modelutilities.service';
 import {backend} from './backend.service';
 import {metadata} from './metadata.service';
-import {Router} from '@angular/router';
-import {Observable, Subject} from 'rxjs';
+import {Subject} from 'rxjs';
 
 @Injectable()
 export class fts {
@@ -40,7 +40,6 @@ export class fts {
 
     constructor(
         private backend: backend,
-        private http: HttpClient,
         private configurationService: configurationService,
         private session: session,
         private modelutilities: modelutilities,
@@ -163,6 +162,35 @@ export class fts {
             retSubject.next(response);
             retSubject.complete();
 
+        });
+
+        return retSubject.asObservable();
+    }
+
+    public export(searchterm: string, module: string, fields: string[], aggregates = {}, sortparams: any = {}, owner = false, modulefilter = '') {
+        let retSubject = new Subject<any>();
+
+        if (searchterm.indexOf('%') != -1) {
+            searchterm = searchterm.replace(/%/g, '*');
+        }
+        searchterm = searchterm.trim();
+        // set the searchterm
+        this.searchTerm = searchterm;
+        this.searchAggregates = aggregates;
+        this.searchSort = sortparams;
+        this.modulefilter = modulefilter;
+
+        this.runningmodulesearch = this.backend.getDownloadPostRequestFile('search/export', {}, {
+            module,
+            searchterm,
+            fields,
+            owner,
+            aggregates,
+            sort: this.searchSort,
+            modulefilter
+        }).subscribe(response => {
+            retSubject.next(response);
+            retSubject.complete();
         });
 
         return retSubject.asObservable();

@@ -10,10 +10,14 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module ObjectFields
+ */
 import {Component, Input, ViewChild, ViewContainerRef, AfterViewInit} from '@angular/core';
 import {model} from '../../services/model.service';
 import {metadata} from '../../services/metadata.service';
 import {language} from '../../services/language.service';
+import {view} from '../../services/view.service';
 
 @Component({
     selector: 'field-container',
@@ -29,7 +33,8 @@ export class fieldContainer implements AfterViewInit {
     constructor(
         protected model: model,
         private language: language,
-        private metadata: metadata
+        private metadata: metadata,
+        private view: view
     ) {
 
     }
@@ -77,5 +82,4 @@ export class fieldContainer implements AfterViewInit {
         return fieldtypeComponent ? fieldtypeComponent : 'fieldGeneric';
 
     }
-
 }

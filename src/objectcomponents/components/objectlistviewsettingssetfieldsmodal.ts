@@ -10,9 +10,11 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
-import {Component, Input, OnInit} from '@angular/core';
-import {modellist} from '../../services/modellist.service';
-import {popup} from '../../services/popup.service';
+/**
+ * @module ObjectComponents
+ */
+import {Component, OnInit} from '@angular/core';
+
 import {language} from '../../services/language.service';
 import {metadata} from '../../services/metadata.service';
 
@@ -100,6 +102,11 @@ export class ObjectListViewSettingsSetfieldsModal implements OnInit {
             }
             this.modellist.updateListType({fielddefs : btoa(JSON.stringify(fieldsArray))}).subscribe(ret => this.close());
         }
+    }
+
+    private onFieldDrop(event) {
+        let previousItem = event.previousContainer.data.splice(event.previousIndex, 1);
+        event.container.data.splice(event.currentIndex, 0, previousItem[0]);
     }
 
     /*

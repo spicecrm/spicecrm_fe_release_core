@@ -10,6 +10,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module AdminComponentsModule
+ */
 import {
     AfterViewInit,
     ComponentFactoryResolver,
@@ -23,9 +26,9 @@ import {
 import {HttpClient, HttpHeaders, HttpResponse} from "@angular/common/http";
 import { dictionary } from '../services/dictionary.service';
 
-declare var Ext: any;
-declare var System: any;
-declare var SpiceCRM: any;
+
+
+
 
 @Component({
     selector: '[administration-dictionarymanager-item-field]',

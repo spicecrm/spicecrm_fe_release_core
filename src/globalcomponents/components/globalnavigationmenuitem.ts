@@ -10,6 +10,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module GlobalComponents
+ */
 import {
     AfterViewInit, ComponentFactoryResolver, Component, Input, ElementRef, Renderer2, NgModule, ViewChild,
     ViewContainerRef, OnInit, OnDestroy
@@ -145,7 +148,7 @@ export class GlobalNavigationMenuItem implements AfterViewInit, OnInit, OnDestro
     }
 
     private getMenuLabel(menuitem) {
-        return this.language.getModuleLabel(this.item.module, menuitem);
+        return this.language.getLabel(this.item.module, menuitem);
     }
 
     private isActive(): boolean {

@@ -10,11 +10,14 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module ObjectComponents
+ */
 import {
-    AfterViewInit, ComponentFactoryResolver, Component, NgModule, ViewChild, ViewContainerRef,
+    ComponentFactoryResolver, Component,
     ElementRef, OnInit, OnDestroy
 } from '@angular/core';
-import {Title} from '@angular/platform-browser';
+
 import {ActivatedRoute} from '@angular/router';
 import {metadata} from '../../services/metadata.service';
 import {model} from '../../services/model.service';

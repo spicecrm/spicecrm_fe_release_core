@@ -10,13 +10,11 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module AddComponentsModule
+ */
 import {
-    Component,
-    Input,
-    AfterViewInit,
-    OnInit,
-    ViewChild,
-    ViewContainerRef
+    Component
 } from '@angular/core';
 import {metadata} from '../../services/metadata.service';
 import {model} from '../../services/model.service';
@@ -26,8 +24,6 @@ import {backend} from '../../services/backend.service';
 import {configurationService} from '../../services/configuration.service';
 import {Router}   from '@angular/router';
 
-declare var System: any;
-declare var google: any;
 
 @Component({
     selector: 'spice-territorries-detail',

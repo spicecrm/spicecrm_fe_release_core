@@ -10,8 +10,10 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
-import {Component, Input, HostBinding} from "@angular/core";
-import {Router} from "@angular/router";
+/**
+ * @module ModuleContacts
+ */
+import {Component} from "@angular/core";
 import {metadata} from "../../../services/metadata.service";
 import {model} from "../../../services/model.service";
 import {backend} from "../../../services/backend.service";

@@ -11,7 +11,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 */
 
 /**
- * Created by christian on 08.11.2016.
+ * @module AdminComponentsModule
  */
 import {
     AfterViewInit,
@@ -37,36 +37,36 @@ import {ftsconfiguration} from '../services/ftsconfiguration.service';
 })
 export class AdministrationFTSManagerFields {
 
-    currentfield: string = '';
-    fieldDetails: any = {};
-    displayAddFieldModal: boolean = false;
-
+    public currentfield: string = '';
+    public fieldDetails: any = {};
+    public displayAddFieldModal: boolean = false;
     constructor(private metadata: metadata, private language: language, private ftsconfiguration: ftsconfiguration) {
 
     }
 
-    selectField(id){
+    public selectField(id) {
         this.currentfield = id;
         this.fieldDetails = this.ftsconfiguration.getFieldDetails(id);
     }
 
-    get moduleFtsFields(){
+    get moduleFtsFields() {
         return this.ftsconfiguration.moduleFtsFields;
     }
 
-    get aggregateaddparams(){
+    get aggregateaddparams() {
         return this.fieldDetails.aggregateaddparams ? atob(this.fieldDetails.aggregateaddparams) : '';
     }
-    set aggregateaddparams(value){
+    set aggregateaddparams(value) {
         this.fieldDetails.aggregateaddparams = value ? btoa(value) : '';
     }
 
-    showAddFields(){
+    public showAddFields() {
         this.displayAddFieldModal = true;
     }
 
-    closeAddFields(event){
+    public closeAddFields(event) {
         this.displayAddFieldModal = false;
     }
+
 }
 

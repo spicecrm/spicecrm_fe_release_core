@@ -10,16 +10,13 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
-import {Component, Input} from '@angular/core';
-import {metadata} from '../../services/metadata.service';
+/**
+ * @module SystemComponents
+ */
+import {Component} from '@angular/core';
 
 @Component({
     selector: 'system-modal-footer',
     templateUrl: './src/systemcomponents/templates/systemmodalfooter.html'
 })
-export class SystemModalFooter {
-
-    constructor(private metadata: metadata) {
-
-    }
-}
+export class SystemModalFooter {}

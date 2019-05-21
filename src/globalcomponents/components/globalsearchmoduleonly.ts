@@ -10,6 +10,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module GlobalComponents
+ */
 import {ElementRef, Component, Input, ViewChild, ViewContainerRef, OnInit, OnChanges} from '@angular/core';
 import {Router} from '@angular/router';
 import {fts} from '../../services/fts.service';
@@ -18,6 +21,9 @@ import {layout} from '../../services/layout.service';
 import {metadata} from '../../services/metadata.service';
 import {broadcast} from '../../services/broadcast.service';
 
+/**
+ * @ignore
+ */
 declare var _;
 
 @Component({

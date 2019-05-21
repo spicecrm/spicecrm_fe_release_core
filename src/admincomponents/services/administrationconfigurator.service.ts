@@ -10,6 +10,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module AdminComponentsModule
+ */
 import {Injectable} from '@angular/core';
 import {Subject, Observable} from 'rxjs';
 
@@ -17,20 +20,30 @@ import {backend} from '../../services/backend.service';
 import {modelutilities} from '../../services/modelutilities.service';
 
 @Injectable()
+/**
+ * This service handles data retrieved from metadata dictionaries (simple config tables)
+ * Data is retrieved, fields are mapped dynamically for display in workbench.
+ * Please check sysuiadmincomponents component config for adjustments needed in form layout.
+ */
 export class administrationconfigurator {
 
-    dictionary: string = '';
-    entries: Array<any> = [];
-    sorting: any = {
+    public dictionary: string = '';
+    public entries: any = [];
+    public sorting: any = {
         field: '',
         direction: ''
     };
-    fielddefobj: any = {};
+    public fielddefobj: any = {};
 
     constructor(private backend: backend, private modelutilities: modelutilities) {
     }
 
-    loadEntries(fielddefs = []) {
+
+    /**
+     * Load entries from selected dictionary
+     * @param fielddefs Array
+     */
+    public loadEntries(fielddefs = []) {
         this.backend.getRequest('configurator/entries/' + this.dictionary).subscribe(data => {
 
             // traverse the fielddefs
@@ -44,11 +57,14 @@ export class administrationconfigurator {
                     id: entry.id,
                     mode: '',
                     data: this.mapData(entry)
-                })
+                });
             }
         });
     }
 
+    /**
+     * @param record
+     */
     private mapData(record) {
         for (let field in this.fielddefobj) {
             switch (this.fielddefobj[field]) {
@@ -59,6 +75,9 @@ export class administrationconfigurator {
         return record;
     }
 
+    /**
+     * @param record
+     */
     private remapData(record) {
         let newRecord = {};
         for (let field in this.fielddefobj) {
@@ -74,7 +93,9 @@ export class administrationconfigurator {
         return newRecord;
     }
 
-    addEntry() {
+    /**
+     */
+    public addEntry() {
         let newId = this.modelutilities.generateGuid();
         this.entries.unshift({
             id: newId,
@@ -85,7 +106,10 @@ export class administrationconfigurator {
         });
     }
 
-    saveEntry(id) {
+    /**
+     * @param id
+     */
+    public saveEntry(id) {
         this.entries.some(entry => {
             if (entry.id === id) {
                 delete(entry.backup);
@@ -94,10 +118,13 @@ export class administrationconfigurator {
                 });
                 return true;
             }
-        })
+        });
     }
 
-    deleteEntry(id) {
+    /**
+     * @param id
+     */
+    public deleteEntry(id) {
         this.entries.some((entry, index) => {
             if (entry.id === id) {
                 delete(entry.backup);
@@ -106,47 +133,58 @@ export class administrationconfigurator {
                 });
                 return true;
             }
-        })
+        });
     }
 
-    setEditMode(id) {
+    /**
+     * @param id
+     */
+    public setEditMode(id) {
         this.entries.some(entry => {
             if (entry.id === id) {
                 entry.mode = 'edit';
                 entry.backup = JSON.parse(JSON.stringify(entry.data));
                 return true;
             }
-        })
+        });
     }
 
-    cancelEditMode(id) {
+    /**
+     * @param id
+     */
+    public cancelEditMode(id) {
         this.entries.some((entry, index) => {
             if (entry.id === id) {
-                if (entry.mode === 'new')
+                if (entry.mode === 'new') {
                     this.entries.splice(index, 1);
-                else {
+                } else {
                     entry.data = JSON.parse(JSON.stringify(entry.backup));
                     delete(entry.backup);
                     entry.mode = '';
                 }
                 return true;
             }
-        })
+        });
     }
 
-    isEditMode(id) {
+    /**
+     * @param id
+     */
+    public isEditMode(id) {
         let editMode = false;
         this.entries.some(entry => {
             if (entry.id === id) {
                 editMode = entry.mode === 'edit' || entry.mode === 'new';
                 return true;
             }
-        })
+        });
         return editMode;
     }
 
-    copy(id)
-    {
+    /**
+     * @param id
+     */
+    public copy(id) {
         this.entries.some(
             entry => {
                 if (entry.id === id) {
@@ -154,15 +192,19 @@ export class administrationconfigurator {
                     new_entry.data = JSON.parse(JSON.stringify(entry.data)); //  {...entry.data};
                     new_entry.mode = 'new';
                     new_entry.id = this.modelutilities.generateGuid();
+                    new_entry.data.id = new_entry.id;
                     this.entries.unshift(new_entry);
                     return true;
                 }
             }
         );
-        //console.log(this.entries);
+        // console.log(this.entries);
     }
 
-    sort(field) {
+    /**
+     * @param field
+     */
+    public sort(field) {
         if (this.sorting.field === field) {
             this.sorting.direction = this.sorting.direction == 'asc' ? 'dsc' : 'asc';
         } else {
@@ -171,14 +213,15 @@ export class administrationconfigurator {
         }
 
         this.entries.sort((a, b) => {
-            if (a.data[this.sorting.field] == b.data[this.sorting.field])
+            if (a.data[this.sorting.field] == b.data[this.sorting.field]) {
                 return 0;
+            }
 
             if (this.sorting.direction == 'asc') {
                 return a.data[this.sorting.field] < b.data[this.sorting.field] ? -1 : 1;
             } else {
                 return a.data[this.sorting.field] < b.data[this.sorting.field] ? 1 : -1;
             }
-        })
+        });
     }
 }

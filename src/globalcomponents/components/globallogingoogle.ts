@@ -10,6 +10,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module GlobalComponents
+ */
 import {HttpClient} from "@angular/common/http";
 import {AfterViewInit, Component, ElementRef, EventEmitter, Output} from "@angular/core";
 import {backend} from "../../services/backend.service";
@@ -17,6 +20,9 @@ import {configurationService} from "../../services/configuration.service";
 import {loginService} from "../../services/login.service";
 import {session} from "../../services/session.service";
 
+/**
+ * @ignore
+ */
 declare var gapi: any;
 
 @Component({

@@ -10,6 +10,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module ModuleAccounts
+ */
 import {AfterViewInit, Component, OnDestroy} from '@angular/core';
 import {relatedmodels} from '../../../services/relatedmodels.service';
 import {model} from '../../../services/model.service';

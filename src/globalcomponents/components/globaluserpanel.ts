@@ -10,6 +10,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module GlobalComponents
+ */
 import {Router} from "@angular/router";
 import {Component, ViewChild, ViewContainerRef, Renderer} from "@angular/core";
 import {loginService} from "../../services/login.service";

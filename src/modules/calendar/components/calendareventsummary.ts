@@ -10,10 +10,16 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module ModuleCalendar
+ */
 import {Component, Input} from "@angular/core";
 import {model} from "../../../services/model.service";
 import {userpreferences} from "../../../services/userpreferences.service";
 
+/**
+* @ignore
+*/
 declare var moment: any;
 
 @Component({

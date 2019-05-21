@@ -10,6 +10,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module ModuleUsers
+ */
 import {Component, Input} from "@angular/core";
 import {model} from "../../../services/model.service";
 import {modelutilities} from "../../../services/modelutilities.service";
@@ -17,9 +20,11 @@ import {view} from "../../../services/view.service";
 import {language} from "../../../services/language.service";
 import {toast} from "../../../services/toast.service";
 import {backend} from "../../../services/backend.service";
-import {Observable, Subject} from "rxjs";
-import {metadata} from "../../../services/metadata.service";
+import {Observable, Subject} from "rxjs";;
 
+/**
+* @ignore
+*/
 declare var moment: any;
 
 @Component({
@@ -43,9 +48,7 @@ export class UserRolesAddModal {
         private model: model,
         private modelutilities: modelutilities,
         private toast: toast,
-        private backend: backend,
-        private view: view,
-        private metadata: metadata,
+        private backend: backend
     ) {
         this.responseSubject = new Subject<object>();
         this.response = this.responseSubject.asObservable();

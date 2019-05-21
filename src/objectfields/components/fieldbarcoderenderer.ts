@@ -10,7 +10,10 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
-import {Component, Input, OnChanges, AfterViewInit} from "@angular/core";
+/**
+ * @module ObjectFields
+ */
+import {Component, Input, OnChanges,} from "@angular/core";
 import {metadata} from "../../services/metadata.service";
 
 declare let JsBarcode: any;

@@ -10,11 +10,17 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module ObjectComponents
+ */
 import {Injectable} from '@angular/core';
 import { metadata } from '../../services/metadata.service';
 import { backend } from '../../services/backend.service';
 import { modelutilities } from '../../services/modelutilities.service';
 
+/**
+* @ignore
+*/
 declare var moment: any;
 
 @Injectable()

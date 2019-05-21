@@ -10,6 +10,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module ModuleCalendar
+ */
 import {EventEmitter, Injectable, OnDestroy} from '@angular/core';
 import {of, Subject, Subscription} from 'rxjs';
 import {backend} from '../../../services/backend.service';
@@ -22,7 +25,14 @@ import {language} from "../../../services/language.service";
 import {take} from "rxjs/operators";
 
 
+/**
+* @ignore
+*/
 declare var moment: any;
+
+/**
+* @ignore
+*/
 declare var _: any;
 
 @Injectable()

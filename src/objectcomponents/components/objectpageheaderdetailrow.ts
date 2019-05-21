@@ -10,7 +10,10 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
-import {Component, Input, AfterViewInit, OnInit} from '@angular/core';
+/**
+ * @module ObjectComponents
+ */
+import {Component, Input, OnInit} from '@angular/core';
 import {metadata} from '../../services/metadata.service';
 import {model} from '../../services/model.service';
 import {view} from "../../services/view.service";
@@ -20,53 +23,57 @@ import {view} from "../../services/view.service";
     templateUrl: './src/objectcomponents/templates/objectpageheaderdetailrow.html',
     providers: [view]
 })
-export class ObjectPageHeaderDetailRow implements OnInit{
-    @Input() fieldSet: string = '';
-    @Input() opacity: number = 1;
-    @Input() collapsed: boolean = true;
+export class ObjectPageHeaderDetailRow implements OnInit {
+    @Input() private fieldSet: string = '';
+    @Input() private opacity: number = 1;
+    @Input() private collapsed: boolean = true;
 
     constructor(private metadata: metadata, private model: model, private view: view) {
 
     }
 
-    ngOnInit(){
-        this.setLabelLength()
+    public ngOnInit() {
+        this.setLabelLength();
     }
 
-    getFields() {
+    private getFields() {
         let fieldsetFields = this.metadata.getFieldSetFields(this.fieldSet);
 
 
         if (this.model.data && this.model.data.acl_fieldcontrol) {
             let thisFieldsetFields = [];
             for (let fieldsetFieldIndex in fieldsetFields) {
-                if (!(this.model.data.acl_fieldcontrol[fieldsetFields[fieldsetFieldIndex].field] && this.model.data.acl_fieldcontrol[fieldsetFields[fieldsetFieldIndex].field] === '1'))
+                if (!(this.model.data.acl_fieldcontrol[fieldsetFields[fieldsetFieldIndex].field] && this.model.data.acl_fieldcontrol[fieldsetFields[fieldsetFieldIndex].field] === '1')) {
                     thisFieldsetFields.push(fieldsetFields[fieldsetFieldIndex]);
+                }
             }
 
             return thisFieldsetFields;
         }
 
-        return fieldsetFields
+        return fieldsetFields;
 
     }
 
-    toggleCollapsed(){
+    private toggleCollapsed() {
         this.collapsed = !this.collapsed;
 
         // set the view label length
         this.setLabelLength();
     }
 
-    get toggleIcon(){
+    get toggleIcon() {
         return this.collapsed ? 'chevrondown' : 'chevronup';
     }
 
-    setLabelLength(){
-        if(this.collapsed)
+    private setLabelLength() {
+        if (this.collapsed) {
+            this.view.displayLabels = false;
             this.view.labels = 'short';
-        else
+        } else {
+            this.view.displayLabels = true;
             this.view.labels = 'default';
+        }
     }
 
     private showLabel(fieldConfig) {

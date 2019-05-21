@@ -10,6 +10,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module AdminComponentsModule
+ */
 import {Component} from '@angular/core';
 import {metadata} from '../../services/metadata.service';
 import {language} from '../../services/language.service';
@@ -19,6 +22,9 @@ import {modal} from "../../services/modal.service";
 import {toast} from "../../services/toast.service";
 import {broadcast} from "../../services/broadcast.service";
 
+/**
+* @ignore
+*/
 declare var _;
 
 @Component({
