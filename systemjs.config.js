@@ -4,7 +4,7 @@
             'vendor:': 'vendor/'
         },
         map: {
-            app: 'src',
+            app: 'app',
             '@angular/core': 'vendor:@angular/core.umd.min.js?v=7.2.13',
             '@angular/common': 'vendor:@angular/common.umd.min.js?v=7.2.13',
             '@angular/common/http': 'vendor:@angular/common-http.umd.min.js?v=7.2.13',
