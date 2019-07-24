@@ -33,7 +33,7 @@ export class MailboxManagerHeader implements OnInit {
 
     set emailopenness(val) {
         this.mailboxesEmails.emailopenness = val == 'all' ? "" : val;
-        this.mailboxesEmails.loadMails();
+        this.mailboxesEmails.loadMessages();
     }
 
     get buttonenabled() {
@@ -77,11 +77,11 @@ export class MailboxManagerHeader implements OnInit {
                 this.mailboxesEmails.activeMailBox = mailbox;
             }
         }
-        this.mailboxesEmails.loadMails();
+        this.mailboxesEmails.loadMessages();
     }
 
     private reloadList() {
-        this.mailboxesEmails.loadMails();
+        this.mailboxesEmails.loadMessages();
     }
 
     private fetchEmails() {

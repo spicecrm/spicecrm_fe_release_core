@@ -17,6 +17,7 @@ import {Component, Input} from '@angular/core';
 import {model} from '../../services/model.service';
 import {view} from '../../services/view.service';
 import {language} from '../../services/language.service';
+import {userpreferences} from "../../services/userpreferences.service";
 
 @Component({
     selector: 'field-label',
@@ -31,6 +32,7 @@ export class fieldLabel {
     constructor(
         private model: model,
         private view: view,
+        private userPreferences: userpreferences,
         private language: language
     ) {
     }
@@ -90,6 +92,7 @@ export class fieldLabel {
     }
 
     get helpText() {
+        if (this.userPreferences.toUse.help_icon && this.userPreferences.toUse.help_icon == 'hidden') return false;
         if (this.fieldconfig.helpText) {
             if (this.fieldconfig.helpText.indexOf(':') > 0) {
                 let fielddetails = this.fieldconfig.helpText.split(':');
@@ -101,6 +104,4 @@ export class fieldLabel {
             return this.language.getFieldHelpText(this.model.module, this.fieldname, this.fieldconfig);
         }
     }
-
-
 }

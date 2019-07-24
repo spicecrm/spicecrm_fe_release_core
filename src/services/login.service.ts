@@ -21,6 +21,7 @@ import {configurationService} from './configuration.service';
 import {loader} from './loader.service';
 import {session} from './session.service';
 import {toast} from './toast.service';
+import {helper} from './helper.service';
 
 interface loginAuthDataIf {
     userName: string;
@@ -47,6 +48,7 @@ export class loginService {
         private router: Router,
         private loader: loader,
         private toast: toast,
+        private helper: helper,
         public session: session
     ) { }
 
@@ -66,7 +68,7 @@ export class loginService {
             let loginheaders = new HttpHeaders();
             loginheaders = loginheaders.set(
                 'Authorization',
-                'Basic ' + btoa(this.authData.userName + ':' + this.authData.password)
+                'Basic ' + this.helper.encodeBase64(this.authData.userName + ':' + this.authData.password)
             );
 
             krestUrl = this.configurationService.getBackendUrl() + '/login';

@@ -102,7 +102,7 @@ export class tfieldGeneric {
     }
 })
 export class SpiceTerritorriesPrimary extends tfieldGeneric {
-    @ViewChild('popover', {read: ViewContainerRef}) private popover: ViewContainerRef;
+    @ViewChild('popover', {read: ViewContainerRef, static: true}) private popover: ViewContainerRef;
 
     private clickListener: any;
 
@@ -220,7 +220,7 @@ export class SpiceTerritorriesPrimary extends tfieldGeneric {
     }
 })
 export class SpiceTerritoriesAdditional extends tfieldGeneric {
-    @ViewChild('popover', {read: ViewContainerRef}) popover: ViewContainerRef;
+    @ViewChild('popover', {read: ViewContainerRef, static: true}) popover: ViewContainerRef;
 
     clickListener: any;
 

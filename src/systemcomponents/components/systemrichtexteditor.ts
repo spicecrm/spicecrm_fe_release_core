@@ -21,9 +21,10 @@ import {
     EventEmitter,
     forwardRef,
     Inject,
-    OnDestroy,
+    OnDestroy, Output,
     Renderer2,
-    ViewChild, ViewContainerRef
+    ViewChild,
+    ViewContainerRef
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from "@angular/forms";
 import {DOCUMENT} from "@angular/common";
@@ -48,7 +49,7 @@ import {metadata} from "../../services/metadata.service";
 })
 export class SystemRichTextEditor implements OnDestroy, ControlValueAccessor {
 
-    @ViewChild('htmleditor', {read: ViewContainerRef}) private htmlEditor: ViewContainerRef;
+    @ViewChild('htmleditor', {read: ViewContainerRef, static: true}) private htmlEditor: ViewContainerRef;
 
     // for the value accessor
     private onChange: (value: string) => void;
@@ -60,6 +61,7 @@ export class SystemRichTextEditor implements OnDestroy, ControlValueAccessor {
     private modalOpen: boolean = false;
     public isExpanded: boolean = false;
     public contract: EventEmitter<string> = new EventEmitter<string>();
+    public editorModalSaveSubscriber: any;
 
     private block: string = 'default';
     private fontName: string = 'Tilium Web';
@@ -68,6 +70,8 @@ export class SystemRichTextEditor implements OnDestroy, ControlValueAccessor {
         BLOCKQUOTE: "indent",
         A: "link"
     };
+
+    @Output() private save$: EventEmitter<string> = new EventEmitter<string>();
 
     private select = ["H1", "H2", "H3", "H4", "H5", "H6", "P", "PRE", "DIV"];
 
@@ -220,6 +224,8 @@ export class SystemRichTextEditor implements OnDestroy, ControlValueAccessor {
         this.isExpanded = !this.isExpanded;
         if (this.isExpanded) {
             this.modal.openModal('SystemRichTextEditorModal').subscribe(componentRef => {
+                this.editorModalSaveSubscriber = componentRef.instance.save$
+                    .subscribe(content => this.save$.emit(content));
                 componentRef.instance.content = this._html;
                 componentRef.instance.contract
                     .pipe(take(1))
@@ -227,6 +233,8 @@ export class SystemRichTextEditor implements OnDestroy, ControlValueAccessor {
                         this.isExpanded = false;
                         this.htmlEditor.element.nativeElement.focus();
                         this.writeValue(html);
+                        this.onChange(html);
+                        if (this.editorModalSaveSubscriber) this.editorModalSaveSubscriber.unsubscribe();
                     });
             });
         } else {
@@ -295,7 +303,7 @@ export class SystemRichTextEditor implements OnDestroy, ControlValueAccessor {
         let found = false;
         this.select.forEach(y => {
             const node = nodes.find(x => x.nodeName === y);
-            if (node !== undefined && y === node.nodeName) {
+            if (node !== undefined && (y === node.nodeName || node.nodeName == 'code')) {
                 if (found === false) {
                     this.block = node.nodeName.toLowerCase();
                     found = true;
@@ -306,37 +314,6 @@ export class SystemRichTextEditor implements OnDestroy, ControlValueAccessor {
         });
 
         found = false;
-        /*
-        if (this.customClasses) {
-            this.customClasses.forEach((y, index) => {
-                const node = nodes.find(x => {
-                    if (x instanceof Element) {
-                        return x.className === y.class;
-                    }
-                });
-                if (node !== undefined) {
-                    if (found === false) {
-                        this.customClassId = index;
-                        found = true;
-                    }
-                } else if (found === false) {
-                    this.customClassId = -1;
-                }
-            });
-        }
-        */
-
-        /*
-        Object.keys(this.tagMap).map(e => {
-            const elementById = this._document.getElementById(this.tagMap[e] + '-' + this.id);
-            const node = nodes.find(x => x.nodeName === e);
-            if (node !== undefined && e === node.nodeName) {
-                this._renderer.addClass(elementById, "active");
-            } else {
-                this._renderer.removeClass(elementById, "active");
-            }
-        });
-        */
     }
 
     /**
@@ -354,7 +331,7 @@ export class SystemRichTextEditor implements OnDestroy, ControlValueAccessor {
         if (!this.isActive) {return;}
         this.editorService.saveSelection();
         this.modal.input('Add Video','Inser Video URL').subscribe((url: string) => {
-            if (!url || url.length == 0) {return;}
+            if (!url || url.length == 0) return;
             this.htmlEditor.element.nativeElement.focus();
             this.editorService.restoreSelection();
             let vimeoReg = /https?:\/\/(?:www\.)?vimeo.com\/(?:channels\/(?:\w+\/)?|groups\/([^\/]*)\/videos\/|album\/(\d+)\/video\/|)(\d+)(?:$|\/|\?)/;
@@ -370,7 +347,7 @@ export class SystemRichTextEditor implements OnDestroy, ControlValueAccessor {
         });
     }
 
-    private getSelectedText() {
+    private getSelectedText(): string {
         if (window.getSelection) {
             return window.getSelection().toString();
         } else if (this._document.selection && this._document.selection.type != "Control") {
@@ -411,5 +388,31 @@ export class SystemRichTextEditor implements OnDestroy, ControlValueAccessor {
 
     private setCustomClass(classId: number) {
         // this.editorService.createCustomClass(this.customClasses[classId]);
+    }
+
+    private encodeHtml(value: string): string {
+        return String(value)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;');
+    }
+
+    private addCodeSnippet(): void {
+        if (!this.isActive) {return;}
+        let value = this.encodeHtml(this.getSelectedText()) || '&nbsp;';
+        let html = `<br><pre style="background-color: #eee;border-radius: .2rem; border:1px solid #ccc; padding: .5rem"><code>${value}</code></pre><br>`;
+        this._document.execCommand('insertHTML', false, html);
+    }
+
+    /**
+     * paste a plain text when the caret is in a code tag.
+     */
+    private onPaste(e) {
+        if (e.target.nodeName == 'CODE') {
+            e.preventDefault();
+            let text = (e.originalEvent || e).clipboardData.getData('text/plain');
+            document.execCommand("insertHTML", false, this.encodeHtml(text));
+        }
     }
 }

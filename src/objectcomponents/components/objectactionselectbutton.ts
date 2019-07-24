@@ -55,6 +55,7 @@ export class ObjectActionSelectButton implements OnInit {
             this.modal.openModal('ObjectModalModuleLookup').subscribe(selectModal => {
                 selectModal.instance.module = this.model.module;
                 selectModal.instance.multiselect = true;
+                selectModal.instance.modulefilter = this.actionconfig.modulefilter;
                 selectModal.instance.selectedItems.subscribe(items => {
                     this.addSelectedItems(items);
                 });

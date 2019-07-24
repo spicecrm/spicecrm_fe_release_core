@@ -32,7 +32,7 @@ import {fieldGeneric} from '../../objectfields/components/fieldgeneric';
     }
 })
 export class SpiceTerritorriesPrimary extends fieldGeneric {
-    @ViewChild('popover', {read: ViewContainerRef}) popover: ViewContainerRef;
+    @ViewChild('popover', {read: ViewContainerRef, static: true}) popover: ViewContainerRef;
 
     clickListener: any;
 

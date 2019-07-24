@@ -82,7 +82,7 @@ export class SystemInputDatePicker implements OnInit, OnChanges {
     }
 
     get currentMonth(): string {
-        return moment.months()[this.curDate.month()];
+        return moment.localeData().months()[this.curDate.month()];
     }
 
     get weekdays() {

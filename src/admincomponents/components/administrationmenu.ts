@@ -19,6 +19,7 @@ import {
     ViewContainerRef,
     ElementRef, OnDestroy
 } from '@angular/core';
+import {Router} from '@angular/router';
 import {metadata} from '../../services/metadata.service';
 import {navigation} from '../../services/navigation.service';
 import {backend} from '../../services/backend.service';
@@ -32,7 +33,7 @@ import {session} from '../../services/session.service';
 })
 export class AdministrationMenu implements OnDestroy {
 
-    @ViewChild('admincontentcontainer', {read: ViewContainerRef}) private admincontentcontainer: ViewContainerRef;
+    @ViewChild('admincontentcontainer', {read: ViewContainerRef, static: true}) private admincontentcontainer: ViewContainerRef;
 
     private admincontentObject: any = null;
     private adminNavigation: any = {};
@@ -42,6 +43,7 @@ export class AdministrationMenu implements OnDestroy {
     private broadcastsubscription: any;
 
     constructor(
+        private router: Router,
         private metadata: metadata,
         private language: language,
         private backend: backend,
@@ -160,6 +162,7 @@ export class AdministrationMenu implements OnDestroy {
         );
 
         if (adminItem.component) {
+            // this.router.navigate(['admin/'+block+'/'+item.adminaction]);
             this.metadata.addComponent(adminItem.component, this.admincontentcontainer).subscribe(admObject => {
                 admObject.instance.componentconfig = adminItem.componentconfig;
                 this.admincontentObject = admObject;

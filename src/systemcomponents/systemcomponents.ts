@@ -16,6 +16,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 import {
     NgModule
 } from "@angular/core";
+import {DragDropModule} from '@angular/cdk/drag-drop';
 
 // MODULEs
 import {CommonModule} from "@angular/common";
@@ -71,6 +72,8 @@ import /*embed*/ {SystemInputModuleFilter} from "./components/systeminputmodulef
 import /*embed*/ {SystemInputRadio} from "./components/systeminputradio";
 import /*embed*/ {SystemInputTags} from "./components/systeminputtags";
 import /*embed*/ {SystemInputTime} from "./components/systeminputtime";
+import /*embed*/ {SystemInputCompanycodes} from "./components/systeminputcompanycodes";
+import /*embed*/ {SystemInputBackendMethod} from "./components/systeminputbackendmethod";
 import /*embed*/ {SystemLink} from "./components/systemlink";
 import /*embed*/ {SystemLoaderProgress} from "./components/systemloaderprogress";
 import /*embed*/ {SystemLoadingModal} from "./components/systemloadingmodal";
@@ -100,9 +103,11 @@ import /*embed*/ {SystemTooltip} from "./components/systemtooltip";
 import /*embed*/ {SystemTreeItem} from "./components/systemtreeitem";
 import /*embed*/ {SystemTree} from "./components/systemtree";
 import /*embed*/ {SystemUploadImage} from "./components/systemuploadimage";
+import /*embed*/ {SystemPopover} from "./components/systempopover";
 import /*embed*/ {SystemUtilityIcon} from "./components/systemutilityicon";
 import /*embed*/ {SystemViewContainer} from "./components/systemviewcontainer";
 import /*embed*/ {SystemIconHelpText} from "./components/systemiconhelptext";
+import /*embed*/ {SystemMultipleSelect} from "./components/systemmultipleselect";
 
 import /*embed*/ {PackageLoader} from "./components/packageloader";
 import /*embed*/ {PackageLoaderPipe} from "./components/packageloaderpipe";
@@ -111,6 +116,8 @@ import /*embed*/ {PackageLoaderPackage} from "./components/packageloaderpackage"
 import /*embed*/ {PackageLoaderLanguages} from "./components/packageloaderlanguages";
 import /*embed*/ {PackageLoaderLanguage} from "./components/packageloaderlanguage";
 import /*embed*/ {SystemInputNumber} from "./components/systeminputnumber";
+
+import /*embed*/ {SystemFilterBuilder} from "./components/systemfilterbuilder";
 import /*embed*/ {SystemFilterBuilderFilterExpression} from "./components/systemfilterbuilderfilterexpression";
 import /*embed*/ {SystemFilterBuilderFilterExpressionGroup} from "./components/systemfilterbuilderfilterexpressiongroup";
 
@@ -118,7 +125,8 @@ import /*embed*/ {SystemFilterBuilderFilterExpressionGroup} from "./components/s
     imports: [
         DirectivesModule,
         CommonModule,
-        FormsModule
+        FormsModule,
+        DragDropModule
     ],
     declarations: [
         PackageLoader,
@@ -172,6 +180,8 @@ import /*embed*/ {SystemFilterBuilderFilterExpressionGroup} from "./components/s
         SystemInputRadio,
         SystemInputTags,
         SystemInputTime,
+        SystemInputCompanycodes,
+        SystemInputBackendMethod,
         SystemLink,
         SystemLoaderProgress,
         SystemLoadingModal,
@@ -184,6 +194,11 @@ import /*embed*/ {SystemFilterBuilderFilterExpressionGroup} from "./components/s
         SystemModuleCustomPipe,
         SystemModuleGlobalPipe,
         SystemObjectPreviewModal,
+        SystemInputModuleFilter,
+        SystemFilterBuilder,
+        SystemFilterBuilderFilterExpressionGroup,
+        SystemFilterBuilderFilterExpression,
+        SystemPopover,
         SystemProgressRing,
         SystemProgressBar,
         SystemPrompt,
@@ -205,7 +220,8 @@ import /*embed*/ {SystemFilterBuilderFilterExpressionGroup} from "./components/s
         SystemUploadImage,
         SystemUtilityIcon,
         SystemViewContainer,
-        SystemIconHelpText
+        SystemIconHelpText,
+        SystemMultipleSelect
     ],
     entryComponents: [
         SystemDynamicRouteContainer
@@ -251,6 +267,8 @@ import /*embed*/ {SystemFilterBuilderFilterExpressionGroup} from "./components/s
         SystemInputRadio,
         SystemInputTags,
         SystemInputTime,
+        SystemInputCompanycodes,
+        SystemInputBackendMethod,
         SystemLink,
         SystemLoaderProgress,
         SystemModal,
@@ -277,7 +295,12 @@ import /*embed*/ {SystemFilterBuilderFilterExpressionGroup} from "./components/s
         SystemTreeItem,
         SystemUtilityIcon,
         SystemViewContainer,
-        SystemIconHelpText
+        SystemIconHelpText,
+        SystemMultipleSelect,
+        SystemInputModuleFilter,
+        SystemFilterBuilder,
+        SystemFilterBuilderFilterExpressionGroup,
+        SystemFilterBuilderFilterExpression
     ]
 })
 export class SystemComponents {

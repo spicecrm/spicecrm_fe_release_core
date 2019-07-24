@@ -81,7 +81,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
                 {{language.getLabel('MSG_NO_GDPRRECORDS_FOUND')}}
             </div>
         </system-collapsable-tab>
-        <system-collapsable-tab [title]="language.getLabel('LBL_AUDIT_RECORDS')">
+        <system-collapsable-tab [title]="language.getLabel('LBL_AUDITLOG')">
             <table class="slds-table slds-table--bordered slds-table--cell-buffer">
                 <thead>
                     <tr class="slds-text-title--caps">
@@ -117,7 +117,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
                 </tbody>
             </table>
             <div *ngIf="gdprAuditLog.length === 0" class="slds-text-heading--small slds-p-around--medium slds-align--absolute-center">
-                {{language.getLabel('MSG_NO_AUDITRECORDS_FOUND')}}
+                {{language.getLabel('MSG_NOAUDITRECORDS_FOUND')}}
             </div>
         </system-collapsable-tab>
     </system-modal-content>

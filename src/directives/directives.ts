@@ -22,6 +22,7 @@ import {metadata} from '../services/metadata.service';
 import {VersionManagerService} from '../services/versionmanager.service';
 
 import /*embed*/ {ModelPopOverDirective} from "./directives/modelpopover";
+import /*embed*/ {SystemPopOverDirective} from "./directives/systempopover";
 import /*embed*/ {SpiceUIToBottomDirective} from "./directives/spiceuitobottom";
 import /*embed*/ {ModelProviderDirective} from "./directives/modelprovider";
 import /*embed*/ {LocalVariableDirective} from "./directives/localvariable";
@@ -41,6 +42,7 @@ import /*embed*/ {ViewProviderDirective} from './directives/viewprovider';
     ],
     declarations: [
         ModelPopOverDirective,
+        SystemPopOverDirective,
         SpiceUIToBottomDirective,
         ModelProviderDirective,
         LocalVariableDirective,
@@ -53,6 +55,7 @@ import /*embed*/ {ViewProviderDirective} from './directives/viewprovider';
     ],
     exports: [
         ModelPopOverDirective,
+        SystemPopOverDirective,
         SpiceUIToBottomDirective,
         ModelProviderDirective,
         LocalVariableDirective,
@@ -69,7 +72,6 @@ export class DirectivesModule {
     readonly build_date = '/*build_date*/';
 
     constructor(
-        public metadata: metadata,
         private vms: VersionManagerService,
     ) {
         this.vms.registerModule(this);

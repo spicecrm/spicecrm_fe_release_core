@@ -25,7 +25,7 @@ import {language} from '../../services/language.service';
 })
 export class ObjectRecordTabbedDetailsTab implements AfterViewInit {
 
-    @ViewChild('panelcontainer', {read: ViewContainerRef}) panelcontainer: ViewContainerRef;
+    @ViewChild('panelcontainer', {read: ViewContainerRef, static: true}) panelcontainer: ViewContainerRef;
 
     @Input()componentset: string = '';
     componentRefs: Array<any> = [];

@@ -21,13 +21,13 @@ import {modal} from './modal.service';
 @Injectable()
 export class helper {
 
-    dialog: any = null;
+    public dialog: any = null;
 
     private _base64_keyStr = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
 
     constructor( private modalservice: modal ) {} // private metadata: metadata, private footer: footer
 
-    confirm( title, message ): Observable<boolean> {
+    public confirm( title, message ): Observable<boolean> {
 
         /*
         // For compatibility reasons this method is not deleted. It triggers "prompt" of modal service.
@@ -60,7 +60,7 @@ export class helper {
 
     }
 
-    shuffle( array: Array<any> ): Array<any> {
+    public shuffle( array: Array<any> ): Array<any> {
         var m = array.length, t, i;
         // While there remain elements to shuffle…
         while ( m ) {
@@ -74,7 +74,7 @@ export class helper {
         return array;
     }
 
-    encodeBase64(e) {
+    public encodeBase64(e) {
         var t = '', n, r, i, s, o, u, a, f = 0;
         e = this._utf8_encodeBase64(e);
         while ( f < e.length ) {
@@ -95,7 +95,7 @@ export class helper {
         return t;
     }
 
-    decodeBase64(e) {
+    public decodeBase64(e) {
         var t = '', n, r, i, s, o, u, a, f = 0;
         e = e.replace(/[^A-Za-z0-9\+\/\=]/g, '');
         while ( f<e.length ) {

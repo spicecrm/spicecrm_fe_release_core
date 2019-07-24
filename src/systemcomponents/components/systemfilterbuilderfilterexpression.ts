@@ -14,7 +14,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
  * @module WorkbenchModule
  */
 import {
-    Component, Input, OnInit
+    Component, EventEmitter, Input, OnInit, Output
 } from '@angular/core';
 import {backend} from '../../services/backend.service';
 import {metadata} from '../../services/metadata.service';
@@ -26,12 +26,28 @@ import {language} from '../../services/language.service';
 })
 export class SystemFilterBuilderFilterExpression implements OnInit {
 
+    /**
+     * the module we are attaching this filter to
+     */
     @Input() private module: string;
+
+    /**
+     * the durrect set filter expression
+     */
     @Input() private filterexpression: any = {};
 
     public fields: any[] = [];
+
+    /**
+     * the selected operator type .. this is determined by the field definitions
+     */
     private operatortype = 'default';
 
+    @Output() private expressionDeleted: EventEmitter<any> = new EventEmitter<any>();
+
+    /**
+     * the operators available also grouped by type
+     */
     private operators = {
         default: [
             {
@@ -98,14 +114,27 @@ export class SystemFilterBuilderFilterExpression implements OnInit {
                 name: 'LBL_NEXT_YEAR'
             },
             {
-                operator: 'inndays',
-                name: 'LBL_IN_N_DAYS',
+                operator: 'ndaysago',
+                name: 'LBL_N_DAYS_AGO',
                 showvalue: true
             },
             {
-                operator: 'inlessthanndays',
+                operator: 'inlessthandays',
                 name: 'LBL_IN_LESS_THAN_N_DAYS',
                 showvalue: true
+            },
+            {
+                operator: 'inmorethandays',
+                name: 'LBL_IN_MORE_THAN_N_DAYS',
+                showvalue: true
+            },
+            {
+                operator: 'inndays',
+                name: 'LBL_IN_N_DAYS',
+                showvalue: true
+            }, {
+                operator: 'empty',
+                name: 'LBL_OP_ISEMPTY'
             }
         ],
         bool: [
@@ -186,7 +215,8 @@ export class SystemFilterBuilderFilterExpression implements OnInit {
     private determineOperatorType(field) {
         let fieldtype = this.metadata.getFieldDefs(this.module, field);
         if (!fieldtype) {
-            return
+            this.operatortype = 'default';
+            return;
         }
         switch (fieldtype.type) {
             case 'date':
@@ -208,6 +238,9 @@ export class SystemFilterBuilderFilterExpression implements OnInit {
         }
     }
 
+    /**
+     * determines based on teh operator definition if the value field should be shown or not to allow the user to enter a value
+     */
     private showValueField() {
 
         for (let thisOperator of this.operators[this.operatortype]) {
@@ -249,6 +282,7 @@ export class SystemFilterBuilderFilterExpression implements OnInit {
 
     private delete() {
         this.filterexpression.deleted = true;
+        this.expressionDeleted.emit(true);
     }
 
     private trackByFn(i, item) {

@@ -17,7 +17,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
             <span class="slds-truncate" title="Section Title">{{language.getLabel(_title)}}</span>
         </button>
     </h3>
-    <div [@tabanimation]="expanded">
+    <div [@tabanimation]="expanded" [style.display]="!expanded ? 'none': 'block'">
         <ng-content></ng-content>
     </div>
 </div>

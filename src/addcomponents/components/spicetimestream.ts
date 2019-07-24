@@ -36,7 +36,7 @@ declare var moment: any;
 })
 export class SpiceTimestream {
 
-    @ViewChild('streamwindow', {read: ViewContainerRef}) streamwindow: ViewContainerRef;
+    @ViewChild('streamwindow', {read: ViewContainerRef, static: true}) streamwindow: ViewContainerRef;
 
     modellistsubscribe: any = undefined;
     requestedFields: Array<string> = [];

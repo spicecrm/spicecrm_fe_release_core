@@ -32,7 +32,7 @@ export class fieldModelFooterPopover implements OnInit {
 
     private hidePopoverTimeout: any = {};
 
-    @ViewChild('popover', {read: ViewContainerRef}) private popover: ViewContainerRef;
+    @ViewChild('popover', {read: ViewContainerRef, static: true}) private popover: ViewContainerRef;
 
     public parentElementRef: any = null;
     public self: any = null;

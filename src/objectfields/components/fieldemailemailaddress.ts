@@ -21,7 +21,7 @@ import {language} from '../../services/language.service';
     templateUrl: './src/objectfields/templates/fieldemailemailaddress.html'
 })
 export class fieldEmailEmailAddress  {
-    @ViewChild('inputText') private inputText: ElementRef;
+    @ViewChild('inputText', {static: false}) private inputText: ElementRef;
 
     @Input() private emailaddress: any = {};
     @Output() public primaryaddress: EventEmitter<boolean> = new EventEmitter<boolean>();
@@ -31,11 +31,13 @@ export class fieldEmailEmailAddress  {
 
     }
 
+    /*
     public ngAfterViewInit() {
-        if (this.emailaddress.email_address == '') {
+        if (this.inputText && this.emailaddress.email_address == '') {
             this.inputText.nativeElement.focus();
         }
     }
+    */
 
     get emailadr() {
         return this.emailaddress.email_address;
