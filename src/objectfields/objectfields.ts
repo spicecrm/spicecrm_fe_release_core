@@ -44,14 +44,10 @@ import /*embed*/ {fieldLanguage} from './components/fieldlanguage';
 import /*embed*/ {fieldMailboxes} from './components/fieldmailboxes';
 import /*embed*/ {fieldEmailTo} from './components/fieldemailto';
 import /*embed*/ {fieldEmailTemplates} from './components/fieldemailtemplates';
-import /*embed*/ {fieldTextMessageTemplates} from './components/fieldtextmessagetemplates';
 import /*embed*/ {fieldMailRelais} from './components/fieldmailrelais';
 import /*embed*/ {fieldMultienum} from './components/fieldmultienum';
-import /*embed*/ {fieldGroupedEnum} from './components/fieldgroupedenum';
 import /*embed*/ {fieldMultienumCheckBox} from './components/fieldmultienumcheckbox';
-import /*embed*/ {fieldMultipleEnumDropdown} from './components/fieldmultipleenumdropdown';
 import /*embed*/ {fieldEnumAlternate} from './components/fieldenumalternate';
-import /*embed*/ {fieldEnumRadio} from './components/fieldenumradio';
 import /*embed*/ {fieldBool} from './components/fieldbool';
 import /*embed*/ {fieldParent} from './components/fieldparent';
 import /*embed*/ {fieldModuleFilter} from './components/fieldmodulefilter';
@@ -114,10 +110,6 @@ import /*embed*/ {fieldPhone} from "./components/fieldphone";
 import /*embed*/ {fieldCronInterval} from "./components/fieldcroninterval";
 import /*embed*/ {fieldGooglePlacesSearch} from "./components/fieldgoogleplacessearch";
 import /*embed*/ {fieldTextID} from "./components/fieldtextid";
-import /*embed*/ {fieldBackendMethod} from "./components/fieldbackendmethod";
-import /*embed*/ {fieldSystemLabel} from "./components/fieldsystemlabel";
-import /*embed*/ {fieldTimeDifference} from "./components/fieldtimedifference";
-import /*embed*/ {fieldIconPopover} from "./components/fieldiconpopover";
 
 /**
 * @ignore
@@ -159,14 +151,10 @@ declare var _: any;
         fieldMailboxes,
         fieldEmailTo,
         fieldEmailTemplates,
-        fieldTextMessageTemplates,
         fieldMailRelais,
         fieldMultienum,
-        fieldGroupedEnum,
         fieldMultienumCheckBox,
-        fieldMultipleEnumDropdown,
         fieldEnumAlternate,
-        fieldEnumRadio,
         fieldBool,
         fieldDate,
         fieldTime,
@@ -227,11 +215,7 @@ declare var _: any;
         fieldPhone,
         fieldCronInterval,
         fieldGooglePlacesSearch,
-        fieldTextID,
-        fieldBackendMethod,
-        fieldSystemLabel,
-        fieldTimeDifference,
-        fieldIconPopover
+        fieldTextID
     ],
     exports: [
         fieldSet,

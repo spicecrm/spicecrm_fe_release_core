@@ -26,7 +26,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
                   <input type="radio" name="primaryemail" [id]="emailaddress.id + 'primary'" [checked]="primary" (change)="onBlur.emit()" [disabled]="invalid_email || this.emailaddress.email_address == ''">
                   <label class="slds-radio__label" [attr.for]="emailaddress.id + 'primary'">
                     <span class="slds-radio--faux"></span>
-                    <span class="slds-form-element__label slds-p-left--xx-small slds-truncate">{{language.getLabel('LBL_EMAILADDRESS_FIELD_PRIMARY')}}</span>
+                    <span class="slds-form-element__label slds-p-left--xx-small slds-truncate">primary</span>
                   </label>
                 </span>
             </div>
@@ -35,7 +35,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
                   <input type="checkbox" [id]="emailaddress.id + 'optout'" [(ngModel)]="opt_out" [disabled]="invalid_email || this.emailaddress.email_address == ''">
                   <label class="slds-checkbox__label" [attr.for]="emailaddress.id + 'optout'">
                     <span class="slds-checkbox--faux"></span>
-                    <span class="slds-form-element__label slds-p-left--xx-small slds-truncate">{{language.getLabel('LBL_EMAILADDRESS_FIELD_OPT_OUT')}}</span>
+                    <span class="slds-form-element__label slds-p-left--xx-small slds-truncate">opt out</span>
                   </label>
                 </span>
             </div>
@@ -44,7 +44,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
                   <input type="checkbox" [id]="emailaddress.id + 'invalid'" [ngModel]="invalid_email" disabled>
                   <label class="slds-checkbox__label" [attr.for]="emailaddress.id + 'invalid'">
                     <span class="slds-checkbox--faux"></span>
-                    <span class="slds-form-element__label slds-p-left--xx-small slds-truncate">{{language.getLabel('LBL_EMAILADDRESS_FIELD_INVALID')}}</span>
+                    <span class="slds-form-element__label slds-p-left--xx-small slds-truncate">invalid</span>
                   </label>
                 </span>
             </div>

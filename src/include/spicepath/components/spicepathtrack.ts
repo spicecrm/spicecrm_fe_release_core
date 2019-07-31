@@ -15,7 +15,6 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
  */
 import {Component, Input, AfterViewInit, OnInit, Output, EventEmitter} from "@angular/core";
 import {model} from "../../../services/model.service";
-import {language} from "../../../services/language.service";
 import {configurationService} from "../../../services/configuration.service";
 import {broadcast} from "../../../services/broadcast.service";
 
@@ -40,7 +39,7 @@ export class SpicePathTrack {
      */
     @Output() private activeStage$: EventEmitter<string> = new EventEmitter<string>();
 
-    constructor(private configuration: configurationService, private model: model, private language: language) {
+    constructor(private configuration: configurationService, private model: model) {
 
     }
 
@@ -105,17 +104,4 @@ export class SpicePathTrack {
         this.activeStage$.emit(stage);
     }
 
-
-    /**
-     * returns the name for the stage to be displayed
-     *
-     * @param stagedata
-     */
-    private getStageLabel(stagedata) {
-        if (stagedata.stage_label) {
-            return this.language.getLabel(stagedata.stage_label);
-        } else {
-            return stagedata.stage_name;
-        }
-    }
 }

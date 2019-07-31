@@ -30,6 +30,14 @@ import {model} from "../../services/model.service";
     providers: [model]
 })
 export class ModelProviderDirective {
+    /*
+    @Input('modelProvider') provided_model:{
+        module:string,
+        id:string,
+        data:any,
+    };
+    */
+
     constructor(
         private model: model
     ) {
@@ -39,13 +47,6 @@ export class ModelProviderDirective {
 
     /**
      * as part of the attribute the model paramaters can be passed in
-     *
-     * @Input('modelProvider') provided_model:{
-     *   module:string,
-     *   id:string,
-     *   data:any,
-     *   };
-     *
      * @param provided_model
      */
     @Input('modelProvider')

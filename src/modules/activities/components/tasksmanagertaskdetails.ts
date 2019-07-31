@@ -13,16 +13,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 /**
  * @module ModuleActivities
  */
-import {
-    Component,
-    ElementRef,
-    ViewChild,
-    ViewContainerRef,
-    Input,
-    OnChanges,
-    AfterViewInit,
-    OnDestroy
-} from '@angular/core';
+import {Component, ElementRef, ViewChild, ViewContainerRef, Input, OnChanges, AfterViewInit, OnDestroy} from '@angular/core';
 import {HttpClient, HttpHeaders, HttpResponse} from "@angular/common/http";
 import {model} from '../../../services/model.service';
 import {view} from '../../../services/view.service';
@@ -30,43 +21,36 @@ import {metadata} from '../../../services/metadata.service';
 import {language} from '../../../services/language.service';
 import {broadcast} from '../../../services/broadcast.service';
 
-/**
- * displays a task in teh task manager view
- */
 @Component({
     selector: 'tasks-manager-task-details',
     templateUrl: './src/modules/activities/templates/tasksmanagertaskdetails.html',
     host: {
-        class: 'slds-theme--shade'
+        'class': 'slds-theme--shade'
     },
     providers: [model, view]
 })
 export class TasksManagerTaskDetails implements OnChanges, OnDestroy {
 
-    @ViewChild('detailscontent', {read: ViewContainerRef, static: true}) private detailscontent: ViewContainerRef;
+    @ViewChild('detailscontent', {read: ViewContainerRef}) detailscontent: ViewContainerRef;
 
-    /**
-     * to set the focus
-     */
-    @Input() private focusid: string = '';
+    @Input() focusid: string = '';
 
-    private viewComponent: any = null;
-    private modelSubscription: any = null;
+    viewComponent: any = null;
+    modelSubscription: any = null;
 
-    constructor(private view: view, private language: language, private elementRef: ElementRef, private metadata: metadata, private model: model, private broadcast: broadcast) {
+    constructor(private language: language, private elementRef: ElementRef, private metadata: metadata, private model: model, private broadcast: broadcast) {
         this.model.module = 'Tasks';
 
         // subscribe to the broadcast service
         this.modelSubscription = this.broadcast.message$.subscribe(message => {
             this.handleMessage(message);
-        });
-
-        this.view.displayLabels = false;
+        })
     }
 
-    private handleMessage(message: any) {
+    handleMessage(message: any) {
         // only handle if the module is the list module
-        if (message.messagedata.module !== this.model.module)  return;
+        if (message.messagedata.module !== this.model.module)
+            return;
 
         switch (message.messagetype) {
             case 'model.delete':
@@ -80,7 +64,7 @@ export class TasksManagerTaskDetails implements OnChanges, OnDestroy {
         }
     }
 
-    public ngOnChanges() {
+    ngOnChanges() {
         // set or delete the component
         if (this.focusid) {
             if (!this.viewComponent) {
@@ -101,16 +85,15 @@ export class TasksManagerTaskDetails implements OnChanges, OnDestroy {
         }
     }
 
-    public ngOnDestroy() {
+    ngOnDestroy(){
         this.modelSubscription.unsubscribe();
     }
 
-    get nameStyle() {
+    get nameStyle(){
         let styles = {};
 
-        if (this.isCompleted){
+        if(this.isCompleted)
             styles['text-decoration'] = 'line-through';
-        }
 
         return styles;
     }
@@ -127,7 +110,7 @@ export class TasksManagerTaskDetails implements OnChanges, OnDestroy {
         }
     }
 
-    private completeTask() {
+    completeTask() {
         this.model.data.status = 'Completed';
         this.model.save();
     }

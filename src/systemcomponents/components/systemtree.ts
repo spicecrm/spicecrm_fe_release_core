@@ -13,47 +13,34 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 /**
  * @module SystemComponents
  */
-import {Component, EventEmitter, Input, OnChanges, Output} from "@angular/core";
-import {CdkDragDrop, moveItemInArray, transferArrayItem} from "@angular/cdk/drag-drop";
+import {Component, EventEmitter, Input, Output, SimpleChanges} from "@angular/core";
 
 /**
- * @ignore
- */
+* @ignore
+*/
 declare var _: any;
-
-/* -----------------------------------
-*  -- REQUIRED INPUT LIST STRUCTURE --
-* ------------------------------------
-* - id: string
-* - parent_id: string
-* - parent_sequence: string
-* - name: string
-* - selected: boolean
-* - clickable: boolean
-* -------------------
+/*
 * -- @INPUT PARAMS --
-* -------------------
 * - treelist: any[] = [];
 * - selectedItem: string = "";
-* - config: any = {
+* - config: any =
+*   {
 *       draggable: false,
 *       canadd: false,
 *       clickable: false,
 *       expandall: false,
 *       collapsible: true
 *   };
-*---------------------
+*
 * -- @OUTPUT PARAMS --
-* --------------------
 * - selectedItem$: string = selected item id;
 * - addItem$: string = parent item id
-* - itemPosition$: any = {
+* - treelistChange$: any =
+*   {
 *       id: string = moved item id,
 *       parent_id: string = parent item id,
 *       parent_name: string = parent item name,
-*       parent_sequence: string = item new sequence
 *   };
-* ----------------------------
 * TODO:Lazy Load functionality
 */
 
@@ -62,16 +49,13 @@ declare var _: any;
     templateUrl: "./src/systemcomponents/templates/systemtree.html"
 })
 
-export class SystemTree implements OnChanges {
+export class SystemTree {
+    @Output() public selectedItem$: EventEmitter<any> = new EventEmitter<any>();
+    @Output() public treelistChange$: EventEmitter<any> = new EventEmitter<any>();
+    @Output() public addItem$: EventEmitter<any> = new EventEmitter<any>();
     @Input() public treelist: any[] = [];
     @Input() public selectedItem: string = "";
-
-    @Output() public addItem$: EventEmitter<any> = new EventEmitter<any>();
-    @Output() public selectedItem$: EventEmitter<any> = new EventEmitter<any>();
-    @Output() public itemPosition$: EventEmitter<any> = new EventEmitter<any>();
-
-    public tree: any[] = [];
-    public droplistids: any[] = [];
+    public tree: Array<any> = [];
     private treeConfig: any = {
         draggable: false,
         canadd: false,
@@ -79,13 +63,7 @@ export class SystemTree implements OnChanges {
         expandall: false,
         collapsible: true,
     };
-
-    get config() {
-        return this.treeConfig;
-    }
-
-    @Input()
-    set config(obj) {
+    @Input() set config(obj) {
         this.treeConfig.draggable = obj.draggable || false;
         this.treeConfig.canadd = obj.canadd || false;
         this.treeConfig.clickable = obj.clickable || false;
@@ -93,20 +71,23 @@ export class SystemTree implements OnChanges {
         this.treeConfig.collapsible = obj.collapsible || true;
     }
 
-    get dropListIds() {
-        return this.droplistids;
+    get config() {
+        return this.treeConfig;
     }
 
-    set dropListIds(val) {
-        this.droplistids = val;
-    }
+    //  -- INPUT LIST STRUCTURE --
+    // id
+    // parent_id
+    // name
+    // selected
+    // clickable
 
-    public ngOnChanges() {
-        this.resetTreeList();
+    private ngOnChanges(changes: SimpleChanges) {
+        this.resetTreelist();
         this.tree = this.buildTree(this.treelist);
     }
 
-    private resetTreeList() {
+    private resetTreelist() {
         this.treelist.map(item => {
             if (item.parent_id === "" || item.parent_id === undefined) {
                 item.parent_id = null;
@@ -121,7 +102,6 @@ export class SystemTree implements OnChanges {
         let tree = [];
         for (let item of treelist) {
             if (item.parent_id === parent) {
-
                 item.expanded = this.config.collapsible ? this.config.expandall : true;
                 item.clickable = this.config.clickable;
                 item.level = level + 1;
@@ -131,7 +111,11 @@ export class SystemTree implements OnChanges {
                 let children = this.buildTree(treelist, item.id, level + 1, item.path);
                 delete item.path[level + 1];
 
-                item.children = children.length ? children : [];
+                if (children.length) {
+                    item.children = children;
+                } else {
+                    item.children = [];
+                }
 
                 // set expanded if child is selected or also expanded
                 for (let child of children) {
@@ -139,40 +123,41 @@ export class SystemTree implements OnChanges {
                         item.expanded = true;
                     }
                 }
+
                 tree.push(item);
             }
         }
         return tree;
     }
 
-    private handleDrop(dragEvent: CdkDragDrop<any>) {
-        let newParent: any = dragEvent.container.data[0];
-        let newItemPosition = {
-            id: dragEvent.item.data.id,
-            parent_id: newParent.parent_id,
-            parent_sequence: dragEvent.currentIndex
-        };
-        let canDrop = !this.treelist
-            .some(item => item.id === newItemPosition.parent_id && item.path.includes(newItemPosition.id));
-
-        if (dragEvent.previousContainer === dragEvent.container) {
-            moveItemInArray(dragEvent.container.data, dragEvent.previousIndex, dragEvent.currentIndex);
-            this.itemPosition$.emit(newItemPosition);
-        } else if (canDrop) {
-            dragEvent.item.data.level = newParent.level;
-            transferArrayItem(dragEvent.previousContainer.data,
-                dragEvent.container.data,
-                dragEvent.previousIndex,
-                dragEvent.currentIndex);
-            this.itemPosition$.emit(newItemPosition);
-        }
+    private handleSelectItemEvent(id) {
+        this.selectedItem$.emit(id);
     }
 
-    private handleDropListId(obj) {
-        if (obj.action == 'add') {
-            this.droplistids.push(obj.id);
-        } else {
-            this.droplistids = this.droplistids.filter(id => id != obj.id);
+    private handleAddEvent(parent) {
+        this.addItem$.emit(parent);
+    }
+
+    /*
+    * Emit: moved Item with fields:
+    * id, parent_id, parent_name
+    */
+    private handleDragDropEvent(obj: any) {
+        let toEdit: any = {};
+        let canDrop = true;
+        for (let item of this.treelist) {
+            if (item.id === obj.child && item.level === 1) {
+                canDrop = false;
+            }
+            if (item.id === obj.parent && item.path.includes(obj.child)) {
+                canDrop = false;
+            }
+        }
+        if (canDrop) {
+            toEdit.id = obj.child;
+            toEdit.parent_id = obj.parent;
+            toEdit.parent_name = this.treelist.find(unit => unit.id === obj.parent).name;
+            this.treelistChange$.emit(toEdit);
         }
     }
 }

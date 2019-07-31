@@ -15,37 +15,38 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
  */
 import {Component} from "@angular/core";
 import {language} from "../../../services/language.service";
+import {view} from "../../../services/view.service";
 import {backend} from "../../../services/backend.service";
+import {broadcast} from "../../../services/broadcast.service";
 import {toast} from "../../../services/toast.service";
 import {modal} from "../../../services/modal.service";
 import {model} from "../../../services/model.service";
 import {session} from "../../../services/session.service";
 
 /**
- * @ignore
- */
+* @ignore
+*/
 declare var _: any;
 
 @Component({
     selector: "user-roles",
-    templateUrl: "./src/modules/users/templates/userroles.html"
+    templateUrl: "./src/modules/users/templates/userroles.html",
+    providers: [view],
 })
 export class UserRoles {
 
-    private userRoles: any[] = [];
-    private noneUserRoles: any[] = [];
-    private componentId: string;
+    private userRoles: Array<any> = [];
+    private noneUserRoles: Array<any> = [];
 
     constructor(
         private backend: backend,
+        private view: view,
         private toast: toast,
         private modal: modal,
         private model: model,
         private session: session,
+        private broadcast: broadcast,
         private language: language) {
-
-        this.componentId = _.uniqueId();
-
         this.backend.getRequest("spiceui/core/roles/" + this.model.id).subscribe(res => {
             this.userRoles = res.allRoles.filter(role => {
                 for (let userRole of res.userRoles) {
@@ -56,7 +57,6 @@ export class UserRoles {
                 }
                 return false;
             });
-            this.userRoles = this.sortRoles( this.userRoles );
 
             this.noneUserRoles = res.allRoles.filter(role => {
                 for (let userRole of this.userRoles) {
@@ -65,19 +65,12 @@ export class UserRoles {
                 }
                 return true;
             });
-            this.noneUserRoles = this.sortRoles( this.noneUserRoles );
 
             this.noneUserRoles.map(noneUserRole => noneUserRole.defaultrole = "0");
         });
     }
 
-    private sortRoles( roles ): any[] {
-        return roles.sort( ( a, b ) => {
-            return this.language.getLabel( a.label ).localeCompare( this.language.getLabel( b.label ));
-        });
-    }
-
-    private addRole(event) {
+    private addNew(event) {
         if (this.session.authData.admin) {
             this.modal.openModal("UserRolesAddModal").subscribe(addModalRef => {
                 addModalRef.instance.user_id = this.model.data.id;
@@ -88,7 +81,6 @@ export class UserRoles {
                         if (this.userRoles.length === 1) {
                             this.setDefaultRole(res.id);
                         }
-                        this.userRoles = this.sortRoles( this.userRoles );
                     }
                     if (res && typeof res === "string") {
                         this.noneUserRoles = this.noneUserRoles.filter(role => role.id != res);
@@ -98,7 +90,7 @@ export class UserRoles {
         }
     }
 
-    private deleteRole(roleIndex, roleId, isDefaultRole) {
+    private delete(roleIndex, roleId, isDefaultRole) {
         if (this.session.authData.admin && !isDefaultRole) {
             this.modal.confirm(
                 this.language.getLabel("MSG_DELETE_RECORD", "", "long"),
@@ -114,7 +106,6 @@ export class UserRoles {
                                     }
                                     let deletedRole = this.userRoles.splice(roleIndex, 1);
                                     this.noneUserRoles.push(deletedRole[0]);
-                                    this.noneUserRoles = this.sortRoles( this.noneUserRoles );
                                     this.toast.sendToast(this.language.getLabel("MSG_SUCCESSFULLY_DELETED"), "success");
                                 },
                                 err => this.toast.sendToast(this.language.getLabel("ERR_CANT_DELETE"), "error"));

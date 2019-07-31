@@ -11,7 +11,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 */
 
 /**
- * @module ModuleSpicePath
+ * @module AddComponentsModule
  */
 import {Component, Input, OnInit} from '@angular/core';
 import {metadata} from '../../../services/metadata.service';
@@ -21,7 +21,7 @@ import {modellist} from '../../../services/modellist.service';
 
 @Component({
     selector: '[spice-kanban-tile]',
-    templateUrl: './src/include/spicepath/templates/spicekanbantile.html',
+    templateUrl: './src//include/spicepath/templates/spicekanbantile.html',
     providers: [model, view],
     host: {
         '[class]': "'slds-item'"
@@ -38,7 +38,6 @@ export class SpiceKanbanTile implements OnInit {
 
         // display short labels
         this.view.labels = 'short';
-        this.view.displayLabels = false;
     }
 
     public ngOnInit() {

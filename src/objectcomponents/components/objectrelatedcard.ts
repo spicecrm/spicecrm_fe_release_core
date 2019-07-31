@@ -55,7 +55,7 @@ export class ObjectRelatedCard {
     /**
      * a selector for the Header in teh card. This will trigger the open or collapsed stated
      */
-    @ViewChild(ObjectRelatedCardHeader,{static: true}) private cardheaders: ObjectRelatedCardHeader;
+    @ViewChild(ObjectRelatedCardHeader) private cardheaders: ObjectRelatedCardHeader;
 
     /**
      * the component config as key paramater into the component

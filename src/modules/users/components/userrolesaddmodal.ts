@@ -14,20 +14,30 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
  * @module ModuleUsers
  */
 import {Component, Input} from "@angular/core";
+import {model} from "../../../services/model.service";
+import {modelutilities} from "../../../services/modelutilities.service";
+import {view} from "../../../services/view.service";
 import {language} from "../../../services/language.service";
 import {toast} from "../../../services/toast.service";
 import {backend} from "../../../services/backend.service";
-import {Observable, Subject} from "rxjs";
+import {Observable, Subject} from "rxjs";;
+
+/**
+* @ignore
+*/
+declare var moment: any;
 
 @Component({
     selector: "user-roles-add-modal",
-    templateUrl: "./src/modules/users/templates/userrolesaddmodal.html"
+    templateUrl: "./src/modules/users/templates/userrolesaddmodal.html",
+    providers: [model, view]
 })
 export class UserRolesAddModal {
 
-    @Input() public user_id = '';
-    @Input() public noneUserRoles: any[] = [];
-    private sysuirole_id = '';
+    @Input() public user_id = "";
+    @Input() public noneUserRoles: Array<any> = [];
+    private selectedRoles: Array<any> = [];
+    private sysuirole_id: string = "";
     private self: any;
     private response: Observable<object> = null;
     private responseSubject: Subject<any> = null;
@@ -35,6 +45,8 @@ export class UserRolesAddModal {
 
     constructor(
         private language: language,
+        private model: model,
+        private modelutilities: modelutilities,
         private toast: toast,
         private backend: backend
     ) {
@@ -42,20 +54,14 @@ export class UserRolesAddModal {
         this.response = this.responseSubject.asObservable();
     }
 
-    get nonUserGlobalRoles(): any[] {
-        let globalRoles = [];
-        this.noneUserRoles.forEach( role => {
-            if ( !role.custom ) globalRoles.push( role );
-        });
-        return globalRoles;
+    private setSelectedRole(roleIndex, role) {
+        this.noneUserRoles.splice(roleIndex, 1);
+        this.selectedRoles.push(role);
     }
 
-    get nonUserCustomRoles(): any[] {
-        let customRoles = [];
-        this.noneUserRoles.forEach( role => {
-            if ( role.custom ) customRoles.push( role );
-        });
-        return customRoles;
+    private removeSelectedRole(roleIndex, role) {
+        this.selectedRoles.splice(roleIndex, 1);
+        this.noneUserRoles.push(role);
     }
 
     private setRole(id) {
@@ -72,11 +78,12 @@ export class UserRolesAddModal {
         this.cancel();
     }
 
-    private canSubmit(): boolean {
-        return this.sysuirole_id.length > 0;
-    }
-
     private add() {
+        if (this.sysuirole_id.length == 0) {
+            this.toast.sendToast(this.language.getLabel("LBL_MAKE_SELECTION"));
+            return false;
+        }
+
         this.backend.postRequest(`/spiceui/core/roles/${this.sysuirole_id}/${this.user_id}/new`)
             .subscribe(
                 res => {
@@ -99,6 +106,7 @@ export class UserRolesAddModal {
                 },
                 error => {
                     this.toast.sendToast("Error, try again later", "error");
+                    console.log(error);
                     this.self.destroy();
                 });
     }

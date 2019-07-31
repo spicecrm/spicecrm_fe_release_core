@@ -38,7 +38,7 @@ export class ObjectActionContainerItem implements AfterViewInit {
     /**
      * a viewcontainer ref to the container itself so the action set item can render the component from the config in this element
      */
-    @ViewChild("actioncontainer", {read: ViewContainerRef, static: true}) private actioncontainer: ViewContainerRef;
+    @ViewChild("actioncontainer", {read: ViewContainerRef}) private actioncontainer: ViewContainerRef;
 
     /**
      * an Input parameter with the action item from the actionset items defined in the metadata
@@ -91,14 +91,6 @@ export class ObjectActionContainerItem implements AfterViewInit {
     get disabled() {
         if (this.stable && this.componentref) {
             return this.componentref.instance.disabled ? true : false;
-        } else {
-            return true;
-        }
-    }
-
-    get hidden() {
-        if (this.stable && this.componentref) {
-            return this.componentref.instance.hidden ? true : false;
         } else {
             return true;
         }

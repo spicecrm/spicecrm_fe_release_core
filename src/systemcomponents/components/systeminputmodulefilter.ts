@@ -54,14 +54,7 @@ export class SystemInputModuleFilter implements ControlValueAccessor {
         private metadata: metadata
     ) {
         this._modulefilters = this.metadata.getModuleFilters();
-
-        for (let moduleFilter of this._modulefilters) {
-            if (!this.modules.find(item => item == moduleFilter.module)) {
-                this.modules.push(moduleFilter.module);
-            }
-        }
-
-        this.modules.sort();
+        this.modules = this.metadata.getModules().sort();
     }
 
     get modulefilter() {

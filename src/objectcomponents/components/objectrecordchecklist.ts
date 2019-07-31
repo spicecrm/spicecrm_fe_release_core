@@ -13,9 +13,8 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 /**
  * @module ObjectComponents
  */
-import { Component } from '@angular/core';
-import { view } from '../../services/view.service';
-import { language } from '../../services/language.service';
+import { Component} from '@angular/core';
+import {view} from '../../services/view.service';
 
 @Component({
     selector: 'object-record-checklist',
@@ -26,13 +25,11 @@ export class ObjectRecordChecklist {
 
     componentconfig: any = {};
 
-    constructor(private language: language) { }
-
-    get checkitems() {
+    get checkitems(){
         return this.componentconfig.checkitems ? this.componentconfig.checkitems : [];
     }
 
-    get modelfield() {
+    get modelfield(){
         return this.componentconfig.field;
     }
 

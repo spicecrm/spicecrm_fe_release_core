@@ -14,7 +14,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
  * @module ObjectFields
  */
 import {Component} from '@angular/core';
-import {fieldEnum} from './fieldenum';
+import {fieldEnum} from './fieldEnum';
 
 @Component({
     selector: 'field-enum-alternate',

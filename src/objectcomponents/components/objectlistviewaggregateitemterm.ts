@@ -40,8 +40,8 @@ export class ObjectListViewAggregateItemTerm implements OnInit {
      */
     @Input() private aggregate: any = {};
 
-    constructor(private model: model, private view: view) {
-        this.view.displayLabels = false;
+    constructor(private model: model) {
+
     }
 
     /**

@@ -38,7 +38,7 @@ export class ObjectEditModal implements OnInit {
     /**
      * a reference to the modal content to have a reference to scrolling
      */
-    @ViewChild('modalContent', {read: ViewContainerRef, static: true}) private modalContent: ViewContainerRef;
+    @ViewChild('modalContent', {read: ViewContainerRef}) private modalContent: ViewContainerRef;
     /**
      * the componentconfig that gets passed in when the modal is created
      */
@@ -92,7 +92,6 @@ export class ObjectEditModal implements OnInit {
     ) {
         this.view.isEditable = true;
         this.view.setEditMode();
-        this.model.isEditing = true;
 
         this.action$ = this.actionSubject.asObservable();
     }
@@ -123,13 +122,6 @@ export class ObjectEditModal implements OnInit {
         } else {
             return this.model.module != '' ? this.language.getModuleName(this.model.module, true) : '';
         }
-    }
-
-    /**
-     * returns the grow entry from teh componentconfig
-     */
-    get grow() {
-        return this.componentconfig.grow;
     }
 
     /**
@@ -182,7 +174,6 @@ export class ObjectEditModal implements OnInit {
         this.modal.openModal('SystemLoadingModal').subscribe(modalRef => {
             modalRef.instance.messagelabel = 'LBL_SAVING_DATA';
             this.model.save(true).subscribe(status => {
-                    this.model.isEditing = false;
                     if (status) {
                         // emit that we saved;
                         this.actionSubject.next(this.model.data);

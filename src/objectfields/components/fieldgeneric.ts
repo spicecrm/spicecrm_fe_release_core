@@ -31,7 +31,7 @@ import {Router} from '@angular/router';
     templateUrl: './src/objectfields/templates/fieldgeneric.html'
 })
 export class fieldGeneric implements OnInit {
-    @ViewChild('focus', {read: ViewContainerRef, static: true}) public focuselement: ViewContainerRef;
+    @ViewChild('focus', {read: ViewContainerRef}) public focuselement: ViewContainerRef;
     @Input() public fieldname: string = '';
     @Input() public fieldconfig: any = {};
     @Input() public fielddisplayclass: any = {};
@@ -77,10 +77,6 @@ export class fieldGeneric implements OnInit {
 
     get errors() {
         return this.model.getFieldMessages(this.fieldname, 'error');
-    }
-
-    get displayLabel() {
-        return this.view.displayLabels && this.fieldconfig.hidelabel !== true;
     }
 
     get css_classes() {

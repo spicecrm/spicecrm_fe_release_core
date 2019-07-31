@@ -14,57 +14,36 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
  * @module ObjectComponents
  */
 import {
-    Component, OnInit, Input, NgZone
+    Component, OnInit, Input
 } from '@angular/core';
 import {objectnote} from '../services/objectnote.service';
-import {DomSanitizer} from "@angular/platform-browser";
 
 /**
- * @ignore
- */
+* @ignore
+*/
 declare var moment: any;
 
-/**
- * displays a quicknote that is read in teh stream
- */
 @Component({
     selector: 'object-note',
     templateUrl: './src/objectcomponents/templates/objectnote.html'
 })
-export class ObjectNote {
+export class ObjectNote implements OnInit {
 
-    /**
-     * the note in the for loop
-     */
-    @Input() private note: any = {};
+    @Input() note: any = {};
 
-    /**
-     * @ignore
-     *
-     * @param objectnote
-     */
-    constructor(private objectnote: objectnote, public sanitized: DomSanitizer) {
+    constructor(private objectnote: objectnote ) {
 
     }
 
-    /**
-     * get the timestamp and vonverts into a relative one
-     */
-    private getNoteTimeFromNow() {
+    ngOnInit(){
+
+    }
+
+    getNoteTimeFromNow(){
         return moment(this.note.date).fromNow();
     }
 
-    /**
-     * delete the note
-     */
-    private deleteNote() {
+    deleteNote(){
         this.objectnote.deleteNote(this.note.id);
-    }
-
-    /**
-     * sanitizes the value and passes it to the template
-     */
-    get htmlValue()    {
-        return this.sanitized.bypassSecurityTrustHtml(this.note.text);
     }
 }

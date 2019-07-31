@@ -31,11 +31,10 @@ export class SpicePathRelatedListTile implements OnInit {
     @Input() private module: string = '';
     @Input() private data: any = {};
     @Input() private fieldset: string = '';
-    @Input() private componentset: string = '';
 
     private componentconfig: any = {};
 
-    private addActions = [{action: 'remove', label: 'LBL_UNLINK'}];
+    private addActions = [{action: 'remove', name: 'Remove'}];
 
     constructor(private model: model, private relatedmodels: relatedmodels, private view: view, private language: language, private metadata: metadata) {
 
