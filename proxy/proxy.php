@@ -34,6 +34,23 @@ $ch = curl_init();
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 
+
+if (!function_exists('getallheaders')) 
+{ 
+    function getallheaders() 
+    { 
+       $headers = array (); 
+       foreach ($_SERVER as $name => $value) 
+       { 
+           if (substr($name, 0, 5) == 'HTTP_') 
+           { 
+               $headers[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value; 
+           } 
+       } 
+       return $headers; 
+    } 
+}
+
 // handle the header
 $headers = getallheaders();
 // create header array with the originating IP for logging purposes
