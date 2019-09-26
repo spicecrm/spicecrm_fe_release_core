@@ -10,6 +10,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module ModuleGroupware
+ */
 import {NgModule} from '@angular/core';
 import {BrowserModule, Title} from '@angular/platform-browser';
 import {HttpClientModule} from "@angular/common/http";
@@ -22,7 +25,7 @@ import {SystemComponents} from "../../systemcomponents/systemcomponents";
 import {ObjectComponents} from "../../objectcomponents/objectcomponents";
 import {DirectivesModule} from "../../directives/directives";
 
-import /*embed*/ {GroupwareService} from '../groupware/services/groupware.service';
+import /*embed*/ {GroupwareService} from './services/groupware.service';
 
 import /*embed*/ {GroupwarePaneBean} from './components/groupwarepanebean';
 import /*embed*/ {GroupwarePaneAttachment} from './components/groupwarepaneattachment';

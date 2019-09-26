@@ -13,7 +13,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 /**
  * @module services
  */
-import {Injectable} from "@angular/core";
+import { ApplicationRef, Injectable } from "@angular/core";
 import {modelutilities} from "./modelutilities.service";
 
 /**
@@ -27,9 +27,12 @@ export class toast {
      */
     private activeToasts: any[] = [];
 
-    constructor(private modelutilities: modelutilities) {
+    /*  Showing toasts is based on the array "activeToasts" and the angular change detection cares for displaying the toasts.
+     *  But sometimes the change detection is not triggered automatically. For example: getAsString() of ClipboardEvent.
+     *  Therefore the toast service triggers the change detection manually, with appref.tick().
+     */
 
-    }
+    constructor(private modelutilities: modelutilities, private appref: ApplicationRef ) { }
 
     /**
      * a generic function to send a toast
@@ -86,6 +89,7 @@ export class toast {
             description: description,
             code: uniqueMessageCode
         });
+        this.appref.tick();
 
         // set a timeout to automatically clear the toast
         if (autoClose) {
@@ -105,6 +109,7 @@ export class toast {
         this.activeToasts.some((item, index) => {
             if (item.id === messageId) {
                 this.activeToasts.splice(index, 1);
+                this.appref.tick();
                 return true;
             }
         });
@@ -115,6 +120,7 @@ export class toast {
      */
     public clearAll() {
         this.activeToasts = [];
+        this.appref.tick();
     }
 
 }

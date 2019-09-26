@@ -37,9 +37,10 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
         </div>
     </div>
 </div>
-<table aria-labelledby="month" aria-multiselectable="true" class="slds-datepicker__month" role="grid">
+<table aria-labelledby="month" aria-multiselectable="true" class="slds-datepicker__month slds-m-left--x-small" role="grid">
     <thead>
         <tr id="weekdays">
+            <th scope="col"></th>
             <th *ngFor="let weekday of weekdays; let index = index" scope="col">
                 <abbr [title]="weekdayLong(index)">{{weekday}}</abbr>
             </th>
@@ -47,7 +48,12 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
     </thead>
     <tbody>
         <tr *ngFor="let week of currentGrid">
-            <td *ngFor="let day of week" role="gridcell" (click)="pickDate(day.day, day.month)" [ngClass]="{'slds-disabled-text': disabled(day.month, day.day), 'slds-is-today': isToday(day.day, day.month), 'slds-is-selected': isCurrent(day.day, day.month)}">
+            <td role="gridcell" class="slds-theme--shade">
+                <abbr class="slds-p-horizontal--xx-small" [title]="language.getLabel('LBL_WEEK')+' '+week?.number">
+                    {{week?.number}}
+                </abbr>
+            </td>
+            <td *ngFor="let day of week?.days" role="gridcell" (click)="pickDate(day.day, day.month)" [ngClass]="{'slds-disabled-text': disabled(day.month, day.day), 'slds-is-today': isToday(day.day, day.month), 'slds-is-selected': isCurrent(day.day, day.month)}">
                 <span class="slds-day">{{day.day}}</span>
             </td>
         </tr>

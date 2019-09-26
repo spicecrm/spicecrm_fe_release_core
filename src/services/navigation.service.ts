@@ -28,6 +28,7 @@ export class navigation {
     public activeModule$: EventEmitter<string>;
 
     public activeModule: string = "Home";
+    public hasSubTabs: string;
     private activeId: string = "";
 
     private modelsEditing: any[] = [];

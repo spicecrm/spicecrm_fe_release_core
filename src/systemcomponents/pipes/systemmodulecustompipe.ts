@@ -15,7 +15,10 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
  */
 import {Pipe} from '@angular/core';
 
-@Pipe({name: 'systemmodulecustompipe'})
+@Pipe({
+    name: 'systemmodulecustompipe',
+    pure: false
+})
 export class SystemModuleCustomPipe {
     public transform(values, module) {
         let retValues = [];

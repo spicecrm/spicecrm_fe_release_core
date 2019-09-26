@@ -10,6 +10,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module Gmail
+ */
 import {Injectable} from "@angular/core";
 import {GroupwareService} from "../../include/groupware/services/groupware.service";
 import {Observable, Subject} from "rxjs";

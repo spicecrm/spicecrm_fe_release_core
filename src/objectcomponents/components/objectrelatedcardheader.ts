@@ -13,7 +13,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 /**
  * @module ObjectComponents
  */
-import {Component, Input} from '@angular/core';
+import { Component, ElementRef, Input, ViewChild } from '@angular/core';
 import {
     trigger,
     state,
@@ -59,6 +59,11 @@ export class ObjectRelatedCardHeader {
      */
     public isopen: boolean = true;
 
+    /**
+     * Reference to <ng-content></ngcontent>. Is needed in the template.
+     */
+    @ViewChild('ngContent', {static:true}) private ngContent: ElementRef;
+
     constructor( private language: language, private relatedmodels: relatedmodels, private model: model, private metadata: metadata ) { }
 
     /**
@@ -91,6 +96,13 @@ export class ObjectRelatedCardHeader {
      */
     private toggleOpen() {
         this.isopen = !this.isopen;
+    }
+
+    /**
+     * triggers the reload of the related models service
+     */
+    private reload() {
+        this.relatedmodels.getData();
     }
 
 }

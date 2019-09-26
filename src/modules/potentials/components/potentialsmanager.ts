@@ -11,7 +11,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 */
 
 /**
- * @module ModuleEmails
+ * @module ModulePotentials
  */
 import {Component, OnInit, ViewChild} from "@angular/core";
 import {metadata} from "../../../services/metadata.service";

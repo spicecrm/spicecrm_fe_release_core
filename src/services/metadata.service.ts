@@ -235,7 +235,9 @@ export class metadata {
     }
 
     /*
-     * function to add Component
+     * function to add a Component direct
+     *
+     * no system container is rendered. This is faster but can cause that the sequence is mixed up
      */
     public addComponentDirect(component: string, viewChild: any, injector?: Injector): Observable<any> {
         let retSubject = new Subject();
@@ -261,7 +263,6 @@ export class metadata {
         } else {
             if (this.componentDirectory[component].module) {
                 let module = this.componentDirectory[component].module;
-
                 try {
                     System.import(this.moduleDirectory[module].path)
                         .then((fileContents: any) => {
@@ -270,17 +271,13 @@ export class metadata {
                         .then((type: any) => {
                             this.moduleDirectory[module].factories = {};
                             this.compiler.compileModuleAndAllComponentsAsync(type).then(componentfactory => {
-                                let foundComp = componentfactory.componentFactories.some(factory => {
-                                    if (factory.componentType.name === component) {
-                                        let componentRef = viewChild.createComponent(factory, undefined, injector);
-                                        componentRef.instance.self = componentRef;
-                                        retSubject.next(componentRef);
-                                        retSubject.complete();
-                                        return true;
-                                    }
-                                });
-                                if (!foundComp) {
-                                    // console.error("Cannot find a factory for component " + component);
+                                let foundComp = componentfactory.componentFactories.find(factory => factory.componentType.name === component);
+                                if (foundComp) {
+                                    let componentRef = viewChild.createComponent(foundComp, undefined, injector);
+                                    componentRef.instance.self = componentRef;
+                                    retSubject.next(componentRef);
+                                    retSubject.complete();
+                                } else {
                                     retSubject.error("Cannot find a factory for component " + component);
                                     retSubject.complete();
                                 }
@@ -308,7 +305,6 @@ export class metadata {
     }
 
     public checkComponent(component: string) {
-
         if (this.componentDirectory[component]) {
             return true;
         } else {
@@ -1094,18 +1090,29 @@ export class metadata {
         delete this.moduleFilters[filterId];
     }
 
-    /*
-     get available Roles
+
+    /**
+     * checkl if teh user has access to the module.
+     *
+     * @param module the name of the module
+     * @param action a specific action. if not specified checks if the module exists for the user
      */
-    public checkModuleAcl(module, action) {
+    public checkModuleAcl(module, action?) {
         try {
-            return this.moduleDefs[module].acl[action];
+            if (action) {
+                return this.moduleDefs[module].acl[action];
+            } else {
+                return !!this.moduleDefs[module];
+            }
         } catch (e) {
             return false;
         }
 
     }
 
+    /**
+     * get available roles
+     */
     public getRoles() {
         return this.roles;
     }
@@ -1134,7 +1141,7 @@ export class metadata {
 
         if (this.rolemodules[this.role]) {
             for (let rolemodule of this.rolemodules[this.role]) {
-                if ((menu === false || rolemodule.sequence !== null) && this.moduleDefs[rolemodule.module] && this.moduleDefs[rolemodule.module].visible && this.moduleDefs[rolemodule.module].acl.list) {
+                if ((menu === false || rolemodule.sequence !== null) && this.moduleDefs[rolemodule.module] && this.moduleDefs[rolemodule.module].visible && (!this.moduleDefs[rolemodule.module].visibleaclaction || (this.moduleDefs[rolemodule.module].visibleaclaction && this.checkModuleAcl(rolemodule.module, this.moduleDefs[rolemodule.module].visibleaclaction))) && this.moduleDefs[rolemodule.module].acl.list) {
                     modules.push(rolemodule.module);
                 }
             }
@@ -1209,6 +1216,8 @@ export class metadata {
     }
 
     /**
+     * @deprecated shuld be replaced with libloader service
+     *
      * Lib Loading
      */
 
@@ -1442,11 +1451,18 @@ export class aclCheck implements CanActivate {
     }
 
     public canActivate(route, state) {
+
+        // if no session leave the redirect to the login handler
+        if (!this.session || !this.session.authData.sessionId) {
+            return false;
+        }
+
+        // otherwise check here
         if (route.params.module === 'Users' && !this.session.authData.admin) {
             return false;
         } // prevents non-admins from listing the user list
         // if ( route.params.module === 'Users' && this.session.authData.portalOnly ) return false; // prevents "portal only users" from listing the user list
-        if (route.params.module && route.params.module != "Home" && !this.metadata.checkModuleAcl(route.params.module, "list")) {
+        if (route.params.module && route.params.module != "Home" && !this.metadata.checkModuleAcl(route.params.module, route.data.aclaction)) {
             this.router.navigate(["/modules/Home"]);
             return false;
         } else {

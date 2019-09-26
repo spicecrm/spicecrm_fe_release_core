@@ -34,7 +34,9 @@ interface menuItem {
     name: string;
 }
 
-
+/**
+ * @deprecated
+ */
 @Component({
     selector: 'global-navigation-menu-item-new',
     templateUrl: './src/globalcomponents/templates/globalnavigationmenuitemnew.html'

@@ -28,6 +28,7 @@ import {SystemComponents} from '../systemcomponents/systemcomponents';
 
 import {loginCheck} from '../services/login.service';
 import {metadata, aclCheck} from '../services/metadata.service';
+import {canNavigateAway} from '../services/navigation.service';
 import {VersionManagerService} from '../services/versionmanager.service';
 
 import /*embed*/ {listfilters} from './services/listfilters.service';
@@ -40,11 +41,16 @@ import /*embed*/ {ObjectListViewHeaderListSelector} from './components/objectlis
 import /*embed*/ {ObjectList} from './components/objectlist';
 import /*embed*/ {ObjectListViewContainer} from './components/objectlistviewcontainer';
 import /*embed*/ {ObjectListView} from './components/objectlistview';
+import /*embed*/ {ObjectActionContainerItem} from './components/objectactioncontaineritem';
+import /*embed*/ {ObjectActionContainer} from './components/objectactioncontainer';
 import /*embed*/ {ObjectListHeader} from './components/objectlistheader';
 import /*embed*/ {ObjectListHeaderActionMenu} from './components/objectlistheaderactionmenu';
 import /*embed*/ {ObjectListHeaderActionsExportCSVButton} from './components/objectlistheaderactionsexportcsvbutton';
 import /*embed*/ {ObjectListHeaderActionsExportTargetlistButton} from './components/objectlistheaderactionsexporttargetlistbutton';
 import /*embed*/ {ObjectListHeaderActionsExportTargetlistModal} from './components/objectlistheaderactionsexporttargetlistmodal';
+import /*embed*/ {ObjectListHeaderActionsSelectAllButton} from "./components/objectlistheaderactionsselectallbutton";
+import /*embed*/ {ObjectListHeaderActionsUnselectAllButton} from "./components/objectlistheaderactionsunselectallbutton";
+
 import /*embed*/ {ObjectListItem} from './components/objectlistitem';
 import /*embed*/ {ObjectListItemField} from './components/objectlistitemfield';
 import /*embed*/ {ObjectActionMenu} from './components/objectactionmenu';
@@ -54,16 +60,20 @@ import /*embed*/ {ObjectActionsetMenuContainerEdit} from './components/objectact
 import /*embed*/ {ObjectActionsetMenuContainerDelete} from './components/objectactionsetmenucontainerdelete';
 import /*embed*/ {ObjectListTypes} from './components/objectlisttypes';
 
-import /*embed*/ {ObjectActionContainerItem} from './components/objectactioncontaineritem';
-import /*embed*/ {ObjectActionContainer} from './components/objectactioncontainer';
 import /*embed*/ {ObjectActionEditButton} from './components/objectactioneditbutton';
 import /*embed*/ {ObjectActionDeleteButton} from './components/objectactiondeletebutton';
 import /*embed*/ {ObjectActionAuditlogButton} from './components/objectactionauditlogbutton';
+import /*embed*/ {ObjectActionOpenButton} from './components/objectactionopenbutton';
+import /*embed*/ {ObjectActionCancelButton} from './components/objectactioncancelbutton';
+import /*embed*/ {ObjectActionModalSaveButton} from './components/objectactionmodalsavebutton';
+import /*embed*/ {ObjectActionRemoveButton} from "./components/objectactionremovebutton";
 import /*embed*/ {ObjectActionAuditlogModal} from './components/objectactionauditlogmodal';
 import /*embed*/ {ObjectActionNewButton} from './components/objectactionnewbutton';
 import /*embed*/ {ObjectActionDuplicateButton} from './components/objectactionduplicatebutton';
 import /*embed*/ {ObjectActionSaveButton} from './components/objectactionsavebutton';
+import /*embed*/ {ObjectActionSaveRelatedButton} from './components/objectactionsaverelatedbutton';
 import /*embed*/ {ObjectActionNewrelatedButton} from './components/objectactionnewrelatedbutton';
+import /*embed*/ {ObjectActionNewCopyRuleBeanButton, ObjectActionNewCopyRuleBeanButtonModelHelper} from './components/objectactionnewcopyrulebeanbutton';
 import /*embed*/ {ObjectActionImportButton} from './components/objectactionimportbutton';
 import /*embed*/ {ObjectReminderButton} from './components/objectreminderbutton';
 import /*embed*/ {ObjectActionSelectButton} from './components/objectactionselectbutton';
@@ -113,7 +123,9 @@ import /*embed*/ {ObjectPageHeaderDetails} from './components/objectpageheaderde
 import /*embed*/ {ObjectPageHeaderDetailRow} from './components/objectpageheaderdetailrow';
 import /*embed*/ {ObjectPageHeaderDetailRowField} from './components/objectpageheaderdetailrowfield';
 import /*embed*/ {ObjectTabContainerItem, ObjectTabContainer, ObjectTabContainerItemHeader} from './components/objecttabcontainer';
-import /*embed*/ {ObjectVerticalTabContainerItem, ObjectVerticalTabContainer, ObjectVerticalTabContainerItemHeader} from './components/objectverticaltabcontainer';
+import /*embed*/ {ObjectVerticalTabContainer} from './components/objectverticaltabcontainer';
+import /*embed*/ {ObjectVerticalTabContainerItem} from './components/objectverticaltabcontaineritem';
+import /*embed*/ {ObjectVerticalTabContainerItemHeader} from './components/objectverticaltabcontaineritemheader';
 import /*embed*/ {ObjectRelateContainer} from './components/objectrelatecontainer';
 import /*embed*/ {ObjectRelatedCardHeader} from './components/objectrelatedcardheader';
 import /*embed*/ {ObjectRelatedCard} from './components/objectrelatedcard';
@@ -140,6 +152,7 @@ import /*embed*/ {ObjectStatusNetworkButtonItem} from './components/objectstatus
 import /*embed*/ {ObjectRecordFieldset} from './components/objectrecordfieldset';
 import /*embed*/ {ObjectRecordFieldsetField} from './components/objectrecordfieldsetfield';
 import /*embed*/ {ObjectRecordFieldsetHorizontalList} from './components/objectrecordfieldsethorizontallist';
+import /*embed*/ {ObjectRecordFieldsetContainer} from './components/objectrecordfieldsetcontainer';
 
 import /*embed*/ {ObjectRecordChecklist} from './components/objectrecordchecklist';
 import /*embed*/ {ObjectRecordChecklistItem} from './components/objectrecordchecklistitem';
@@ -223,6 +236,9 @@ import /*embed*/ {ObjectTexts} from "./components/objecttexts";
 import /*embed*/ {ObjectTextsAddButton} from "./components/objecttextsaddbutton";
 import /*embed*/ {ObjectTextsAddModal} from "./components/objecttextsaddmodal";
 
+import /*embed*/ {ObjectRecordMessagesBadge} from "./components/objectrecordmessagesbadge";
+
+
 /**
  * This module encapsulates various components that are used related to an object or the handling of multiple objects
  */
@@ -237,13 +253,39 @@ import /*embed*/ {ObjectTextsAddModal} from "./components/objecttextsaddmodal";
         DirectivesModule,
         RouterModule.forRoot([
             // {path: 'module/Home', component: ModuleHome, canActivate: [loginCheck]},
-            {path: 'module/:module', component: ObjectListViewContainer, canActivate: [loginCheck, aclCheck]},
-            {path: 'module/:module/import', component: ObjectImport, canActivate: [loginCheck]},
-            {path: 'module/:module/historysummary/:id', component: ObjectActivitiyTimelineSummary, canActivate: [loginCheck]},
-            {path: 'module/:module/:id', component: ObjectRecordViewContainer, canActivate: [loginCheck]},
+            {
+                path: 'module/:module',
+                component: ObjectListViewContainer,
+                canActivate: [loginCheck, canNavigateAway, aclCheck],
+                data: {aclaction: 'list'}
+            },
+            {
+                path: 'module/:module/import',
+                component: ObjectImport,
+                canActivate: [loginCheck, aclCheck],
+                data: {aclaction: 'import'}
+            },
+            {
+                path: 'module/:module/historysummary/:id',
+                component: ObjectActivitiyTimelineSummary,
+                canActivate: [loginCheck, aclCheck],
+                data: {aclaction: 'view'}
+            },
+            {
+                path: 'module/:module/:id',
+                component: ObjectRecordViewContainer,
+                canActivate: [loginCheck, canNavigateAway, aclCheck],
+                data: {aclaction: 'view'}
+            },
             {path: 'module/:module/:id/:related/:link', component: ObjectRelatedlistAll, canActivate: [loginCheck]},
-            {path: 'module/:module/:id/:related/:link/:fieldset', component: ObjectRelatedlistAll, canActivate: [loginCheck]},
-            {path: '**', redirectTo: 'module/Home', canActivate: [loginCheck]}
+            {
+                path: 'module/:module/:id/:related/:link/:fieldset',
+                component: ObjectRelatedlistAll,
+                canActivate: [loginCheck, aclCheck],
+                data: {aclaction: 'view'}
+            },
+            // {path: "", redirectTo: "/module/Home", pathMatch: "full"},
+            // {path: '**', redirectTo: 'module/Home', canActivate: [loginCheck]}
         ])],
     declarations: [
         ObjectIcon,
@@ -254,10 +296,14 @@ import /*embed*/ {ObjectTextsAddModal} from "./components/objecttextsaddmodal";
         ObjectListViewHeaderListSelector,
         ObjectList,
         ObjectListHeader,
+        ObjectActionContainer,
+        ObjectActionContainerItem,
         ObjectListHeaderActionMenu,
         ObjectListHeaderActionsExportCSVButton,
         ObjectListHeaderActionsExportTargetlistButton,
         ObjectListHeaderActionsExportTargetlistModal,
+        ObjectListHeaderActionsSelectAllButton,
+        ObjectListHeaderActionsUnselectAllButton,
         ObjectListItem,
         ObjectListItemField,
         ObjectActionMenu,
@@ -284,17 +330,22 @@ import /*embed*/ {ObjectTextsAddModal} from "./components/objecttextsaddmodal";
         ObjectListViewSettingsAddlistModal,
         ObjectListViewSettingsDeletelistModal,
         ObjectListViewSettingsSetfieldsModal,
-        ObjectActionContainer,
-        ObjectActionContainerItem,
         ObjectActionEditButton,
         ObjectActionSaveButton,
+        ObjectActionSaveRelatedButton,
         ObjectActionDeleteButton,
         ObjectActionAuditlogButton,
+        ObjectActionOpenButton,
+        ObjectActionCancelButton,
+        ObjectActionModalSaveButton,
+        ObjectActionRemoveButton,
         ObjectActionAuditlogModal,
         ObjectGDPRModal,
         ObjectActionNewButton,
         ObjectActionDuplicateButton,
         ObjectActionNewrelatedButton,
+        ObjectActionNewCopyRuleBeanButton,
+        ObjectActionNewCopyRuleBeanButtonModelHelper,
         ObjectActionImportButton,
         ObjectActionSelectButton,
         ObjectEditModal,
@@ -401,6 +452,7 @@ import /*embed*/ {ObjectTextsAddModal} from "./components/objecttextsaddmodal";
         ObjectRecordFieldset,
         ObjectRecordFieldsetField,
         ObjectRecordFieldsetHorizontalList,
+        ObjectRecordFieldsetContainer,
         ObjectRowItemComponent,
         ObjectModalModuleDBLookup,
         ObjectActionOutputBeanModal,
@@ -416,7 +468,8 @@ import /*embed*/ {ObjectTextsAddModal} from "./components/objecttextsaddmodal";
         ObjectModelPopoverRelatedItem,
         ObjectTexts,
         ObjectTextsAddButton,
-        ObjectTextsAddModal
+        ObjectTextsAddModal,
+        ObjectRecordMessagesBadge
     ],
     exports: [
         ObjectListViewHeader,
@@ -426,14 +479,15 @@ import /*embed*/ {ObjectTextsAddModal} from "./components/objecttextsaddmodal";
         ObjectPageHeader,
         ObjectPageHeaderDetails,
         ObjectPageHeaderDetailRow,
+        ObjectActionContainer,
         ObjectActionMenu,
         ObjectActionsetMenu,
         ObjectSelectButton,
         ObjectRelatedList,
+        ObjectRelatedlistTable,
         ObjectRelatedListItem,
         ObjectPopoverHeader,
         ObjectPopoverBodyItem,
-        ObjectActionContainer,
         ObjectRecordFieldset,
         ObjectRecordFieldsetHorizontalList,
         ObjectRowItemComponent,
@@ -443,8 +497,12 @@ import /*embed*/ {ObjectTextsAddModal} from "./components/objecttextsaddmodal";
         ObjectActivitiyTimelineItemContainer,
         ObjectActivitiyTimelineStencil,
         ObjectRelatedCard,
+        ObjectRelatedCardHeader,
+        ObjectRelatedCardFooter,
         ObjectRecordDetails,
-        ObjectRecordDetailsFooter
+        ObjectRecordDetailsFooter,
+        ObjectEditModalDialogContainer,
+        ObjectListHeaderActionMenu
     ]
 })
 export class ObjectComponents {

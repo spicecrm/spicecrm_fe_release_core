@@ -48,7 +48,7 @@ export class ObjectModalModuleLookup implements OnInit {
     @Output() private selectedItems: EventEmitter<any> = new EventEmitter<any>();
     @Output() private usedSearchTerm: EventEmitter<string> = new EventEmitter<string>();
 
-    constructor(private language: language, private model: model, private modellist: modellist, private metadata: metadata) {
+    constructor(public language: language, public model: model, public modellist: modellist, public metadata: metadata) {
     }
 
 
@@ -134,16 +134,18 @@ export class ObjectModalModuleLookup implements OnInit {
         return this.modellist.getSelectedCount();
     }
 
-    private selectItems() {
+    public selectItems() {
         this.selectedItems.emit(this.modellist.getSelectedItems());
         this.usedSearchTerm.emit(this.searchTerm);
         this.self.destroy();
     }
 
-    private clickRow(event, item) {
-        this.selectedItems.emit([item]);
-        this.usedSearchTerm.emit(this.searchTerm);
-        this.self.destroy();
+    public clickRow(event, item) {
+        if (!this.multiselect) {
+            this.selectedItems.emit([item]);
+            this.usedSearchTerm.emit(this.searchTerm);
+            this.self.destroy();
+        }
     }
 
     private onModalEscX() {

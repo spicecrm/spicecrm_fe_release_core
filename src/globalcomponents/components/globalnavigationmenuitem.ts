@@ -15,7 +15,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
  */
 import {
     AfterViewInit, ComponentFactoryResolver, Component, Input, ElementRef, Renderer2, NgModule, ViewChild,
-    ViewContainerRef, OnInit, OnDestroy
+    ViewContainerRef, OnInit, OnDestroy, ViewChildren, QueryList
 } from '@angular/core';
 import {Router} from '@angular/router';
 import {broadcast} from '../../services/broadcast.service';
@@ -25,6 +25,7 @@ import {favorite} from '../../services/favorite.service';
 import {language} from '../../services/language.service';
 import {navigation} from '../../services/navigation.service';
 import {metadata} from '../../services/metadata.service';
+import {GlobalNavigationMenuItemActionContainer} from "./globalnavigationmenuitemactioncontainer";
 
 interface menuItem {
     module: string;
@@ -38,6 +39,8 @@ interface menuItem {
     host: {
         '[class.slds-context-bar__item]': 'true',
         '[class.slds-is-active]': 'isActive()',
+        '[class.slds-has-sub-tabs]': 'isActive() && hasSubTabs()',
+        '[class.slds-context-bar__item_tab]': 'isActive() && hasSubTabs()',
     },
     providers: [model]
 })
@@ -46,6 +49,11 @@ export class GlobalNavigationMenuItem implements AfterViewInit, OnInit, OnDestro
 
     @ViewChild('menulist', {read: ViewContainerRef, static: true}) private menulist: ViewContainerRef;
     @ViewChild('menucontainer', {read: ViewContainerRef, static: true}) private menucontainer: ViewContainerRef;
+
+    /**
+     * reference to the container item where the indivvidual components can be rendered into dynamically
+     */
+    @ViewChildren(GlobalNavigationMenuItemActionContainer) private menuItemlist: QueryList<GlobalNavigationMenuItemActionContainer>;
 
     private clickListener: any;
     @Input() private itemtext: string = 'test';
@@ -82,7 +90,7 @@ export class GlobalNavigationMenuItem implements AfterViewInit, OnInit, OnDestro
                         this.model.addModel();
                         break;
                 }
-                return true
+                return true;
             }
         });
     }
@@ -99,7 +107,12 @@ export class GlobalNavigationMenuItem implements AfterViewInit, OnInit, OnDestro
 
 
     public ngOnInit() {
-        this.itemMenu = this.metadata.getModuleMenu(this.item.module);
+        let componentconfig = this.metadata.getComponentConfig('GlobalNavigationMenuItem', this.item.module);
+        if(componentconfig.actionset){
+            this.itemMenu = this.metadata.getActionSetItems(componentconfig.actionset);
+        } else {
+            this.itemMenu = this.metadata.getModuleMenu(this.item.module);
+        }
         this.model.module = this.item.module;
     }
 
@@ -159,6 +172,10 @@ export class GlobalNavigationMenuItem implements AfterViewInit, OnInit, OnDestro
         }
     }
 
+    private hasSubTabs(): boolean {
+        return this.isActive() && this.navigation.hasSubTabs == this.navigation.activeModule;
+    }
+
     public ngAfterViewInit() {
         this.broadcast.broadcastMessage('navigation.itemadded', {
             module: this.item.module,
@@ -169,6 +186,7 @@ export class GlobalNavigationMenuItem implements AfterViewInit, OnInit, OnDestro
     }
 
     private buildMenu() {
+        return true;
         this.destroyMenu();
         for (let menuitem of this.itemMenu) {
             switch (menuitem.action) {
@@ -198,6 +216,55 @@ export class GlobalNavigationMenuItem implements AfterViewInit, OnInit, OnDestro
         for (let component of this.menucomponents) {
             component.destroy();
         }
+    }
+
+    /**
+     * determines based on the action ID if the component embedded in the container item is disabled
+     *
+     * @param actionid the action id
+     */
+    private isDisabled(actionid) {
+        let disabled = true;
+        if (this.menuItemlist) {
+            this.menuItemlist.some((actionitem: any) => {
+                if (actionitem.id == actionid) {
+                    disabled = actionitem.disabled;
+                    return true;
+                }
+            });
+        }
+        return disabled;
+    }
+
+    /**
+     * determines based on the action ID if the component embedded in the container item is hidden
+     *
+     * @param actionid the action id
+     */
+    private isHidden(actionid) {
+        let hidden = false;
+        if (this.menuItemlist) {
+            this.menuItemlist.some((actionitem: any) => {
+                if (actionitem.id == actionid) {
+                    hidden = actionitem.hidden;
+                    return true;
+                }
+            });
+        }
+        return hidden;
+    }
+
+    /**
+     * propagets the click to the respective item
+     * @param actionid
+     */
+    private propagateclick(actionid) {
+        this.menuItemlist.some(actionitem => {
+            if (actionitem.id == actionid) {
+                if (!actionitem.disabled) actionitem.execute();
+                return true;
+            }
+        });
     }
 
 }

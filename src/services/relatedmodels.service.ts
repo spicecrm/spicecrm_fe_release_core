@@ -57,6 +57,10 @@ export class relatedmodels implements OnDestroy {
     public modulefilter = '';
 
     /**
+     * add filters by fieldname and fieldvalue
+     */
+    public fieldfilters: any = {};
+    /**
      * an array with the related records
      */
     public items: any[] = [];
@@ -258,6 +262,7 @@ export class relatedmodels implements OnDestroy {
             offset: 0,
             limit: this.loaditems,
             modulefilter: this.modulefilter,
+            fieldfilters: this.fieldfilters,
             relationshipFields: JSON.stringify(this.relationshipFields),
             sort: this.sort.sortfield ? JSON.stringify(this.sort) : ""
         };

@@ -17,7 +17,7 @@ import {
     Component
 } from '@angular/core';
 import {metadata} from '../../services/metadata.service';
-import {LibLoaderService} from '../../services/libloader.service';
+import {libloader} from '../../services/libloader.service';
 
 
 @Component({
@@ -26,8 +26,8 @@ import {LibLoaderService} from '../../services/libloader.service';
 })
 export class DhtmlxDiagram {
 
-    constructor(private metadata: metadata, private libloader: LibLoaderService) {
-        this.libloader.load()
+    constructor(private metadata: metadata, private libloader: libloader) {
+        // this.libloader.load()
     }
 
 }

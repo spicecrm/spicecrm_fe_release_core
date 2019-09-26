@@ -36,6 +36,8 @@ export class SystemIconHelpText {
      */
     @Input() private helpText: string = "";
 
+    private showHelp: boolean = false;
+
     constructor(private metadata: metadata) {
 
     }
@@ -44,40 +46,47 @@ export class SystemIconHelpText {
      * All Params for the icon-component (system-custom-icon)
      */
     get gicon() {
-        if(this.icon) {
+        if (this.icon) {
             return this.icon;
         }
     }
+
     get gfile() {
         if (this.file) {
             return this.file;
         }
     }
+
     get gsizeClass() {
         if (this.size) {
             return this.size;
         }
     }
+
     get gcolor() {
         if (this.color) {
             return this.color;
         }
     }
+
     get ghovercolor() {
         if (this.hovercolor) {
             return this.hovercolor;
         }
     }
+
     get gdesaturate() {
         if (this.desaturate) {
             return this.desaturate;
         }
     }
+
     get gaddClass() {
         if (this.addclasses) {
             return this.addclasses;
         }
     }
+
     get gdivClass() {
         if (this.divClass) {
             return this.divClass;
@@ -102,6 +111,7 @@ export class SystemIconHelpText {
             return ' 3.5em';
         }
     }
+
     get leftdistance() {
         if (this.size == "xx-small" || this.size == "x-small") {
             return '-65%';
@@ -113,8 +123,6 @@ export class SystemIconHelpText {
             return '10%';
         }
     }
-
-
 
 
 }

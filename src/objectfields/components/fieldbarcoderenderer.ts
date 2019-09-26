@@ -15,6 +15,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
  */
 import {Component, Input, OnChanges,} from "@angular/core";
 import {metadata} from "../../services/metadata.service";
+import {libloader} from "../../services/libloader.service";
 
 declare let JsBarcode: any;
 
@@ -28,9 +29,10 @@ export class fieldBarcodeRenderer implements OnChanges {
     @Input() private fieldId: any = "";
 
     constructor(
-        private metadata: metadata
+        private metadata: metadata,
+        private libloader: libloader
     ) {
-        this.metadata.loadLibs("js-barcode").subscribe(
+        this.libloader.loadLib("js-barcode").subscribe(
             (next) => {
                 JsBarcode("#" + this.fieldId, this.code, {
                     width: 1,

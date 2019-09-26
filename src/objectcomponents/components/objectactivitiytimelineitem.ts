@@ -33,8 +33,14 @@ export class ObjectActivitiyTimelineItem implements OnInit {
     private formFieldSet: string = '';
     private isopen: boolean = false;
 
+    public componentconfig: any = {};
+
     constructor(private model: model, private metadata: metadata, private view: view, private userpreferences: userpreferences) {
         this.view.isEditable = false;
+    }
+
+    get actionset() {
+        return this.componentconfig.actionset;
     }
 
     /**
@@ -49,7 +55,7 @@ export class ObjectActivitiyTimelineItem implements OnInit {
      * gets the activity time and returns it formatted
      */
     get starttime() {
-        let startdate = new moment(this.activity.date_activitiy);
+        let startdate = new moment(this.activity.date_activity);
         return startdate ? startdate.format(this.userpreferences.getTimeFormat()) : '';
     }
 
@@ -57,7 +63,7 @@ export class ObjectActivitiyTimelineItem implements OnInit {
      * gets the activity date and returns it formatted
      */
     get startdate() {
-        let startdate = new moment(this.activity.date_activitiy);
+        let startdate = new moment(this.activity.date_activity);
         return startdate ? startdate.format(this.userpreferences.getDateFormat()) : '';
     }
 
@@ -68,8 +74,8 @@ export class ObjectActivitiyTimelineItem implements OnInit {
         this.model.id = this.activity.id;
         this.model.data = this.activity.data;
         this.model.module = this.activity.module;
-        let componentconfig = this.metadata.getComponentConfig('ObjectActivitiyTimelineItem', this.model.module);
-        this.formFieldSet = componentconfig.fieldset;
+        this.componentconfig = this.metadata.getComponentConfig('ObjectActivitiyTimelineItem', this.model.module);
+        this.formFieldSet = this.componentconfig.fieldset;
     }
 
     /**

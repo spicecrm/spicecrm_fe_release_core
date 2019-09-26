@@ -12,7 +12,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 <div *ngIf="displayHomeAssistant" class="slds-grid">
     <div class="slds-col slds-large-size--3-of-4 slds-medium-size--1-of-2">
-        <home-dashboard></home-dashboard>
+        <ng-container *ngIf="hasDashboardSet; else homeDashboardContainer">
+            <home-dashboardset-container></home-dashboardset-container>
+        </ng-container>
     </div>
     <div class="slds-col slds-large-size--1-of-4 slds-medium-size--1-of-2">
         <home-assistant></home-assistant>
@@ -20,6 +22,11 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 </div>
 <div *ngIf="!displayHomeAssistant" class="slds-grid">
     <div class="slds-col slds-size--1-of-1">
-        <home-dashboard></home-dashboard>
+        <ng-container *ngIf="hasDashboardSet; else homeDashboardContainer">
+            <home-dashboardset-container></home-dashboardset-container>
+        </ng-container>
     </div>
 </div>
+<ng-template #homeDashboardContainer>
+    <home-dashboard></home-dashboard>
+</ng-template>

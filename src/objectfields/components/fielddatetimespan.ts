@@ -36,7 +36,7 @@ declare var moment: any;
 })
 export class fieldDateTimeSpan extends fieldGeneric implements OnInit {
     private isValid: boolean = true;
-    private errorMessage: String = '';
+    private errorMessage: string = '';
 
     constructor(public model: model, public view: view, public language: language, public metadata: metadata, public router: Router, private userpreferences: userpreferences) {
         super(model, view, language, metadata, router);
@@ -66,7 +66,7 @@ export class fieldDateTimeSpan extends fieldGeneric implements OnInit {
         let hours = this.model.getFieldValue(this.fieldhours);
         let minutes = this.model.getFieldValue(this.fieldminutes);
 
-        return parseInt(hours, 10) * 60 + parseInt(minutes, 10) * 60;
+        return parseInt(hours, 10) * 60 + parseInt(minutes, 10);
     }
 
     get formattedStartDate() {

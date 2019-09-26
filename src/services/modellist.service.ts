@@ -177,6 +177,13 @@ export class modellist implements OnDestroy {
         }
     }
 
+    public setSortDirection(direction: string) {
+        this.sortdirection = direction;
+    }
+    public setSortFieldWithoutReload(field: string) {
+        this.sortfield = field;
+    }
+
     public setSortField(field: string) {
         if (this.sortfield == field) {
             this.sortdirection = this.sortdirection == 'ASC' ? 'DESC' : 'ASC';
@@ -705,11 +712,18 @@ export class modellist implements OnDestroy {
         if (this.currentList.type == 'all' || this.currentList.type == 'owner') {
             let aggregates = {};
             aggregates[this.module] = this.selectedAggregates;
-            this.fts.searchByModules(this.searchTerm, [this.module], this.loadlimit, aggregates, {
+            this.fts.searchByModules({
+                searchterm: this.searchTerm,
+                modules: [this.module],
+                size: this.loadlimit,
+                aggregates: aggregates,
+                sortparams: {
                     sortfield: this.sortfield,
                     sortdirection: this.sortdirection.toLowerCase()
-                }, this.currentList.type == 'owner' ? true : false,
-                this.modulefilter).subscribe(res => {
+                },
+                owner: this.currentList.type == 'owner' ? true : false,
+                modulefilter: this.modulefilter
+            }).subscribe(res => {
                 // console.log(res);
                 let result = {list: [], totalcount: res[this.module].total};
                 for (let item of res[this.module].hits) {

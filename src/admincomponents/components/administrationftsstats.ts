@@ -26,7 +26,7 @@ import {backend} from '../../services/backend.service';
 })
 export class AdministrationFTSStats {
 
-    stats: any = {};
+    private stats: any = {};
 
     indices: Array<any> = [];
 

@@ -10,13 +10,19 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module ModuleGroupware
+ */
 import {Component, Input, OnInit} from '@angular/core';
-import {GroupwareService} from '../services/groupware.service';
+import {GroupwareService} from '../../../include/groupware/services/groupware.service';
 import {model} from '../../../services/model.service';
 import {metadata} from "../../../services/metadata.service";
 import {language} from "../../../services/language.service";
 import {view} from "../../../services/view.service";
 
+/**
+ * A bean component.
+ */
 @Component({
     selector: 'groupware-pane-bean',
     templateUrl: './src/include/groupware/templates/groupwarepanebean.html',
@@ -24,6 +30,9 @@ import {view} from "../../../services/view.service";
 })
 export class GroupwarePaneBean implements OnInit {
 
+    /**
+     * Current bean.
+     */
     @Input() private bean: any;
 
     private mainfieldsetfields: any[];

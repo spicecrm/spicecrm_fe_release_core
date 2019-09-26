@@ -21,9 +21,9 @@ import { RouterModule, Routes, Router } from '@angular/router';
 import {DirectivesModule} from "../directives/directives";
 import {SystemComponents} from '../systemcomponents/systemcomponents';
 
-import /*embed*/ {administrationconfigurator} from './services/administrationconfigurator.service'
-import /*embed*/ {ftsconfiguration} from './services/ftsconfiguration.service'
-import /*embed*/ {dictionary} from './services/dictionary.service'
+import /*embed*/ {administrationconfigurator} from './services/administrationconfigurator.service';
+import /*embed*/ {ftsconfiguration} from './services/ftsconfiguration.service';
+import /*embed*/ {dictionary} from './services/dictionary.service';
 
 import /*embed*/ { AdministrationMenu } from './components/administrationmenu';
 import /*embed*/ { AdministrationMenuRouteItem } from './components/administrationmenurouteitem';
@@ -38,6 +38,8 @@ import /*embed*/ { AdministrationFTSManagerFields } from './components/administr
 import /*embed*/ { AdministrationFTSManagerDetails } from './components/administrationftsmanagerdetails';
 import /*embed*/ { AdministrationFTSManagerFieldsAdd } from './components/administrationftsmanagerfieldsadd';
 import /*embed*/ { AdministrationFTSStats } from './components/administrationftsstats';
+
+import /*embed*/ { AdministrationSystemStats } from './components/administrationsystemstats';
 
 import /*embed*/ { AdministrationSysTrashcanManager } from './components/administrationsystrashcanmanager';
 import /*embed*/ { AdministrationSysTrashcanRecover } from './components/administrationsystrashcanrecover';
@@ -96,7 +98,8 @@ export class AdministrationMain {}
         AdministrationSchedulerJobsEnum,
         AdministrationSchedulerJobLog,
         AdministrationSchedulerRunButton,
-        AdministrationSchedulerScheduleButton
+        AdministrationSchedulerScheduleButton,
+        AdministrationSystemStats
     ],
     entryComponents: [
         AdministrationMain,
