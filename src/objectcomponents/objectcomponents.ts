@@ -222,6 +222,7 @@ import /*embed*/ {ObjectRowItemComponent} from "./components/objectrowitem";
 import /*embed*/ {ObjectModalModuleDBLookup} from "./components/objectmodalmoduledblookup";
 import /*embed*/ {ObjectActionOutputBeanModal} from "./components/objectactionoutputbeanmodal";
 import /*embed*/ {ObjectActionOutputBeanButton} from "./components/objectactionoutputbeanbutton";
+import /*embed*/ {ObjectActionVCardButton} from "./components/objectactionvcardbutton";
 
 import /*embed*/ {ObjectKeyValuesPipe} from "./components/objectkeyvalue.pipe";
 import /*embed*/ {ObjectTableRow} from "./components/objecttablerow";
@@ -457,6 +458,7 @@ import /*embed*/ {ObjectRecordMessagesBadge} from "./components/objectrecordmess
         ObjectModalModuleDBLookup,
         ObjectActionOutputBeanModal,
         ObjectActionOutputBeanButton,
+        ObjectActionVCardButton,
         ObjectStatusNetworkButton,
         ObjectStatusNetworkButtonItem,
         ObjectKeyValuesPipe,
