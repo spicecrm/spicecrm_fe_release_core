@@ -108,10 +108,10 @@ export class ObjectActionContainer implements OnChanges {
 
     get opendisabled() {
         let disabled = true;
-        this.addactionitems.some((actionitem: any) => {
+        this.addactionitems.some(actionitem => {
             if (this.isDisabled(actionitem.id) === false) {
                 disabled = false;
-                return disabled;
+                return true;
             }
         });
         return disabled;
