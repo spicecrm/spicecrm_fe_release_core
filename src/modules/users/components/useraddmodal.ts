@@ -120,10 +120,10 @@ export class UserAddModal implements OnInit {
 
     get hasError() {
         let isValid = true;
-        if (this.pwdGuideline && this.pwdNotMatchGuide) {
+        if (!this.autoGenerate && this.pwdGuideline && this.pwdNotMatchGuide) {
             isValid = false;
         }
-        if (!this.password || this.rePwdNotSame) {
+        if (!this.autoGenerate && (!this.password || this.rePwdNotSame)) {
             isValid = false;
         }
 
@@ -146,7 +146,7 @@ export class UserAddModal implements OnInit {
 
     set autoGenerate(value) {
         this.autogenerate = value;
-        this.password = value ? Math.random().toString(36).slice(-8) : this.password;
+        this.password = value ? Math.random().toString(36).slice(-8) : '';
         this.repeatPassword = this.password;
     }
 
@@ -205,7 +205,7 @@ export class UserAddModal implements OnInit {
 
     private save(goDetail: boolean = false) {
         this.saveTriggered = true;
-        if (!this.autoGenerate && this.hasError) {
+        if (this.hasError) {
             return;
         }
         this.model.data.system_generated_password = this.autoGenerate;

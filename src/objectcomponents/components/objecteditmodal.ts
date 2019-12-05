@@ -53,7 +53,11 @@ export class ObjectEditModal implements OnInit {
      * ToDo: add documentation what we need this for
      */
     private actionSubject: Subject<any> = new Subject<any>();
-    private action$: Observable<any> = new Observable<any>();
+
+    /**
+     * this emits the data ... is referenced from the modal save button that handles this
+     */
+    public action$: Observable<any> = new Observable<any>();
 
     /**
      * set to true (default) to have the modal check for duplicates
@@ -103,11 +107,12 @@ export class ObjectEditModal implements OnInit {
         this.componentconfig = this.metadata.getComponentConfig(this.constructor.name, this.model.module);
         this.actionSetItems = this.metadata.getActionSetItems(this.componentconfig.actionset);
 
-        // pass the self object to the modalwindow service for the actionsets
+        // set the reference to self ..
+        // helper service so buttons can destroy the window
         this.modalwindow.self = this.self;
     }
 
-    get actionset(){
+    get actionset() {
         return this.componentconfig.actionset;
     }
 
@@ -138,10 +143,33 @@ export class ObjectEditModal implements OnInit {
     }
 
     /**
+     * handles the event emitted by the actionset
+     *
+     * @param event
+     */
+    private handleAction(event) {
+        switch (event) {
+            case 'savegodetail':
+                this.actionSubject.next(event);
+                this.model.goDetail();
+                break;
+            case 'save':
+                this.actionSubject.next(event);
+                break;
+            default:
+                this.actionSubject.next(false);
+        }
+        this.actionSubject.complete();
+        this.self.destroy();
+    }
+
+    /**
      * saves the data and if not done before does a duplicate check before saving
      *
      * @param goDetail if set to true the system will naviaget to the detail fo teh record after saving
      */
+
+    /*
     private save(goDetail: boolean = false) {
         if (this.preventGoingToRecord) goDetail = false;
         if (this.model.validate()) {
@@ -163,6 +191,8 @@ export class ObjectEditModal implements OnInit {
         }
     }
 
+     */
+
     /**
      * returns if the duplicate check iss enabled for the module. Used for the visiblity of he duplicates button in the view
      */
@@ -175,6 +205,7 @@ export class ObjectEditModal implements OnInit {
      *
      * @param goDetail if set to true the system will naviaget to the detail fo teh record after saving
      */
+    /*
     private saveModel(goDetail: boolean = false) {
         this.modal.openModal('SystemLoadingModal').subscribe(modalRef => {
             modalRef.instance.messagelabel = 'LBL_SAVING_DATA';
@@ -200,7 +231,9 @@ export class ObjectEditModal implements OnInit {
                 });
         });
     }
+    */
 
+    /*
     private saveToRelated(related_module: string) {
         if (!this.model.validate()) {
             return false;
@@ -232,6 +265,7 @@ export class ObjectEditModal implements OnInit {
             this.router.navigate(['/module/' + related_module + '/' + related_id]);
         });
     }
+    */
 
     /*
     private setModule(module) {
@@ -239,34 +273,4 @@ export class ObjectEditModal implements OnInit {
     }
     */
 
-    /*
-     style function for the duplicate overlay
-     */
-    get duplicateStyle() {
-        if (this.modalContent) {
-            let rect = this.modalContent.element.nativeElement.getClientRects();
-            return {
-                height: rect[0].height + 'px',
-                width: rect[0].width + 'px',
-                top: '0px'
-            };
-        } else {
-            return {
-                height: '0px',
-                width: '0px',
-                top: '0px'
-            };
-        }
-    }
-
-    /*
-     style function to prevent overflow to display scrollbar when duplicate check is displayed
-     */
-    get contentStyle() {
-        if (this.showDuplicates) {
-            return {
-                'overflow-y': 'hidden'
-            };
-        }
-    }
 }

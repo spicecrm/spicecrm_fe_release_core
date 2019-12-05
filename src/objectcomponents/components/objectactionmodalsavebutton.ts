@@ -13,7 +13,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 /**
  * @module ObjectComponents
  */
-import {Component, OnInit, Optional} from '@angular/core';
+import {Component, EventEmitter, OnInit, Optional, Output} from '@angular/core';
 import {metadata} from '../../services/metadata.service';
 import {model} from '../../services/model.service';
 import {modalwindow} from '../../services/modalwindow.service';
@@ -31,11 +31,16 @@ import {modal} from "../../services/modal.service";
 })
 export class ObjectActionModalSaveButton {
 
+    /**
+     * emits the action. can emit save or savegodetail
+     */
+    @Output() public  actionemitter: EventEmitter<any> = new EventEmitter<any>();
+
     private actionconfig: any = {};
 
     constructor(private language: language, private metadata: metadata, private model: model, private modal: modal,  @Optional()private modalwindow: modalwindow) {}
 
-    get displayLabel(){
+    get displayLabel() {
         return this.actionconfig.gorelated ? 'LBL_SAVE_AND_GO_TO_RECORD' : 'LBL_SAVE';
     }
 
@@ -77,13 +82,13 @@ export class ObjectActionModalSaveButton {
                     if (status) {
                         /// if go Deail go to record)
                         if (this.actionconfig.gorelated) {
-                            this.model.goDetail();
+                            this.actionemitter.emit('savegodetail');
                         }
                     }
                     modalRef.instance.self.destroy();
 
-                    // destroy the modal window
-                    if(this.modalwindow) this.modalwindow.self.destroy();
+                    // emit that we saved
+                    this.actionemitter.emit('save');
                 },
                 error => {
                     modalRef.instance.self.destroy();

@@ -71,5 +71,4 @@ export class ObjectListViewAggregateItem {
     get checked() {
         return this.modellist.checkAggregate(this.aggregate.aggregateindex, this.bucketitem.aggdata);
     }
-
 }

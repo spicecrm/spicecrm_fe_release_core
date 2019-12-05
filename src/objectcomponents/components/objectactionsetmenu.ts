@@ -14,7 +14,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
  * @module ObjectComponents
  */
 import {
-    Component, ElementRef, Renderer, Input, Output, OnDestroy, EventEmitter, ViewChild,
+    Component, ElementRef, Renderer2, Input, Output, OnDestroy, EventEmitter, ViewChild,
     ViewContainerRef
 } from '@angular/core';
 import {metadata} from '../../services/metadata.service';
@@ -39,7 +39,7 @@ export class ObjectActionsetMenu implements  OnDestroy {
     popupSubscription: any;
     clickListener: any;
 
-    constructor(private language: language, private model: model, private metadata: metadata, private elementRef: ElementRef, private renderer: Renderer, private popup: popup, private helper: helper) {
+    constructor(private language: language, private model: model, private metadata: metadata, private elementRef: ElementRef, private renderer: Renderer2, private popup: popup, private helper: helper) {
         this.popupSubscription = this.popup.closePopup$.subscribe(close => {
             this.isOpen = false;
         })
@@ -58,7 +58,7 @@ export class ObjectActionsetMenu implements  OnDestroy {
 
         // toggle the listener
         if (this.isOpen) {
-            this.clickListener = this.renderer.listenGlobal('document', 'click', (event) => this.onClick(event));
+            this.clickListener = this.renderer.listen('document', 'click', (event) => this.onClick(event));
 
 
 

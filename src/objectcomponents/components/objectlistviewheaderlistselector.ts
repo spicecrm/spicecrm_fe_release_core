@@ -13,7 +13,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 /**
  * @module ObjectComponents
  */
-import {Component, Input, Output, EventEmitter, Renderer, ElementRef, OnInit} from '@angular/core';
+import {Component, Input, Output, EventEmitter, Renderer2, ElementRef, OnInit} from '@angular/core';
 import { ActivatedRoute }   from '@angular/router';
 import { modellist } from '../../services/modellist.service';
 import { language } from '../../services/language.service';
@@ -31,7 +31,7 @@ export class ObjectListViewHeaderListSelector implements OnInit{
     clickListener: any;
     currentList: string = '';
 
-    constructor(private metadata: metadata, private activatedRoute: ActivatedRoute, private modellist: modellist, private language: language, private model: model, private elementRef: ElementRef, private renderer: Renderer) {
+    constructor(private metadata: metadata, private activatedRoute: ActivatedRoute, private modellist: modellist, private language: language, private model: model, private elementRef: ElementRef, private renderer: Renderer2) {
 
     }
 
@@ -42,7 +42,7 @@ export class ObjectListViewHeaderListSelector implements OnInit{
     toggleMenu(){
         this.showMenu = !this.showMenu;
         if (this.showMenu) {
-            this.clickListener = this.renderer.listenGlobal('document', 'click', (event) => this.onClick(event));
+            this.clickListener = this.renderer.listen('document', 'click', (event) => this.onClick(event));
         } else if (this.clickListener)
             this.clickListener();
     }

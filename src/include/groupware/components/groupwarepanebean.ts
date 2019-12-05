@@ -21,7 +21,7 @@ import {language} from "../../../services/language.service";
 import {view} from "../../../services/view.service";
 
 /**
- * A bean component.
+ * A bean component. Dsiplays a list of Beans that are matched to an email address
  */
 @Component({
     selector: 'groupware-pane-bean',
@@ -43,7 +43,9 @@ export class GroupwarePaneBean implements OnInit {
         private language: language,
         private metadata: metadata,
         private model: model,
+        private view: view
     ) {
+        this.view.displayLabels = false;
     }
 
     public ngOnInit() {

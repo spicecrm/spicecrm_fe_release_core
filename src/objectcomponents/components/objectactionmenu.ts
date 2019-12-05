@@ -13,7 +13,17 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 /**
  * @module ObjectComponents
  */
-import {Component, ElementRef, Renderer2, Input, Output, EventEmitter, ChangeDetectorRef, OnInit} from '@angular/core';
+import {
+    Component,
+    ElementRef,
+    Renderer2,
+    Input,
+    Output,
+    EventEmitter,
+    ChangeDetectorRef,
+    OnInit,
+    AfterViewInit, NgZone
+} from '@angular/core';
 import {metadata} from '../../services/metadata.service';
 import {language} from '../../services/language.service';
 import {model} from '../../services/model.service';
@@ -50,8 +60,8 @@ export class ObjectActionMenu extends ObjectActionContainer implements OnInit {
                 private renderer: Renderer2,
                 private helper: helper,
                 private layout: layout,
-                public changeDetectorRef: ChangeDetectorRef) {
-        super(language, metadata, model, changeDetectorRef);
+                public ngZone: NgZone) {
+        super(language, metadata, model,  ngZone);
     }
 
     public ngOnInit() {

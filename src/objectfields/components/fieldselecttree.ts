@@ -13,7 +13,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 /**
  * @module ObjectFields
  */
-import {Component, ElementRef,  Renderer} from '@angular/core';
+import {Component, ElementRef,  Renderer2} from '@angular/core';
 import {model} from '../../services/model.service';
 import {view} from '../../services/view.service';
 import {language} from '../../services/language.service';
@@ -51,7 +51,7 @@ export class fieldSelectTree extends fieldGeneric {
         private backend: backend,
         private config: configurationService,
         private elementRef: ElementRef,
-        public renderer: Renderer
+        public renderer: Renderer2
     ) {
         super(model, view, language, metadata, router);
 
@@ -84,20 +84,24 @@ export class fieldSelectTree extends fieldGeneric {
 
     get display_value() {
         let txt = '';
-        for(let field_name of this.fields) {
-
-            if (this.model.data[field_name]) {
-
-                txt += this.language.getLabel(this.model.data[field_name]) + ' \\ ';
+        for(let field_keyname of this.fields) {
+            if (this.model.data[field_keyname]) {
+                let field_name = "";
+                for(let key in this.sel_fields) {
+                    if(this.sel_fields[key].keyname === this.model.data[field_keyname]) {
+                        field_name = this.sel_fields[key].name;
+                    }
+                }
+                txt += this.language.getLabel(field_name) + ' \\ ';
             } else {
                 break;
             }
         }
         // remove the last slash...
         txt = txt.substring(0,txt.length -2);
-
         return txt;
     }
+
 
     get maxlevels() {
         return this.fieldconfig.maxlevels ? this.fieldconfig.maxlevels : 4;
@@ -151,6 +155,6 @@ export class fieldSelectTree extends fieldGeneric {
     }
     public onFocus() {
         this.show_tree = true;
-        this.clickListener = this.renderer.listenGlobal('document', 'click', (event) => this.onClick(event));
+        this.clickListener = this.renderer.listen('document', 'click', (event) => this.onClick(event));
     }
 }

@@ -29,6 +29,7 @@ export class ObjectRecordAdministrationTab implements OnInit {
 
     private componentconfig: any = {};
     private expanded: boolean = true;
+    private hasFieldAssignedUser = false;
     // private territorymanaged: boolean = false;
 
     private fields: any = {
@@ -38,6 +39,10 @@ export class ObjectRecordAdministrationTab implements OnInit {
         },
         spiceacl_territories_hash: {
             field: 'spiceacl_territories_hash',
+            fieldconfig: {}
+        },
+        spiceacl_users_hash: {
+            field: 'spiceacl_users_hash',
             fieldconfig: {}
         },
         assigned_user_name: {
@@ -70,6 +75,8 @@ export class ObjectRecordAdministrationTab implements OnInit {
             }
         }
         */
+
+        this.hasFieldAssignedUser = this.metadata.hasField(this.model.module, 'assigned_user_name');
     }
 
     /**
@@ -79,7 +86,16 @@ export class ObjectRecordAdministrationTab implements OnInit {
         return this.territories.checkModuleManaged(this.model.module);
     }
 
+
+    /**
+     * simple getter to return if the current module manages multiple users
+     */
+    get multipleusers() {
+        return this.metadata.getModuleDefs(this.model.module).acl_multipleusers == 1 ? true : false;
+    }
+
     get hidden() {
         return (this.componentconfig.requiredmodelstate && !this.model.checkModelState(this.componentconfig.requiredmodelstate));
     }
+
 }

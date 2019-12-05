@@ -16,6 +16,8 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 import {CommonModule} from '@angular/common';
 import {FormsModule}   from '@angular/forms';
 import {NgModule, Component} from '@angular/core';
+import {DragDropModule} from '@angular/cdk/drag-drop';
+
 import {VersionManagerService} from '../services/versionmanager.service';
 import { RouterModule, Routes, Router } from '@angular/router';
 import {DirectivesModule} from "../directives/directives";
@@ -35,9 +37,12 @@ import /*embed*/ { AdministrationQuotaManagerField } from './components/administ
 
 import /*embed*/ { AdministrationFTSManager } from './components/administrationftsmanager';
 import /*embed*/ { AdministrationFTSManagerFields } from './components/administrationftsmanagerfields';
+import /*embed*/ { AdministrationFTSManagerFieldsList } from './components/administrationftsmanagerfieldslist';
 import /*embed*/ { AdministrationFTSManagerDetails } from './components/administrationftsmanagerdetails';
+import /*embed*/ { AdministrationFTSManagerModuleAdd } from './components/administrationftsmanagermoduleadd';
 import /*embed*/ { AdministrationFTSManagerFieldsAdd } from './components/administrationftsmanagerfieldsadd';
 import /*embed*/ { AdministrationFTSStats } from './components/administrationftsstats';
+import /*embed*/ { AdministrationFtsManagerIndexModal } from './components/administrationftsmanagerindexmodal';
 
 import /*embed*/ { AdministrationSystemStats } from './components/administrationsystemstats';
 
@@ -69,9 +74,7 @@ export class AdministrationMain {}
         FormsModule,
         SystemComponents,
         DirectivesModule,
-        RouterModule.forChild([
-            { path: '', component: AdministrationMain}
-        ])
+        DragDropModule
     ],
     declarations: [
         AdministrationMain,
@@ -83,7 +86,9 @@ export class AdministrationMain {}
         AdministrationQuotaManager,
         AdministrationQuotaManagerField,
         AdministrationFTSManager,
+        AdministrationFTSManagerModuleAdd,
         AdministrationFTSManagerFields,
+        AdministrationFTSManagerFieldsList,
         AdministrationFTSManagerDetails,
         AdministrationFTSManagerFieldsAdd,
         AdministrationFTSStats,
@@ -99,7 +104,8 @@ export class AdministrationMain {}
         AdministrationSchedulerJobLog,
         AdministrationSchedulerRunButton,
         AdministrationSchedulerScheduleButton,
-        AdministrationSystemStats
+        AdministrationSystemStats,
+        AdministrationFtsManagerIndexModal
     ],
     entryComponents: [
         AdministrationMain,
@@ -115,13 +121,12 @@ export class AdministrationMain {}
     exports: [],
 
 })
-export class AdminComponentsModule
-{
-    readonly version = '1.0';
-    readonly build_date = '/*build_date*/';
+export class AdminComponentsModule {
+    public readonly version = '1.0';
+    public readonly build_date = '/*build_date*/';
 
     constructor(
-        private vms:VersionManagerService,
+        private vms: VersionManagerService,
     ) {
         vms.registerModule(this);
     }

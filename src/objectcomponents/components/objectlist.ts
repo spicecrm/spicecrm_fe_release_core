@@ -53,6 +53,9 @@ export class ObjectList implements OnDestroy {
         // load the list intiially
         this.setFieldDefs();
 
+        // set the limit for the loading
+        this.modellist.loadlimit = 50;
+
         // load the list and initialize from sesson data if this is set
         this.loadList(true);
 

@@ -26,7 +26,7 @@ import {ObjectComponents} from "../../objectcomponents/objectcomponents";
 import {SystemComponents} from "../../systemcomponents/systemcomponents";
 
 import /*embed*/ {SpiceMap} from './components/spicemap';
-
+import /*embed*/ {SpiceMapSelector} from './components/spicemapselector';
 
 @NgModule({
     imports: [
@@ -39,7 +39,8 @@ import /*embed*/ {SpiceMap} from './components/spicemap';
         DirectivesModule,
     ],
     declarations: [
-        SpiceMap
+        SpiceMap,
+        SpiceMapSelector
     ]
 })
 export class ModuleSpiceMap {

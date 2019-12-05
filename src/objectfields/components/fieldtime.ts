@@ -13,7 +13,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 /**
  * @module ObjectFields
  */
-import {Component, ElementRef, Renderer, ViewChild, ViewContainerRef} from '@angular/core';
+import {Component, ElementRef, Renderer2, ViewChild, ViewContainerRef} from '@angular/core';
 import {model} from '../../services/model.service';
 import {popup} from '../../services/popup.service';
 import {view} from '../../services/view.service';
@@ -54,7 +54,7 @@ export class fieldTime extends fieldGeneric {
         public metadata: metadata,
         public router: Router,
         private popup: popup,
-        private renderer: Renderer,
+        private renderer: Renderer2,
         private elementRef: ElementRef
     ) {
         super(model, view, language, metadata, router);
@@ -80,7 +80,7 @@ export class fieldTime extends fieldGeneric {
     private toggleTimePicker() {
         this.showTimePicker = !this.showTimePicker;
         if (this.showTimePicker) {
-            this.clickListener = this.renderer.listenGlobal('document', 'click', (event) => this.onClick(event));
+            this.clickListener = this.renderer.listen('document', 'click', (event) => this.onClick(event));
         }
     }
 

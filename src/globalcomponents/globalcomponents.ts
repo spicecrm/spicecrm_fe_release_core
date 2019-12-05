@@ -20,6 +20,7 @@ import {NgModule} from "@angular/core";
 import {RouterModule,} from "@angular/router";
 
 import {ObjectFields}      from "../objectfields/objectfields";
+import {ObjectComponents}      from "../objectcomponents/objectcomponents";
 import {SystemComponents}      from "../systemcomponents/systemcomponents";
 
 /**
@@ -106,6 +107,7 @@ import /*embed*/ {GlobalObtainImportantPreferences} from './components/globalobt
         ObjectFields,
         DirectivesModule,
         SystemComponents,
+        ObjectComponents,
         RouterModule.forRoot([
             // {path: "login", component: GlobalLogin},
             {path: "setup", component: GlobalSetup},

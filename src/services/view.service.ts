@@ -13,8 +13,10 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 /**
  * @module services
  */
-import {EventEmitter, Injectable} from '@angular/core';
+import {EventEmitter, Injectable, OnInit, Optional} from '@angular/core';
 import {BehaviorSubject} from "rxjs";
+import {model} from "./model.service";
+import {layout} from "./layout.service";
 
 @Injectable()
 export class view {
@@ -50,14 +52,39 @@ export class view {
      */
     public editfieldid: string = '';
 
-    // defines the labele .. can be value none, default, long or short
+    /**
+     * defines the default label length for the view
+     */
     public labels: 'default' | 'long' | 'short' = 'default';
 
-    // set the size
-    public size: 'regular' | 'small' = 'regular';
+    /**
+     * the size for the responsive design
+     */
+    public _size: 'regular' | 'small' = 'regular';
 
-    constructor() {
+    /**
+     * set to true to link the view to the model. If set the view will link itself to the model edit mode.
+     */
+    public linkedToModel: boolean = false;
+
+    constructor(@Optional() private model: model, private layout: layout) {
         this.mode$ = new BehaviorSubject<string>(this.mode);
+
+        if (this.model) {
+            this.model.mode$.subscribe(mode => {
+                if (this.linkedToModel && mode == 'display') {
+                    this.setViewMode();
+                }
+            });
+        }
+    }
+
+    set size(size: 'regular' | 'small') {
+        this._size = size;
+    }
+
+    get size() {
+        return this.layout.screenwidth == 'small' ? 'small' : this._size;
     }
 
     /**

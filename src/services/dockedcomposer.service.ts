@@ -14,23 +14,50 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
  * @module services
  */
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {Subject} from 'rxjs';
-import {CanActivate} from '@angular/router';
-
 import {modelutilities} from './modelutilities.service';
+import {broadcast} from './broadcast.service';
 
+/**
+ * holds all current composers
+ */
 @Injectable()
 export class dockedComposer {
+    /**
+     * the regular composers
+     */
     public composers: any[] = [];
+
+    /**
+     * specific for the Telphony Integration
+     * this holds active calls
+     */
     public calls: any[] = [];
+
+    /**
+     * the hidden composers. They are folded away in a separate tab
+     */
     public hiddenComposers: number[] = []
 
+    constructor(private modelutilities: modelutilities, private broadcast: broadcast) {
 
-    constructor(private modelutilities: modelutilities) {
-        this.calls = [];
+        // subscribe to the logout so we can remove all open composers
+        this.broadcast.message$.subscribe(message => this.handleLogout(message));
     }
 
+    private handleLogout(message) {
+        if (message.messagetype == 'logout') {
+            this.composers = [];
+            this.calls = [];
+            this.hiddenComposers = [];
+        }
+    }
+
+    /**
+     * adds a composer
+     *
+     * @param module the module for which the composer is
+     * @param model optional a model that can be passed in with the model data
+     */
     public addComposer(module, model?) {
 
         if (model) {
@@ -56,6 +83,11 @@ export class dockedComposer {
 
     }
 
+    /**
+     * focus on a specific composer and bring that one into view
+     *
+     * @param id the id of the composer
+     */
     public focusComposer(id) {
         this.composers.some((composer, index) => {
             if (composer.id == id) {
@@ -66,6 +98,9 @@ export class dockedComposer {
         });
     }
 
+    /**
+     * caclulates the number of composers that can max be displayed
+     */
     get maxComposers() {
         return Math.floor((window.innerWidth - 70) / 500);
     }

@@ -13,7 +13,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 /**
  * @module ObjectComponents
  */
-import {ChangeDetectorRef, Component, Input} from '@angular/core';
+import {Component, Input, NgZone} from '@angular/core';
 import {language} from '../../services/language.service';
 import {modellist} from '../../services/modellist.service';
 import {ObjectActionContainer} from "./objectactioncontainer";
@@ -33,8 +33,8 @@ export class ObjectListHeaderActionMenu extends ObjectActionContainer {
      */
     public actionitems: any[] = [];
 
-    constructor(private modellist: modellist, public language: language, public metadata: metadata, public model: model, public changeDetectorRef: ChangeDetectorRef) {
-        super(language, metadata, model, changeDetectorRef);
+    constructor(private modellist: modellist, public language: language, public metadata: metadata, public model: model, public ngZone: NgZone) {
+        super(language, metadata, model, ngZone);
     }
 
     public ngOnChanges() {

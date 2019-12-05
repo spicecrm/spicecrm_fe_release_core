@@ -18,6 +18,7 @@ import {metadata} from "./metadata.service";
 import {Observable, Subject, of} from "rxjs";
 import {footer} from "./footer.service";
 import {toast} from "./toast.service";
+import {language} from "./language.service";
 
 /**
  * handles the modals in the system
@@ -35,7 +36,7 @@ export class modal {
      */
     private modalsObject = {};
 
-    constructor( private metadata: metadata, private footer: footer, private toast: toast ) {
+    constructor( private metadata: metadata, private footer: footer, private toast: toast, private language: language ) {
         window.addEventListener("keyup", (event) => {
             if (event.keyCode === 27 && this.modalsArray.length) {
                 event.stopImmediatePropagation();
@@ -187,6 +188,17 @@ export class modal {
      */
     public confirm(text: string, headertext: string = null, theme: string = null): Observable<any> {
         return this.prompt('confirm', text, headertext, theme);
+    }
+
+    /**
+     * a shortcut to prompt for a confirm to delete Record dialog
+     *
+     * @param text
+     * @param headertext
+     * @param theme
+     */
+    public confirmDeleteRecord(): Observable<any> {
+        return this.prompt('confirm', this.language.getLabel('LBL_DELETE_RECORD', '', 'long') , this.language.getLabel('LBL_DELETE_RECORD'));
     }
 
     /**

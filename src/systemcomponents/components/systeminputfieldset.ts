@@ -54,11 +54,6 @@ export class SystemInputFieldset implements ControlValueAccessor {
     private _fieldsets: any[] = [];
 
     /**
-     * internal held for the modules
-     */
-    private _modules: any[] = [];
-
-    /**
      * the current module
      */
     private _module: string = '';
@@ -68,8 +63,6 @@ export class SystemInputFieldset implements ControlValueAccessor {
         private metadata: metadata,
     ) {
         this._fieldsets = this.metadata.getFieldSets();
-        this._modules = this.metadata.getModules();
-        this._modules.sort();
     }
 
     /**

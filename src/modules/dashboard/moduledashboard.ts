@@ -43,6 +43,7 @@ import /*embed*/ {DashboardGenericDashlet} from "./components/dashboardgenericda
 import /*embed*/ {DashboardGenericDashletRow} from "./components/dashboardgenericdashletrow";
 import /*embed*/ {DashboardRemindersDashlet} from "./components/dashboardremindersdashlet";
 import /*embed*/ {DashboardComponentset} from "./components/dashboardcomponentset";
+import /*embed*/ {DashboardSelectPanelAddButton} from "./components/dashboardselectpaneladdbutton";
 
 @NgModule({
     imports: [
@@ -66,6 +67,7 @@ import /*embed*/ {DashboardComponentset} from "./components/dashboardcomponentse
         DashboardGenericDashletRow,
         DashboardRemindersDashlet,
         DashboardComponentset,
+        DashboardSelectPanelAddButton
     ],
     exports: [
         DashboardContainer,

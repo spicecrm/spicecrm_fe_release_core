@@ -32,6 +32,8 @@ import /*embed*/ {DropdownTriggerDirective} from "./directives/dropdowntrigger";
 import /*embed*/ {ToBottomDirective} from "./directives/tobottom";
 import /*embed*/ {TrimInputDirective} from './directives/triminput';
 import /*embed*/ {ViewProviderDirective} from './directives/viewprovider';
+import /*embed*/ {SpiceDropFileArea} from './directives/spicedropfilearea';
+import /*embed*/ {SpiceOverlayLoadingSpinner} from './directives/spiceoverlayloadingspinner';
 
 /**
  * the angular module that collects all teh directives and can be imported by other modules to use the set of directives
@@ -51,7 +53,9 @@ import /*embed*/ {ViewProviderDirective} from './directives/viewprovider';
         DropdownTriggerDirective,
         ToBottomDirective,
         TrimInputDirective,
-        ViewProviderDirective
+        ViewProviderDirective,
+        SpiceDropFileArea,
+        SpiceOverlayLoadingSpinner
     ],
     exports: [
         ModelPopOverDirective,
@@ -64,7 +68,9 @@ import /*embed*/ {ViewProviderDirective} from './directives/viewprovider';
         DropdownTriggerDirective,
         ToBottomDirective,
         TrimInputDirective,
-        ViewProviderDirective
+        ViewProviderDirective,
+        SpiceDropFileArea,
+        SpiceOverlayLoadingSpinner
     ]
 })
 export class DirectivesModule {

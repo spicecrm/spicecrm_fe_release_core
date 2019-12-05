@@ -19,7 +19,6 @@ import {
     Component,
     Input,
     ElementRef,
-    Renderer,
     Renderer2,
     NgModule,
     ViewChild,

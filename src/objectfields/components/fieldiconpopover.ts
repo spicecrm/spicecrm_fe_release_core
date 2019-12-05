@@ -13,7 +13,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 /**
  * @module ObjectFields
  */
-import {Component, ElementRef, Renderer, ViewChild, ViewContainerRef, OnInit} from '@angular/core';
+import {Component, ElementRef, ViewChild, ViewContainerRef, OnInit} from '@angular/core';
 import {Router}   from '@angular/router';
 import {model} from '../../services/model.service';
 import {view} from '../../services/view.service';
@@ -50,8 +50,7 @@ export class fieldIconPopover extends fieldGeneric implements OnInit {
         public language: language,
         public metadata: metadata,
         public router: Router,
-        private elementRef: ElementRef,
-        private renderer: Renderer,
+        private elementRef: ElementRef
     ) {
         super(model, view, language, metadata, router);
 

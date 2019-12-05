@@ -39,6 +39,14 @@ export class CampaignTaskActivateButton {
         });
     }
 
+    /**
+     * only show for campaign tasks of type email
+     */
+    get hidden() {
+        return this.model.data.campaigntask_type == 'Email';
+    }
+
+
     private handleDisabled() {
 
         // not for email

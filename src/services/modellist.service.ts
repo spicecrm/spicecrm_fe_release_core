@@ -28,6 +28,12 @@ import {session} from "./session.service";
  */
 declare var moment: any;
 
+interface geoSearch {
+    radius: number;
+    lat: number;
+    lng: number;
+}
+
 @Injectable()
 export class modellist implements OnDestroy {
     public module: string = '';
@@ -42,7 +48,7 @@ export class modellist implements OnDestroy {
         type: '',
         items: []
     };
-    public lastFields: Array<any> = [];
+    public lastFields: any[] = [];
     public sortfield: string = '';
     public sortdirection: string = 'ASC';
     public lastLoad: any = new moment();
@@ -53,7 +59,15 @@ export class modellist implements OnDestroy {
     public searchConditions: any[] = [];
     public searchTerm: string = '';
     public searchAggregates: any = {};
-    public selectedAggregates: Array<any> = [];
+    public searchGeo: geoSearch;
+
+
+    public selectedAggregates: any[] = [];
+
+    /**
+     * for the bucketed views
+     */
+    public buckets: any = {};
 
     /**
      * set to true if the data when retrieved shoudl be cahced in the session
@@ -98,9 +112,9 @@ export class modellist implements OnDestroy {
 
          }*/
     ];
-    public listTypes: Array<any> = [];
+    public listTypes: any[] = [];
     public currentList: any = {};
-    public serviceSubscriptions: Array<any> = [];
+    public serviceSubscriptions: any[] = [];
 
     constructor(
         private broadcast: broadcast,
@@ -180,6 +194,7 @@ export class modellist implements OnDestroy {
     public setSortDirection(direction: string) {
         this.sortdirection = direction;
     }
+
     public setSortFieldWithoutReload(field: string) {
         this.sortfield = field;
     }
@@ -499,8 +514,8 @@ export class modellist implements OnDestroy {
 
         this.isLoading = true;
 
-        if (this.currentList.type == 'all') {
-            this.fts.loadMore().subscribe(res => {
+        if (this.currentList.type == 'all' || this.currentList.type == 'owner') {
+            this.fts.loadMore(this.buckets).subscribe(res => {
                 let newItems = [];
                 for (let item of res[this.module].hits) {
                     item._source.acl = item.acl;
@@ -509,6 +524,9 @@ export class modellist implements OnDestroy {
 
                 this.listData.list = this.listData.list.concat(newItems);
                 this.lastLoad = new moment();
+
+                // set the buckets
+                this.buckets = res[this.module].buckets;
 
                 this.isLoading = false;
 
@@ -574,6 +592,15 @@ export class modellist implements OnDestroy {
     }
 
     public resetListData() {
+        // reset buckets if there are any set
+        if (this.buckets && this.buckets.bucketitems) {
+            for (let bucketitem of this.buckets.bucketitems) {
+                bucketitem.count = 0;
+                bucketitem.value = 0;
+                bucketitem.items = 0;
+            }
+        }
+
         this.listData = {
             list: [],
             totalcount: 0
@@ -714,6 +741,7 @@ export class modellist implements OnDestroy {
             aggregates[this.module] = this.selectedAggregates;
             this.fts.searchByModules({
                 searchterm: this.searchTerm,
+                searchgeo: this.searchGeo,
                 modules: [this.module],
                 size: this.loadlimit,
                 aggregates: aggregates,
@@ -722,7 +750,8 @@ export class modellist implements OnDestroy {
                     sortdirection: this.sortdirection.toLowerCase()
                 },
                 owner: this.currentList.type == 'owner' ? true : false,
-                modulefilter: this.modulefilter
+                modulefilter: this.modulefilter,
+                buckets: this.buckets
             }).subscribe(res => {
                 // console.log(res);
                 let result = {list: [], totalcount: res[this.module].total};
@@ -741,6 +770,9 @@ export class modellist implements OnDestroy {
 
                 // cancel that we are loading
                 this.isLoading = false;
+
+                // set the buckets
+                this.buckets = res[this.module].buckets;
 
                 // save the current result
                 this.setToSession();
@@ -772,7 +804,7 @@ export class modellist implements OnDestroy {
         return retSub.asObservable();
     }
 
-    public exportList(): Observable<boolean> {
+    public exportList(fields?: any[]): Observable<boolean> {
 
         let retSub = new Subject<boolean>();
 
@@ -780,7 +812,7 @@ export class modellist implements OnDestroy {
         if (selectedIds.length > 0) {
             this.backend.getLinkToDownload('/module/' + this.module + '/export', 'POST', {}, {
                 ids: selectedIds,
-                fields: this.lastFields
+                fields: fields ? fields :this.lastFields
             }, {}).subscribe(
                 (downloadurl) => {
                     retSub.next(downloadurl);
@@ -791,7 +823,7 @@ export class modellist implements OnDestroy {
             if (this.currentList.type == 'all' || this.currentList.type == 'owner') {
                 let aggregates = {};
                 aggregates[this.module] = this.selectedAggregates;
-                this.fts.export(this.searchTerm, this.module, this.lastFields, aggregates, {
+                this.fts.export(this.searchTerm, this.module, fields ? fields :this.lastFields, aggregates, {
                         sortfield: this.sortfield,
                         sortdirection: this.sortdirection.toLowerCase()
                     }, this.currentList.type == 'owner' ? true : false,
@@ -809,7 +841,7 @@ export class modellist implements OnDestroy {
                         listid: this.currentList.id,
                         sortfield: this.sortfield,
                         sortdirection: this.sortdirection,
-                        fields: JSON.stringify(this.lastFields)
+                        fields: fields ? fields :this.lastFields
                     }
                 ).subscribe(
                     (res) => {

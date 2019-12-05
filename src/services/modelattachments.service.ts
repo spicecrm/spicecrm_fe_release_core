@@ -142,7 +142,7 @@ export class modelattachments {
             let newfile = {
                 date: new moment(),
                 file: '',
-                file_mime_type: file.type,
+                file_mime_type: file.type ? file.type : 'application/octet-stream',
                 filesize: file.size,
                 filename: file.name,
                 id: '',
@@ -191,7 +191,7 @@ export class modelattachments {
                 let fileBody = {
                     file: file.filecontent,
                     filename: file.name,
-                    filemimetype: file.type
+                    filemimetype: file.type ? file.type :'application/octet-stream'
                 };
 
                 request.send(JSON.stringify(fileBody));

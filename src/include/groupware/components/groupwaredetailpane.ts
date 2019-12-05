@@ -82,7 +82,6 @@ export class GroupwareDetailPane implements OnInit {
      * @param id
      */
     private loadRecord(module, id) {
-
         // load te model
         this.model.module = module;
         this.model.id = id;
@@ -90,7 +89,6 @@ export class GroupwareDetailPane implements OnInit {
 
         // load the componentset
         this.componentconfig = this.metadata.getComponentConfig('GroupwareDetailPane', module);
-        // this.componentset = this.metadata.getComponentConfig('GroupwareDetailPane', module).componentset;
     }
 
     get beans() {

@@ -23,7 +23,7 @@ import {metadata} from '../../services/metadata.service';
 @Component({
     selector: 'object-modal-module-lookup',
     templateUrl: './src/objectcomponents/templates/objectmodalmodulelookup.html',
-    providers: [view, model, modellist],
+    providers: [view, modellist],
     styles: [
         '::ng-deep table.singleselect tr:hover td { cursor: pointer; }',
         '::ng-deep field-generic-display > div { padding-left: 0 !important; padding-right: 0 !important; }'
@@ -48,7 +48,7 @@ export class ObjectModalModuleLookup implements OnInit {
     @Output() private selectedItems: EventEmitter<any> = new EventEmitter<any>();
     @Output() private usedSearchTerm: EventEmitter<string> = new EventEmitter<string>();
 
-    constructor(public language: language, public model: model, public modellist: modellist, public metadata: metadata) {
+    constructor(public language: language, public modellist: modellist, public metadata: metadata) {
     }
 
 
@@ -78,7 +78,7 @@ export class ObjectModalModuleLookup implements OnInit {
         let componentconfig = this.metadata.getComponentConfig('ObjectList', this.module);
         this.displayFields = this.metadata.getFieldSetFields(componentconfig.fieldset);
 
-        this.model.module = this.module;
+        // this.model.module = this.module;
         this.modellist.setModule(this.module);
         this.modellist.modulefilter = this.modulefilter;
 

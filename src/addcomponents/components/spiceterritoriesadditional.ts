@@ -13,7 +13,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 /**
  * @module AddComponentsModule
  */
-import {Component, ElementRef, Renderer, ViewChild, ViewContainerRef, Input} from '@angular/core';
+import {Component, ElementRef, ViewChild, ViewContainerRef, Input, Renderer2} from '@angular/core';
 import {model} from '../../services/model.service';
 import {view} from '../../services/view.service';
 import {popup} from '../../services/popup.service';
@@ -112,7 +112,7 @@ export class SpiceTerritorriesPrimary extends tfieldGeneric {
     private showPopover: boolean = false;
     private showPopoverTimeout: any = {};
 
-    constructor(public model: model, public view: view, public popup: popup, public language: language, public metadata: metadata, public router: Router, private elementRef: ElementRef, private renderer: Renderer, private territories: territories) {
+    constructor(public model: model, public view: view, public popup: popup, public language: language, public metadata: metadata, public router: Router, private elementRef: ElementRef, private renderer: Renderer2, private territories: territories) {
         super(model, view, language, metadata, router);
         this.popup.closePopup$.subscribe(() => this.closePopups());
     }
@@ -166,7 +166,7 @@ export class SpiceTerritorriesPrimary extends tfieldGeneric {
 
     private onFocus() {
         this.relateSearchOpen = true;
-        this.clickListener = this.renderer.listenGlobal('document', 'click', (event) => this.onClick(event));
+        this.clickListener = this.renderer.listen('document', 'click', (event) => this.onClick(event));
     }
 
     private relateSearchStyle() {
@@ -232,7 +232,7 @@ export class SpiceTerritoriesAdditional extends tfieldGeneric {
 
     searchObjects: boolean = false;
 
-    constructor(public model: model, public view: view, public popup: popup, public language: language, public metadata: metadata, public router: Router, private elementRef: ElementRef, private renderer: Renderer, private territories: territories) {
+    constructor(public model: model, public view: view, public popup: popup, public language: language, public metadata: metadata, public router: Router, private elementRef: ElementRef, private renderer: Renderer2, private territories: territories) {
         super(model, view, language, metadata, router);
         this.popup.closePopup$.subscribe(() => this.closePopups());
     }
@@ -311,7 +311,7 @@ export class SpiceTerritoriesAdditional extends tfieldGeneric {
 
     startSearch() {
         this.searchObjects = true;
-        this.clickListener = this.renderer.listenGlobal('document', 'click', (event) => this.onClick(event));
+        this.clickListener = this.renderer.listen('document', 'click', (event) => this.onClick(event));
     }
 
     public onClick(event: MouseEvent): void {

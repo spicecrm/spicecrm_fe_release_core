@@ -16,7 +16,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 import {
     Component,
     ElementRef,
-    Renderer
+    Renderer2
 } from '@angular/core';
 import {Router} from '@angular/router';
 import {fts} from '../../services/fts.service';
@@ -49,7 +49,7 @@ export class GlobalHeaderSearch {
         }
     }
 
-    constructor(public router: Router, public broadcast: broadcast, public fts: fts, public elementRef: ElementRef, public renderer: Renderer, public language: language) {
+    constructor(public router: Router, public broadcast: broadcast, public fts: fts, public elementRef: ElementRef, public renderer: Renderer2, public language: language) {
     }
 
     get showModuleSelector() {
@@ -58,7 +58,7 @@ export class GlobalHeaderSearch {
 
     private onFocus() {
         this.showRecent = true;
-        this.clickListener = this.renderer.listenGlobal('document', 'click', (event) => this.onClick(event));
+        this.clickListener = this.renderer.listen('document', 'click', (event) => this.onClick(event));
     }
 
     private closePopup() {
