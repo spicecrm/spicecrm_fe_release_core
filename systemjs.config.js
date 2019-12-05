@@ -23,6 +23,7 @@
             '@angular/cdk/scrolling': 'vendor:@angular/cdk-scrolling.umd.min.js?v=8.1.3',
             '@angular/cdk/bidi': 'vendor:@angular/cdk-bidi.umd.min.js?v=8.1.3',
             '@angular/cdk/collections': 'vendor:@angular/cdk-collections.umd.min.js?v=8.1.3',
+            '@angular/cdk/portal': 'vendor:@angular/cdk-portal.umd.min.js?v=8.1.3',
             'socket.io-client': 'vendor:socket.io-client/dist/socket.io.js',
             'rxjs': 'vendor:rxjs',
             'rxjs/ajax': 'vendor:rxjs/ajax/index.js',
