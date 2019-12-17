@@ -41,8 +41,8 @@ export class fieldMediaFile extends fieldGeneric implements OnInit, AfterViewIni
     private currentViewMode: string;
     private imageUrlVariant: string;
     private imageUrlOriginal: string;
-    private isLoadingVariant = true;
-    private isLoadingOriginal = true;
+    private isLoadingVariant = false;
+    private isLoadingOriginal = false;
     private widthOfImgFrame: number;
     private heightOfImgFrame: number;
 
@@ -84,6 +84,7 @@ export class fieldMediaFile extends fieldGeneric implements OnInit, AfterViewIni
 
     private loadImageVariant(): void {
         this.imageUrlVariant = '';
+        if ( this.model.isNew ) return;
         this.isLoadingVariant = true;
         this.mediafiles.getImageVariant( this.model.id, 'mwh/' + this.widthOfImgFrame + '/' + this.heightOfImgFrame ).subscribe( url => {
             this.imageUrlVariant = url;
@@ -93,6 +94,7 @@ export class fieldMediaFile extends fieldGeneric implements OnInit, AfterViewIni
 
     private loadImageOriginal(): void {
         this.imageUrlOriginal = '';
+        if ( this.model.isNew ) return;
         this.isLoadingOriginal = true;
         this.mediafiles.getImage( this.model.id ).subscribe( url => {
             this.imageUrlOriginal = url;
@@ -104,10 +106,12 @@ export class fieldMediaFile extends fieldGeneric implements OnInit, AfterViewIni
     }
 
     private getWidthOfImgFrame(): number {
+        if ( !this.imgFrame ) return 0;
         return Math.ceil( Number( getComputedStyle( this.imgFrame.nativeElement, null ).width.replace( /px$/, '' )));
     }
 
     private getHeightOfImgFrame(): number {
+        if ( !this.imgFrame ) return 0;
         return Math.ceil( Number( getComputedStyle( this.imgFrame.nativeElement, null ).height.replace( /px$/, '' )));
     }
 
