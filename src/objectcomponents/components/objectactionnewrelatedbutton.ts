@@ -13,7 +13,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 /**
  * @module ObjectComponents
  */
-import {Component, OnInit} from "@angular/core";
+import {Component, OnInit, SkipSelf} from "@angular/core";
 import {metadata} from "../../services/metadata.service";
 import {model} from "../../services/model.service";
 import {relatedmodels} from "../../services/relatedmodels.service";
@@ -26,10 +26,9 @@ import {language} from "../../services/language.service";
 })
 export class ObjectActionNewrelatedButton implements OnInit {
 
-    public parent: any = {};
     public disabled: boolean = true;
 
-    constructor(private language: language, private metadata: metadata, private model: model, private relatedmodels: relatedmodels) {
+    constructor(@SkipSelf() private parent: model, private language: language, private metadata: metadata, private model: model, private relatedmodels: relatedmodels) {
 
     }
 

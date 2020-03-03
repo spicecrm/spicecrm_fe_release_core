@@ -15,6 +15,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
  */
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
+import {FormsModule}   from "@angular/forms";
 
 import {ObjectFields}      from '../../objectfields/objectfields';
 import {GlobalComponents}      from '../../globalcomponents/globalcomponents';
@@ -26,10 +27,14 @@ import /*embed*/ {CampaignTaskExportButton} from "./components/campaigntaskexpor
 
 import /*embed*/ {CampaignSendMailButton} from './components/campaignsendmailbutton';
 import /*embed*/ {CampaignSendTestMailButton} from './components/campaignsendtestmailbutton';
+import /*embed*/ {CampaignExportButton} from './components/campaignexportbutton';
+import /*embed*/ {CampaignExportModal} from './components/campaignexportmodal';
+import /*embed*/ {CampaignTaskEmailPanel} from './components/campaigntaskemailpanel';
 
 @NgModule({
     imports: [
         CommonModule,
+        FormsModule,
         ObjectFields,
         GlobalComponents,
         ObjectComponents,
@@ -39,7 +44,10 @@ import /*embed*/ {CampaignSendTestMailButton} from './components/campaignsendtes
         CampaignTaskActivateButton,
         CampaignTaskExportButton,
         CampaignSendMailButton,
-        CampaignSendTestMailButton
+        CampaignSendTestMailButton,
+        CampaignExportButton,
+        CampaignExportModal,
+        CampaignTaskEmailPanel
     ]
 })
 export class ModuleCampaigns {}

@@ -24,7 +24,8 @@ import {
     OnDestroy, OnInit, Output,
     Renderer2,
     ViewChild,
-    ViewContainerRef
+    ViewContainerRef,
+    Input
 } from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from "@angular/forms";
 import {DOCUMENT} from "@angular/common";
@@ -49,7 +50,16 @@ import {metadata} from "../../services/metadata.service";
 })
 export class SystemRichTextEditor implements OnInit, OnDestroy, ControlValueAccessor {
 
+    /**
+     * the editor container
+     */
     @ViewChild('htmleditor', {read: ViewContainerRef, static: true}) private htmlEditor: ViewContainerRef;
+
+    /**
+     * set to true to have all options
+     */
+    @Input() private extendedmode: boolean = true;
+
 
     // for the value accessor
     private onChange: (value: string) => void;
@@ -260,6 +270,7 @@ export class SystemRichTextEditor implements OnInit, OnDestroy, ControlValueAcce
                         uploadComponentRef.instance.answer.subscribe(uploadimage => {
                             if (uploadimage) {
                                 this.focusEditor();
+                                this.editorService.restoreSelection();
                                 this.editorService.insertImage('https://cdn.spicecrm.io/' + uploadimage);
                             }
                             this.modalOpen = false;
@@ -268,6 +279,7 @@ export class SystemRichTextEditor implements OnInit, OnDestroy, ControlValueAcce
                 } else {
                     if (image.id) {
                         this.focusEditor();
+                        this.editorService.restoreSelection();
                         this.editorService.insertImage('https://cdn.spicecrm.io/' + image.id);
                     }
                     this.modalOpen = false;

@@ -19,7 +19,8 @@ import {
     ViewChild,
     ViewContainerRef,
     OnDestroy,
-    OnInit
+    OnInit,
+    Input
 } from '@angular/core';
 import {metadata} from '../../../services/metadata.service';
 import {model} from '../../../services/model.service';
@@ -29,69 +30,143 @@ import {modellist} from '../../../services/modellist.service';
 import {broadcast} from '../../../services/broadcast.service';
 import {configurationService} from '../../../services/configuration.service';
 import {userpreferences} from '../../../services/userpreferences.service';
+import {CdkDragDrop} from "@angular/cdk/drag-drop";
 
+declare var _: any;
+
+/**
+ * the kanban board
+ */
 @Component({
     selector: 'spice-kanban',
-    templateUrl: './src/include/spicepath/templates/spicekanban.html'
+    templateUrl: './src/include/spicepath/templates/spicekanban.html',
+    providers: [model]
 })
 export class SpiceKanban implements OnInit, OnDestroy {
-    @ViewChild('kanbanContainer', {read: ViewContainerRef, static: true}) private kanbanContainer: ViewContainerRef;
+    /**
+     * reference to the utility bar if one is rendered
+     */
+    @ViewChild('kanbanUtilityBar', {read: ViewContainerRef, static: false}) private kanbanUtilityBar: ViewContainerRef;
 
+    /**
+     * the component config
+     */
     private componentconfig: any = {};
+
+    /**
+     * subscription to the modellist for type changes
+     */
     private modellistsubscribe: any = undefined;
+
+    /**
+     * for the requested fields
+     */
     private requestedFields: string[] = [];
+
+    /**
+     * holds the config data for the beanguides
+     */
+    private confdata: any;
+
+    /**
+     * holds the info on the stages to be displayed
+     */
     private stages: any[] = [];
+    /**
+     * collects all of the fields and their operation type
+     */
+    private sumfields: any[] = [];
+    /**
+     * hidden statges that are rendered in teh utility bar
+     */
+    private hiddenstages: any[] = [];
 
     /**
      * holds an array of currencies
      */
     public currencies: any[] = [];
 
+    private loadLabel: boolean = false;
+
     constructor(private broadcast: broadcast, private model: model, private modellist: modellist, private configuration: configurationService, private metadata: metadata, private userpreferences: userpreferences, private language: language, private currency: currency) {
 
-        this.componentconfig = this.metadata.getComponentConfig('SpiceKanban', this.model.module);
-
-        // subscribe to changes of the listtype
-        this.modellistsubscribe = this.modellist.listtype$.subscribe(newType => this.switchListtype());
-
+        this.componentconfig = this.metadata.getComponentConfig('SpiceKanban', this.modellist.module);
         this.currencies = this.currency.getCurrencies();
-
     }
 
     /**
      * load ths stage data and build the buckts we are searching for to build the kanban board
      */
     public ngOnInit() {
-        let confData = this.configuration.getData('spicebeanguides')[this.model.module];
-        let stages = confData.stages;
+        this.confdata = this.configuration.getData('spicebeanguides')[this.modellist.module];
+        let stages = this.confdata.stages;
+
+        let tilecomponentconfig = this.metadata.getComponentConfig('SpiceKanbanTile', this.modellist.module);
+        let tilecomponentFields = this.metadata.getFieldSetFields(this.componentconfig.fieldset);
+        for (let tilecomponentField of tilecomponentFields) {
+            this.requestedFields.push(tilecomponentField.field);
+        }
 
         let bucketitems = [];
         for (let stage of stages) {
             // if not in kanban continue
-            if (stage.stagedata.not_in_kanban == '1') continue;
-
-            // push to stages
-            this.stages.push(stage);
+            if (stage.stagedata.not_in_kanban == '1') {
+                this.hiddenstages.push(stage);
+            } else {
+                this.stages.push(stage);
+            }
 
             // push the bucket item
             bucketitems.push({
                 bucket: stage.stagedata.secondary_stage ? stage.stagedata.stage + ' ' + stage.stagedata.secondary_stage : stage.stage,
-                value: 0,
+                values: {},
                 items: 0
             });
+
         }
 
-        this.requestedFields = ['name', 'account_name', 'account_id', 'sales_stage', 'amount_usdollar', 'amount'];
-
-        this.modellist.buckets = {
-            bucketfield: confData.statusfield,
-            bucketitems: bucketitems
+        // builds the sumfields array
+        if(this.componentconfig.sumfield) {
+            let configs = this.componentconfig.sumfield.split(",");
+            for (let config of configs) {
+                // catch whitespace
+                config = config.trim();
+                if (config.includes(":")) {
+                    this.sumfields.push({
+                        name: config.substr(0, config.indexOf(':')),
+                        function: config.substr(config.indexOf(':') + 1),
+                    });
+                } else {
+                    this.sumfields.push({
+                        name: config,
+                        function: "sum",
+                    });
+                }
         }
+
+
+        }
+
+
+        if (_.isEmpty(this.modellist.buckets)) {
+
+            this.modellist.buckets = {
+                bucketfield: this.confdata.statusfield,
+                buckettotal: this.sumfields, // [{field: 'amount', function: 'sum'}, {field: 'probabilty', function: 'avg'}]
+                bucketitems: bucketitems
+            };
+
+            this.modellist.getListData();
+
+        }
+
 
         // set limit to 10 .. since this is retrieved bper stage
-        this.modellist.loadlimit = 10;
+        this.modellist.loadlimit = 25;
 
-        this.modellist.getListData(this.requestedFields, false);
+        // subscribe to changes of the listtype
+        // since this is a behvaiour subject this will also fire the intiial list load
+        this.modellistsubscribe = this.modellist.listtype$.subscribe(newType => this.switchListtype());
     }
 
     /**
@@ -103,6 +178,25 @@ export class SpiceKanban implements OnInit, OnDestroy {
 
         // reset buckets
         this.modellist.buckets = {};
+
+    }
+
+
+    /**
+     * reads draganddrop from the config and returns it
+     */
+    get draganddropenabled() {
+        return this.componentconfig.draganddrop ? true : false;
+    }
+
+    /**
+     * trackby function to opütimize performnce onm the for loop
+     *
+     * @param index
+     * @param item
+     */
+    protected trackbyfn(index, item) {
+        return item.id;
     }
 
     /**
@@ -110,23 +204,18 @@ export class SpiceKanban implements OnInit, OnDestroy {
      *
      * @param stage the stage
      */
-    private getStageData(stage): any {
+    public getStageData(stage): any {
         let stagedata = this.stages.find(thisStage => stage == thisStage.stage);
         return stagedata.stagedata;
     }
 
 
     private switchListtype() {
-        let requestedFields = [];
-        this.modellist.getListData(this.requestedFields);
+        // let requestedFields = [];
+        // this.modellist.loadList(this.requestedFields);
+        // this.modellist.getListData(this.requestedFields);
     }
 
-    /**
-     * a getter retruning if the sum should be shown
-     */
-    get showSum() {
-        return this.componentconfig.sum !== '';
-    }
 
     /**
      * the size class
@@ -140,22 +229,37 @@ export class SpiceKanban implements OnInit, OnDestroy {
      *
      * @param stagedata
      */
+
     private getStageCount(stagedata) {
-        let stage = stagedata.secondary_stage ? stagedata.stage + ' ' + stagedata.secondary_stage : stagedata.stage;
-        let item = this.modellist.buckets.bucketitems.find(bucketitem => bucketitem.bucket == stage);
-        return item ? item.total : 0;
+        try {
+            let stage = stagedata.secondary_stage ? stagedata.stage + ' ' + stagedata.secondary_stage : stagedata.stage;
+            let item = this.modellist.buckets.bucketitems.find(bucketitem => bucketitem.bucket == stage);
+            return item ? item.total : 0;
+        } catch (e) {
+            return 0;
+        }
     }
 
     /**
      * get the sum for the stage bucket
      *
      * @param stagedata
+     * @param aggregatefield
      */
-    private getStageSum(stagedata) {
-        let stage = stagedata.secondary_stage ? stagedata.stage + ' ' + stagedata.secondary_stage : stagedata.stage;
-        let item = this.modellist.buckets.bucketitems.find(bucketitem => bucketitem.bucket == stage);
-
-        return item && item.value ? this.userpreferences.formatMoney(item.value, 0) : 0;
+    private getStageSum(stagedata, aggregatefield) {
+        try {
+            let aggname = "_bucket_agg_" + aggregatefield.name;
+            let stage = stagedata.secondary_stage ? stagedata.stage + ' ' + stagedata.secondary_stage : stagedata.stage;
+            let item = this.modellist.buckets.bucketitems.find(bucketitem => bucketitem.bucket == stage);
+            for(let prop in item.values) {
+                let value = item.values[prop];
+                if(prop == aggname) {
+                    return item.values ? value : 0;
+                }
+            }
+        } catch (e) {
+            return 0;
+        }
     }
 
     /**
@@ -184,26 +288,39 @@ export class SpiceKanban implements OnInit, OnDestroy {
     }
 
     /**
-     * react to the scroll event and if possible reload the list
-     *
-     * @param e
+     * returns ture if there are any visible items for the displayed stages
      */
-    private onScroll(e) {
-        let element = this.kanbanContainer.element.nativeElement;
-        if (element.scrollTop + element.clientHeight + 50 > element.scrollHeight) {
-
-            // check if there are still buckets that have potentially more items
-            let loadmore = false;
+    get hasVisibleItems() {
+        let visible = false;
+        if (this.modellist.buckets) {
             for (let bucket of this.modellist.buckets.bucketitems) {
-                if (bucket.total > bucket.items) {
-                    loadmore = true;
+                if (this.stages.findIndex(st => st.stage == bucket.bucket) >= 0 && bucket.items > 0) {
+                    visible = true;
                     break;
                 }
             }
+        }
+        return visible;
+    }
 
-            if (loadmore) {
-                this.modellist.loadMoreList();
+    /**
+     * checks if there are more records to load
+     */
+    private loadmore() {
+        // no further load if we are loading already
+        if (this.modellist.isLoading) return false;
+
+        // check if there are still buckets that have potentially more items
+        let loadmore = false;
+        for (let bucket of this.modellist.buckets.bucketitems) {
+            if (this.stages.findIndex(st => st.stage == bucket.bucket) >= 0 && bucket.total > bucket.items) {
+                loadmore = true;
+                break;
             }
+        }
+
+        if (loadmore) {
+            this.modellist.loadMoreList();
         }
     }
 
@@ -220,19 +337,104 @@ export class SpiceKanban implements OnInit, OnDestroy {
         }
     }
 
+
     /**
      * helper to get the currency symbol
+     * @param aggregatefield
      */
-    private getCurrencySymbol(): string {
-        let currencySymbol: string;
-        let currencyid = -99;
+    private getCurrencySymbol(aggregatefield): string {
+        if (this.metadata.getFieldType(this.modellist.module, aggregatefield.name) == 'currency') {
+            let currencySymbol: string;
+            let currencyid = -99;
+            this.currencies.some(currency => {
+                if (currency.id == currencyid) {
+                    currencySymbol = currency.symbol;
+                    return true;
+                }
+            });
+            return currencySymbol;
+        }
 
-        this.currencies.some(currency => {
-            if (currency.id == currencyid) {
-                currencySymbol = currency.symbol;
-                return true;
-            }
-        });
-        return currencySymbol;
     }
+
+    /**
+     * handels the drop
+     * ToDo: Check if we can find a nicer way then attaching the drop infor to the item
+     *
+     * @param event
+     */
+    private handleDrop(event: CdkDragDrop<any>) {
+        if (event.item.data[this.confdata.statusfield] != event.container.data.stage) {
+            // a little bit of an ugly hack to get the drop information to the item so the item can handle the moel upadet
+            event.item.data._KanbanDrop = {
+                from: event.item.data[this.confdata.statusfield],
+                to: event.container.data.stage
+            };
+            event.item.data[this.confdata.statusfield] = event.container.data.stage;
+        }
+    }
+
+    /**
+     * handels the drop on a hidden container
+     *
+     * @param event
+     */
+    private handleHiddenDrop(event: CdkDragDrop<any>) {
+        if (event.item.data[this.confdata.statusfield] != event.container.data.stage) {
+            // initialize the model
+            this.model.module = this.modellist.module;
+            this.model.initialize();
+            this.model.id = event.item.data.id;
+            this.model.data = this.model.utils.backendModel2spice(this.modellist.module, _.clone(event.item.data));
+
+            // initialize the field statis
+            this.model.initializeFieldsStati();
+
+            // start the edit and set the new stage
+            this.model.startEdit();
+            this.model.setField(this.confdata.statusfield, event.container.data.stage);
+
+            //
+            if (this.model.validate()) {
+                this.model.save();
+            } else {
+                this.model.edit();
+            }
+
+            // udate the item data
+            event.item.data[this.confdata.statusfield] = event.container.data.stage;
+        }
+    }
+
+    /**
+     * returns if the user is allowed to edit and can edit this opportunity
+     *
+     * @param item
+     */
+    private allowDrag(item) {
+        return this.draganddropenabled && item.acl.edit;
+    }
+
+    /**
+     * adds a bottom margin if the utility bar is shown
+     */
+    get containerStyle() {
+        if (this.kanbanUtilityBar) {
+            let rect = this.kanbanUtilityBar.element.nativeElement.getBoundingClientRect();
+            return {'margin-bottom': rect.height + 'px'};
+        } else {
+            return {};
+        }
+    }
+
+    /**
+     * returns the label of the spicekanbansumfield
+     *
+     * @param aggregatefield
+     */
+    private getTitle(aggregatefield) {
+        return this.language.getLabel("LBL_" + aggregatefield.name.toUpperCase());
+
+    }
+
 }

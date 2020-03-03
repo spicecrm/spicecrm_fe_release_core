@@ -25,6 +25,7 @@ import {
 import {loginService} from '../../services/login.service';
 import {popup} from '../../services/popup.service';
 import {session} from '../../services/session.service';
+import { userpreferences } from '../../services/userpreferences.service';
 
 @Component({
     selector: 'global-user',
@@ -36,7 +37,8 @@ export class GlobalUser {
     private clickListener: any;
     private hideUserDetails: boolean = true;
 
-    constructor(private loginService: loginService, private router: Router, private elementRef: ElementRef, private renderer: Renderer2, private popup: popup, private session: session) {
+    // The user preferences service is not needed in this component, but it has to get started (if not already elsewhere done).
+    constructor(private loginService: loginService, private router: Router, private elementRef: ElementRef, private renderer: Renderer2, private popup: popup, private session: session, private userpreferences: userpreferences) {
         popup.closePopup$.subscribe(close => {
             this.hideUserDetails = true;
         });

@@ -27,6 +27,7 @@ import {SystemComponents} from "../../systemcomponents/systemcomponents";
 
 import /*embed*/ {SpiceMap} from './components/spicemap';
 import /*embed*/ {SpiceMapSelector} from './components/spicemapselector';
+import /*embed*/ {SpiceGoogleMaps} from './components/spicegooglemaps';
 
 @NgModule({
     imports: [
@@ -40,6 +41,7 @@ import /*embed*/ {SpiceMapSelector} from './components/spicemapselector';
     ],
     declarations: [
         SpiceMap,
+        SpiceGoogleMaps,
         SpiceMapSelector
     ]
 })

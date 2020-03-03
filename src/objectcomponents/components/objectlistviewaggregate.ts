@@ -43,7 +43,7 @@ export class ObjectListViewAggregate {
      *
      * This is
      *  - the module if different ot the model
-     *  - the fieldnam
+     *  - the fieldname
      */
     get aggregateNameItems(): string[] {
         let nameItems = [];

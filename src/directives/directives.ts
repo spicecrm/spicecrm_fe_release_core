@@ -29,11 +29,14 @@ import /*embed*/ {LocalVariableDirective} from "./directives/localvariable";
 import /*embed*/ {SpiceUIAutofocusDirective} from "./directives/spiceuiautofocus";
 import /*embed*/ {FirstUpperCasePipe} from "./directives/firstuppercase";
 import /*embed*/ {DropdownTriggerDirective} from "./directives/dropdowntrigger";
+import /*embed*/ {DropdownTriggerSimpleDirective} from "./directives/dropdowntriggersimple";
 import /*embed*/ {ToBottomDirective} from "./directives/tobottom";
+import /*embed*/ {ToBottomNoScrollDirective} from "./directives/tobottomnoscroll";
 import /*embed*/ {TrimInputDirective} from './directives/triminput';
 import /*embed*/ {ViewProviderDirective} from './directives/viewprovider';
 import /*embed*/ {SpiceDropFileArea} from './directives/spicedropfilearea';
-import /*embed*/ {SpiceOverlayLoadingSpinner} from './directives/spiceoverlayloadingspinner';
+import /*embed*/ {OverlayLoadingSpinner} from './directives/overlayloadingspinner';
+import /*embed*/ {SystemResizeDirective} from './directives/systemresize';
 
 /**
  * the angular module that collects all teh directives and can be imported by other modules to use the set of directives
@@ -51,11 +54,14 @@ import /*embed*/ {SpiceOverlayLoadingSpinner} from './directives/spiceoverlayloa
         SpiceUIAutofocusDirective,
         FirstUpperCasePipe,
         DropdownTriggerDirective,
+        DropdownTriggerSimpleDirective,
         ToBottomDirective,
+        ToBottomNoScrollDirective,
         TrimInputDirective,
         ViewProviderDirective,
         SpiceDropFileArea,
-        SpiceOverlayLoadingSpinner
+        OverlayLoadingSpinner,
+        SystemResizeDirective
     ],
     exports: [
         ModelPopOverDirective,
@@ -66,11 +72,14 @@ import /*embed*/ {SpiceOverlayLoadingSpinner} from './directives/spiceoverlayloa
         SpiceUIAutofocusDirective,
         FirstUpperCasePipe,
         DropdownTriggerDirective,
+        DropdownTriggerSimpleDirective,
         ToBottomDirective,
+        ToBottomNoScrollDirective,
         TrimInputDirective,
         ViewProviderDirective,
         SpiceDropFileArea,
-        SpiceOverlayLoadingSpinner
+        OverlayLoadingSpinner,
+        SystemResizeDirective
     ]
 })
 export class DirectivesModule {

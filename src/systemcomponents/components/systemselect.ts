@@ -133,7 +133,7 @@ export class SystemSelect implements OnChanges {
         this.clickListener = this.renderer.listen("document", "click", (event) => this.clickOnSearch(event));
     }
 
-    private itemClicked(item) {
+    private itemClicked(item, event) {
         this.show_list = false;
 
         this.selectList.some(listItem => {
@@ -142,6 +142,7 @@ export class SystemSelect implements OnChanges {
                 return true;
             }
         });
+        if (event.stopPropagation) event.stopPropagation();
     }
 
 }

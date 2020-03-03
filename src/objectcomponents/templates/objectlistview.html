@@ -10,9 +10,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 -->
 
-<div>
-    <object-listview-header [parentconfig]="componentconfig" (headerevent)="handleHeaderEvent($event)"></object-listview-header>
-</div>
-<div [ngStyle]="containerStyle">
+<object-listview-header></object-listview-header>
+<div tobottomnoscroll>
     <div #container></div>
 </div>

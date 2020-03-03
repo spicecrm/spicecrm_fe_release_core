@@ -13,18 +13,20 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 /**
  * @module ObjectComponents
  */
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {metadata} from '../../services/metadata.service';
 import {model} from '../../services/model.service';
 import {language} from '../../services/language.service';
+import {Subscription} from "rxjs";
 
+/**
+ * renders an edit button that can be used in actionsets to start editing the model and render the model edit modal
+ */
 @Component({
     selector: 'object-action-edit-button',
     templateUrl: './src/objectcomponents/templates/objectactioneditbutton.html'
 })
-export class ObjectActionEditButton implements OnInit {
-
-    public disabled: boolean = true;
+export class ObjectActionEditButton {
 
     constructor(
         private language: language,
@@ -34,28 +36,28 @@ export class ObjectActionEditButton implements OnInit {
 
     }
 
-    public ngOnInit() {
-        this.handleDisabled(this.model.isEditing ? 'edit' : 'display');
-        this.model.mode$.subscribe(mode => {
-            this.handleDisabled(mode);
-        });
-
-        this.model.data$.subscribe(data => {
-            this.handleDisabled(this.model.isEditing ? 'edit' : 'display');
-        });
+    /**
+     * hide the button while the model is editing
+     */
+    get hidden() {
+        return this.model.isEditing;
     }
 
+    /**
+     * set to dsiabled when we are not allowed to edit or we are editing or saving already
+     */
+    get disabled() {
+        if (this.model.data.acl && !this.model.checkAccess('edit')) {
+            return true;
+        }
+        return this.model.isEditing || this.model.isSaving;
+    }
+
+    /*
+    * @call model.edit
+    */
     public execute() {
         this.model.edit();
-    }
-
-    private handleDisabled(mode) {
-        if (this.model.data.acl && !this.model.checkAccess('edit')) {
-
-            this.disabled = true;
-            return;
-        }
-        this.disabled = mode == 'edit' ? true : false;
     }
 
 }

@@ -40,7 +40,6 @@ import {helper} from "./services/helper.service";
 import {loginService, loginCheck} from "./services/login.service";
 import {session} from "./services/session.service";
 import {metadata, aclCheck} from "./services/metadata.service";
-import {AppDataService} from "./services/appdata.service";
 import {MathExpressionCompilerService} from "./services/mathexpressioncompiler";
 import {language} from "./services/language.service";
 import {recent} from "./services/recent.service";
@@ -148,7 +147,6 @@ export class SpiceUI {
         canNavigateAway,
         session,
         metadata,
-        AppDataService,
         aclCheck,
         loginCheck,
         helper,
@@ -209,6 +207,8 @@ if (/*@cc_on!@*/false || !!document.documentMode) {
     document.getElementById('loadermessage').innerHTML = 'Internet Explorer is not supported. Please use a supported Browser like Chrome, Safari, Edge, etc.';
 } else {
     document.getElementById('loadstatus').innerHTML = '...preparing..';
+    // ToDo: Prep for Angular 9 - ZoneEventCoalsecing - to be tried for reduced change detection cycles
+    // platformBrowserDynamic().bootstrapModule(SpiceUIModule, { ngZoneEventCoalescing: true });
     platformBrowserDynamic().bootstrapModule(SpiceUIModule);
 }
 

@@ -13,7 +13,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 /**
  * @module ObjectComponents
  */
-import {Component,  EventEmitter, Output} from '@angular/core';
+import {Component, EventEmitter, Output} from '@angular/core';
 import {metadata} from '../../services/metadata.service';
 import {model} from '../../services/model.service';
 import {language} from '../../services/language.service';
@@ -25,32 +25,41 @@ import {view} from "../../services/view.service";
 })
 export class ObjectActionSaveButton {
 
-    @Output() public  actionemitter: EventEmitter<any> = new EventEmitter<any>();
-
-    public parent: any = {};
-    public module: string = '';
-
-    private saving: boolean = false;
+    @Output() public actionemitter: EventEmitter<any> = new EventEmitter<any>();
 
     constructor(private language: language, private metadata: metadata, private model: model, private view: view) {
 
     }
 
+    /**
+     * disable the button when the model is saving
+     */
+    get disabled() {
+        return this.model.isSaving;
+    }
+
+    /*
+    * @return boolean
+    */
     get hidden() {
         return !this.model.isEditing;
     }
 
+    /*
+    * @set saving
+    * @emit 'save' by actionemitter
+    * @call model.endEdit
+    * @setViewMode
+    */
     public execute() {
-        if(this.saving) return;
+        if (this.model.isSaving) return;
 
-        if(this.model.validate()) {
-            this.saving = true;
+        if (this.model.validate()) {
             this.model.save(true).subscribe(saved => {
-                this.actionemitter.emit('save');
                 this.model.endEdit();
                 this.view.setViewMode();
+                this.actionemitter.emit('save');
             });
         }
     }
-
 }

@@ -11,7 +11,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 */
 
 /**
- * @module ObjectComponents
+ * @module ModuleActivities
  */
 import {
     Component, ViewChild, ViewContainerRef,
@@ -21,7 +21,7 @@ import {ActivatedRoute} from '@angular/router';
 import {metadata} from '../../../services/metadata.service';
 import {model} from '../../../services/model.service';
 import {language} from '../../../services/language.service';
-import {activitiyTimeLineService} from '../../../services/activitiytimeline.service';
+import {activitiytimeline} from '../../../services/activitiytimeline.service';
 
 @Component({
     selector: 'activity-timeline-summary-item-view',
@@ -36,7 +36,7 @@ export class ActivityTimelineSummaryItemView implements OnChanges{
     @Input() private data: '';
     private componentRefs: any[] = [];
 
-    constructor(private metadata: metadata, private parent: model, private model: model, private language: language, private activitiyTimeLineService: activitiyTimeLineService, private activatedRoute: ActivatedRoute) {
+    constructor(private metadata: metadata, private parent: model, private model: model, private language: language, private activitiytimeline: activitiytimeline, private activatedRoute: ActivatedRoute) {
 
     }
 

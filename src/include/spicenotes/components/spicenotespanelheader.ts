@@ -11,7 +11,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 */
 
 /**
- * @module ModuleWorkflow
+ * @module ModuleSpiceNotes
  */
 import {
     Component, OnDestroy

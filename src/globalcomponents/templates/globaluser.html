@@ -12,7 +12,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 <button class="slds-button" style="min-width: 32px;" aria-haspopup="true" (click)="toggleUserDetails()">
     <span *ngIf="!userimage" class="slds-icon_container slds-icon-standard-empty slds-icon_container--circle">
-        <system-utility-icon  [icon]="'user'" [size]="'x-small'" [addclasses]="'slds-icon'" [colorclass]="''"></system-utility-icon>
+        <system-utility-icon  icon="user" size="x-small" addclasses="slds-icon" colorclass=""></system-utility-icon>
     </span>
     <img style="height: 32px; width: 32px" *ngIf="userimage" [src]="userimage"/>
 </button>

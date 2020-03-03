@@ -30,7 +30,7 @@ export class ObjectListTypes {
     private clickListener: any;
 
     get listtypes() {
-        return this.modellist.getListTypes(false);
+        return this.modellist.getListTypes(false).sort((a, b) => a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1);
     }
 
     private toggleTypes() {
@@ -48,6 +48,11 @@ export class ObjectListTypes {
         this.showMenu = false;
     }
 
+    /**
+     * for handling the simle dorpdowntrigger
+     *
+     * @param event
+     */
     public onClick(event: MouseEvent): void {
         if (!event.target) {
             return;
@@ -58,4 +63,14 @@ export class ObjectListTypes {
             this.showMenu = false;
         }
     }
+
+    /**
+     * returns a list type icon indicating if this is a peronal or a global list
+     *
+     * @param listtype
+     */
+    private getListtypeIcon(listtype) {
+        return listtype.global && listtype.global != '0' ? 'world' : 'user';
+    }
+
 }

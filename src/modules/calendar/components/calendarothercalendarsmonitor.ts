@@ -36,8 +36,9 @@ export class CalendarOtherCalendarsMonitor {
     public recentUsers: any[] = [];
     public timeout: any = undefined;
     public isLoading: boolean = false;
+    public hovered: string = '';
+
     @ViewChild("inputcontainer", {read: ViewContainerRef, static: true}) private inputContainer: ViewContainerRef;
-    @Input('userscalendars') private usersCalendars: any[] = [];
     @Input('othercalendars') private otherCalendars: any[] = [];
     private googleIsVisible: boolean = true;
 
@@ -46,6 +47,10 @@ export class CalendarOtherCalendarsMonitor {
                 private calendar: calendar,
                 private fts: fts) {
         this.getRecent();
+    }
+
+    get usersCalendars() {
+        return this.calendar.usersCalendars;
     }
 
     get loggedByGoogle() {
@@ -85,7 +90,7 @@ export class CalendarOtherCalendarsMonitor {
         this.timeout = setTimeout(() => {
             this.searchterm = value;
             this.isLoading = true;
-            this.fts.searchByModules({ searchterm: this.searchterm, modules: ["Users"], size: 5, sortparams: {sortfield: "name"}})
+            this.fts.searchByModules({ searchterm: this.searchterm, modules: ["Users"], size: 5, sortparams: {sortfield: "full_name", sortdirection: "asc"}})
                 .subscribe(res => {
                     this.filterResultsList(res.Users.hits.map(user => user = user._source));
                     this.isLoading = false;
@@ -125,13 +130,8 @@ export class CalendarOtherCalendarsMonitor {
     private toggleVisible(id, type) {
         switch (type) {
             case "Users":
-                this.calendar.usersCalendars.some(calendar => {
-                    if (calendar.id == id) {
-                        calendar.visible = !calendar.visible;
-                        this.calendar.setUserCalendars(this.calendar.usersCalendars.slice());
-                        return true;
-                    }
-                });
+                this.calendar.toggleUserCalendarVisibility(id);
+
                 break;
             case "Google":
                 this.googleIsVisible = !this.googleIsVisible;

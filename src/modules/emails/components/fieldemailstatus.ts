@@ -38,6 +38,7 @@ export class fieldEmailStatus extends fieldGeneric {
                 return 'email_open';
             case 'bounced':
             case 'deferred':
+            case 'send_error':
                 return 'error';
             default:
                 return 'email';

@@ -11,11 +11,11 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 */
 
 /**
- * @module ObjectComponents
+ * @module ModuleActivities
  */
 import {OnInit, Component, Input} from '@angular/core';
 import {language} from '../../../services/language.service';
-import {activitiyTimeLineService, activityTimeLineModules} from '../../../services/activitiytimeline.service';
+import {activitiytimeline, activityTimeLineModules} from '../../../services/activitiytimeline.service';
 
 /**
  * a component that renders a contianer with activities (past or future) as well as aggergates etc.
@@ -37,35 +37,42 @@ export class ActivityTimelineContainer implements OnInit {
      */
     @Input() private displayaggregates: boolean = false;
 
-    constructor(private activitiyTimeLineService: activitiyTimeLineService, private language: language) {
+    constructor(private activitiytimeline: activitiytimeline, private language: language) {
     }
 
     /**
      * @ignore
      */
     public ngOnInit() {
-        this.activitiyTimeLineService.getTimeLineData(this.module);
+        this.activitiytimeline.getTimeLineData(this.module);
     }
 
     /**
      * a getter for the activities
      */
     get activities() {
-        return this.activitiyTimeLineService.activities[this.module].list;
+        return this.activitiytimeline.activities[this.module].list;
     }
 
     /**
      * checks if tehera are any activiites to be displayed. Otherwise shows an illustration
      */
     get hasActivities() {
-        return this.activitiyTimeLineService.activities[this.module].list.length > 0 ? true : false;
+        return this.activitiytimeline.activities[this.module].list.length > 0 ? true : false;
     }
 
     /**
      * indicator if teh service is loading. This displays stencils
      */
     get loading() {
-        return this.activitiyTimeLineService.activities[this.module].loading;
+        return this.activitiytimeline.activities[this.module].loading;
+    }
+
+    /**
+     * indicator if the service is loading more item . This displays stencils
+     */
+    get loadingmore() {
+        return this.activitiytimeline.activities[this.module].loadingmore;
     }
 
     /**
@@ -73,7 +80,7 @@ export class ActivityTimelineContainer implements OnInit {
      */
     get hasAggregates() {
         try {
-            return this.activitiyTimeLineService.activities[this.module].aggregates.module.length > 0;
+            return this.activitiytimeline.activities[this.module].aggregates.module.length > 0;
         } catch (e) {
             return false;
         }
@@ -88,6 +95,6 @@ export class ActivityTimelineContainer implements OnInit {
      * @param item
      */
     private trackByFn(index, item) {
-        return item.data.id;
+        return item.id;
     }
 }

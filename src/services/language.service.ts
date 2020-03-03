@@ -41,7 +41,7 @@ export class language {
     public languagedata: any = {};
 
     /**
-     * the current language e.g. 'en_US'
+     * the current language e.g. 'en_us'
      */
     private _currentlanguage: string = '';
 
@@ -65,6 +65,9 @@ export class language {
      * @param language the language to set the srvice to
      */
     set currentlanguage(language) {
+        if(typeof language !== 'string' || language === null) {
+            language = this.getDefaultLanguage();
+        }
         this._currentlanguage = language;
 
         this.cookie.setValue('spiceuilanguage', language);
@@ -117,9 +120,9 @@ export class language {
             params.lang = this.currentlanguage;
         }
 
-        this.http.post(
-            this.configurationService.getBackendUrl() + '/module/language', {},
-            {headers: this.session.getSessionHeader(), observe: "response", params}
+        this.http.get(
+            this.configurationService.getBackendUrl() + '/language/'+this.currentlanguage,
+            {headers: this.session.getSessionHeader(), observe: "response"}
         ).subscribe(
             (res: any) => {
                 let response = res.body;

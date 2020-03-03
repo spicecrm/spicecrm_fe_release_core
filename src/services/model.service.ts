@@ -52,6 +52,14 @@ interface fieldstati {
 }
 
 /**
+ * for the save data emitter
+ */
+interface savedata {
+    changed: any;
+    backupdata: any;
+}
+
+/**
  * a generic service that handles the model instance. This is one of the most central items in SpiceUI as this is the instance of an object (record) in the backend. The service provides all relevant getters and setters for the data handling, it validates etc.
  */
 @Injectable()
@@ -60,14 +68,17 @@ export class model implements OnDestroy {
      * @ignore
      */
     private _module: string = "";
+
     /**
      * the id of the record in the backend
      */
     public id: string = "";
+
     /**
      * an object holding the acl data for the record as it is set in the backend
      */
     public acl: any = {};
+
     /**
      * the data object.
      *
@@ -78,10 +89,12 @@ export class model implements OnDestroy {
             edit: true
         }
     };
+
     /**
      * a private element that holds a copy of the data and is created when the model is set to editmode. This is internal only and used for the assessment of dirty fields
      */
     private backupData: any = {};
+
     /**
      * an event emitter. this is called every time when a value to the model is set or the validation is changed. Otheer components can subscribe to this emitter and get the current data passed out in the event that a change occured
      *
@@ -94,6 +107,24 @@ export class model implements OnDestroy {
      *```
      */
     public data$: BehaviorSubject<any>;
+
+    /**
+     * indicates wheter the model is currently saving
+     */
+    public isSaving: boolean = false;
+
+    /**
+     * a simple event emitter that emits whenever the model is saved
+     * this is used in views that also shoudl update when the model is saved. The pure data$ does not do that since data$ emils all data changes
+     * the emitter emits  the changed data and the backupdate (a shallow copy thereof) in an object
+     *
+     * {
+     *     changed: {}
+     *     backupdata: {}
+     * }
+     */
+    public saved$: EventEmitter<savedata> = new EventEmitter<savedata>();
+
     /**
      * an behaviour Subject that fires when te mode of the model changes between display and editing. Components can subscribe to this to get notified when the mode is triggerd by the application or by the user
      *
@@ -106,14 +137,17 @@ export class model implements OnDestroy {
      *```
      */
     public mode$ = new EventEmitter();
+
     /**
      * indicates if the model state is valid
      */
     public isValid: boolean = false;
+
     /**
      * indicates that the model is currently loading from the backend
      */
     public isLoading: boolean = false;
+
     /**
      * indicates that the current model is in an edit state
      */
@@ -128,28 +162,33 @@ export class model implements OnDestroy {
      * set when a new record is created and teh model is not yet saved on the backend
      */
     public isNew: boolean = false;
+
     /**
      * @ignore
      *
      * @ToDo: add documentation
      */
     private _fields_stati: any = []; // will be build by initialization of the model
+
     /**
      * @ignore
      *
      * @ToDo: add documentation
      */
     private _fields_stati_tmp: any = []; // will be erased when evaluateValidationRules() is called
+
     /**
      * @ignore
      *
      * @ToDo: add documentation
      */
     private _model_stati_tmp: any = [];  // will be erased when evaluateValidationRules() is called
+
     /**
      * holds any collected messages during validation or propagation
      */
     private _messages: any = [];
+
     /**
      * @ToDo: add documentation
      */
@@ -162,6 +201,10 @@ export class model implements OnDestroy {
      */
     public duplicate: boolean = false;
     /**
+     * Holds the ID of the template model, in case the model is a duplicate.
+     */
+    public templateId: string = null;
+    /**
      * inidctaes thata duplicate check is ongoing
      */
     public duplicateChecking: boolean = false;
@@ -171,12 +214,23 @@ export class model implements OnDestroy {
     public duplicates: any[] = [];
 
     /**
+     * can be set if the model is in teh context of a parent and thus allows to pass a parent model through the dom
+     */
+    public parentmodel: model;
+
+    /**
      * the coiunt for the toal duplicates found
      */
     public duplicatecount: number = 0;
 
+    /**
+     * ToDo add documentation on how to use this
+     */
     private modelRegisterId: number;
 
+    /**
+     * ToDo: add documentation how to use this
+     */
     public savingProgress: BehaviorSubject<number> = new BehaviorSubject(1);
 
     constructor(
@@ -334,17 +388,16 @@ export class model implements OnDestroy {
         this.backend.get(this.module, this.id, trackAction).subscribe(
             res => {
                 this.data = res;
-                this.data$.next(res);
-                this.broadcast.broadcastMessage("model.loaded", {id: this.id, module: this.module, data: this.data});
-                responseSubject.next(res);
-                responseSubject.complete();
-
                 if (trackAction != "") {
                     this.recent.trackItem(this.module, this.id, this.data);
                 }
                 this.initializeFieldsStati();
                 this.evaluateValidationRules(null, "init");
                 this.isLoading = false;
+                this.data$.next(res);
+                this.broadcast.broadcastMessage("model.loaded", {id: this.id, module: this.module, data: this.data});
+                responseSubject.next(res);
+                responseSubject.complete();
             },
             err => {
                 if (redirectNotFound && err.status != 401) {
@@ -682,13 +735,28 @@ export class model implements OnDestroy {
         return this._model_stati_tmp.includes(state);
     }
 
-    public startEdit(withbackup: boolean = true) {
+    /**
+     * set the model to the edit mode
+     *
+     * @param withbackup create backup data so dirty fields can be evaluated. Defaults to true. Shoudl ony be set to false in specific cases
+     * @param silent prevents the model to be set to editing
+     */
+    public startEdit(withbackup: boolean = true, silent: boolean = false) {
+        // if the model is already editing .. simply return
+        if (this.isEditing) return;
+
         // shift to backend format .. no objects like date embedded
         if (withbackup && !this.duplicate) {
             this.backupData = {...this.data};
         }
-        this.isEditing = true;
-        this.mode$.emit('edit');
+
+        /**
+         *  do not set to editing if silent is set
+         */
+        if (!silent) {
+            this.isEditing = true;
+            this.mode$.emit('edit');
+        }
 
         // add the model as editing to the navigation service so we can stop the user from navigating away
         this.navigation.addModelEditing(this.module, this.id, this.getFieldValue('summary_text'));
@@ -709,6 +777,13 @@ export class model implements OnDestroy {
         return this.getFieldValue(field);
     }
 
+    /**
+     * @deprecated
+     * sets a single value on a field, also called from setField
+     *
+     * @param field
+     * @param value
+     */
     public setFieldValue(field, value) {
         if (!field) return false;
         this.data[field] = value;
@@ -719,10 +794,21 @@ export class model implements OnDestroy {
         this.duplicateCheckOnChange([field]);
     }
 
+    /**
+     * sets a single field on the model
+     *
+     * @param field
+     * @param value
+     */
     public setField(field, value) {
         return this.setFieldValue(field, value);
     }
 
+    /**
+     * serts an object of fields on a model
+     *
+     * @param fieldData a simple object with the fieldname and the value to be set
+     */
     public setFields(fieldData) {
         let changedFields = [];
         for (let fieldName in fieldData) {
@@ -738,6 +824,9 @@ export class model implements OnDestroy {
         this.duplicateCheckOnChange(changedFields);
     }
 
+    /**
+     * cancels the editing process. Similar to end edit but the data is reset
+     */
     public cancelEdit() {
         this.isEditing = false;
         this.mode$.emit('display');
@@ -752,6 +841,10 @@ export class model implements OnDestroy {
         }
     }
 
+    /**
+     * called to end the editing process. This cleans up the backup data, sets editing to false and emits also that the model is no in display mode
+     * this also removes the model from the editing list in teh va service. Avodiing that navigating away or closing the browser will prompt the user with a warning
+     */
     public endEdit() {
         this.backupData = null;
         this.isEditing = false;
@@ -760,18 +853,29 @@ export class model implements OnDestroy {
         this.navigation.removeModelEditing(this.module, this.id);
     }
 
+    /**
+     * evaluates the dirty fields on a model based on the backupdata that is generated when the model is set to the edit mode
+     */
     public getDirtyFields() {
         let d = {};
         for (let property in this.data) {
-            if (property && (!this.backupData || _.isArray(this.data[property]) || !_.isEqual(this.data[property], this.backupData[property]) || this.isFieldARelationLink(property))) {
+            if (property && (!this.backupData || _.isObject(this.data[property]) || _.isArray(this.data[property]) || !_.isEqual(this.data[property], this.backupData[property]) || this.isFieldARelationLink(property))) {
                 d[property] = this.data[property];
             }
         }
         return d;
     }
 
+    /**
+     * saves the changes on the model
+     *
+     * @param notify if set to true a toast is sent once the save is completed (defaults to false)
+     */
     public save(notify: boolean = false): Observable<boolean> {
         let responseSubject = new Subject<boolean>();
+
+        // set to saving
+        this.isSaving = true;
 
         // Clean strings of leading and ending white spaces:
         for (let property in this.data) {
@@ -791,7 +895,7 @@ export class model implements OnDestroy {
             changedData = this.data;
         }
 
-        this.backend.save(this.module, this.id, changedData, this.savingProgress)
+        this.backend.save(this.module, this.id, changedData, this.savingProgress, this.templateId )
             .subscribe(
                 res => {
                     this.data = res;
@@ -801,19 +905,36 @@ export class model implements OnDestroy {
                         id: this.id,
                         reference: this.reference,
                         module: this.module,
-                        data: this.data
+                        data: this.data,
+                        changed: this.getDirtyFields(),
+                        backupdata: {...this.backupData}
                     });
-                    responseSubject.next(true);
-                    responseSubject.complete();
 
+                    // saving is done
+                    this.isSaving = false;
+
+                    // if notification is on send a toast
                     if (notify) {
                         this.toast.sendToast(this.language.getLabel("LBL_DATA_SAVED") + ".", "success");
                     }
 
+
+
+                    // emit the save$
+                    // redetermin the dirty fields since the backend call might have changed also additonal fields
+                    this.saved$.emit({changed: this.getDirtyFields(), backupdata: {...this.backupData}});
+
+
+                    // end the edit process
                     this.endEdit();
 
                     // reinitialize the Field Stats in case ACL Changed
                     this.initializeFieldsStati();
+
+                    // emit the observable
+                    responseSubject.next(true);
+                    responseSubject.complete();
+
                 },
                 error => {
                     // console.log(error);
@@ -830,6 +951,9 @@ export class model implements OnDestroy {
                             responseSubject.error(true);
                             responseSubject.complete();
                     }
+
+                    // indicvate end of save process
+                    this.isSaving = false;
                 });
         return responseSubject.asObservable();
     }
@@ -838,7 +962,11 @@ export class model implements OnDestroy {
         let responseSubject = new Subject<boolean>();
         this.backend.delete(this.module, this.id)
             .subscribe(res => {
-                this.broadcast.broadcastMessage("model.delete", {id: this.id, module: this.module});
+                this.broadcast.broadcastMessage("model.delete", {
+                    id: this.id,
+                    module: this.module,
+                    data: _.clone(this.data)
+                });
                 responseSubject.next(true);
                 responseSubject.complete();
             });
@@ -910,6 +1038,7 @@ export class model implements OnDestroy {
 
         // reset the data object
         this.data = {};
+        // this.data.id = this.id;
         this.data.assigned_user_id = this.session.authData.userId;
         this.data.assigned_user_name = this.session.authData.userName;
         this.data.modified_by_id = this.session.authData.userId;
@@ -1033,17 +1162,22 @@ export class model implements OnDestroy {
      */
     private copyValue(toField, value) {
         let fieldDef = this.metadata.getFieldDefs(this.module, toField);
+
+        // if not found just set the field attribute
+        if(!fieldDef) this.setField(toField, value);
+
+        // handle links
         switch (fieldDef.type) {
             case 'link':
                 if (_.isObject(value) && value.beans) {
-                    let newLink = {beans:{}};
-                    for(let relid in value.beans){
-                        newLink.beans[this.utils.generateGuid()] = {...value.beans[relid]}
+                    let newLink = {beans: {}};
+                    for (let relid in value.beans) {
+                        newLink.beans[this.utils.generateGuid()] = {...value.beans[relid]};
                     }
-                    this.setFieldValue(toField, newLink);
+                    this.setField(toField, newLink);
                 }
             default:
-                this.setFieldValue(toField, value);
+                this.setField(toField, value);
                 break;
         }
     }
@@ -1068,30 +1202,39 @@ export class model implements OnDestroy {
     /*
     * open an edit modal using the injecor from the provider
      */
-    public edit(reload: boolean = false, componentSet: string = "") {
+    public edit(reload: boolean = false, componentSet: string = ""): Observable<any> {
         // check if the user can edit
         if (!this.checkAccess("edit")) {
-            return false;
+            return of(false);
         }
+
+        // create a response subject
+        let responseSubject = new Subject<any>();
 
         // open the edit Modal
         this.modal.openModal("ObjectEditModal", false, this.injector).subscribe(editModalRef => {
             if (editModalRef) {
+
+                // check if a requested componentset for the modal was passed in
                 if (componentSet && componentSet != "") {
                     editModalRef.instance.componentSet = componentSet;
                 }
 
+                // check if the model shoudl be reloaded
                 if (reload) {
-                    editModalRef.instance.model.getData(false, "editview", false).subscribe(loaded => {
-                        // start editing after it has been loaded
-                        this.startEdit();
-                    });
-                } else {
-                    // start Editing
-                    this.startEdit();
+                    editModalRef.instance.model.getData(false, "editview", false);
                 }
+
+                // emit the action triggered
+                editModalRef.instance.actionSubject.subscribe(response => {
+                    responseSubject.next(response);
+                    responseSubject.complete();
+                });
             }
         });
+
+        // return the subject as observable
+        return responseSubject.asObservable();
     }
 
 

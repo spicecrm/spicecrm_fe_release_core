@@ -34,6 +34,7 @@ import /*embed*/ {LeadConvertAccountListItem} from './components/leadconvertacco
 import /*embed*/ {LeadConvertOpportunity} from './components/leadconvertopportunity';
 import /*embed*/ {LeadOpenLeadsDashlet} from './components/leadopenleadsdashlet';
 import /*embed*/ {LeadConvertOpportunityModal} from './components/leadconvertopportunitymodal';
+import /*embed*/ {fieldLeadClassification} from './components/fieldleadclassification';
 
 @NgModule({
     imports: [
@@ -55,7 +56,8 @@ import /*embed*/ {LeadConvertOpportunityModal} from './components/leadconvertopp
         LeadConvertAccountListItem,
         LeadConvertOpportunity,
         LeadOpenLeadsDashlet,
-        LeadConvertOpportunityModal
+        LeadConvertOpportunityModal,
+        fieldLeadClassification
     ],
 })
 export class ModuleLeads {

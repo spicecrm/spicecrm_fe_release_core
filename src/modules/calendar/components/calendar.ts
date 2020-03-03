@@ -14,7 +14,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
  * @module ModuleCalendar
  */
 import {
-    AfterViewInit,
+    AfterViewInit, ChangeDetectorRef,
     Component,
     ElementRef,
     Injector,
@@ -45,12 +45,10 @@ declare var moment: any;
 })
 
 export class Calendar implements AfterViewInit, OnDestroy {
-    public usersCalendars: any[] = [];
     public otherCalendars: any[] = [];
     public componentconfig: any = {};
     public googleIsVisible: boolean = true;
     @ViewChild('calendarcontainer', {read: ViewContainerRef, static: true}) private calendarContainer: ViewContainerRef;
-    @ViewChild('calendarcontent', {read: ViewContainerRef, static: true}) private calendarcontent: ViewContainerRef;
     @ViewChild(CalendarHeader, {static: true}) private calendarHeader: CalendarHeader;
     private subscriptions: Subscription = new Subscription();
     private touchStartListener: any;
@@ -65,13 +63,12 @@ export class Calendar implements AfterViewInit, OnDestroy {
                 private elementRef: ElementRef,
                 private renderer: Renderer2,
                 private modal: modal,
+                private cdr: ChangeDetectorRef,
                 private model: model,
                 private metadata: metadata,
                 private injector: Injector,
                 private calendar: calendar) {
         this.navigation.setActiveModule('Calendar');
-        let usersSubscriber = this.calendar.usersCalendars$.subscribe(res => this.usersCalendars = res);
-        this.subscriptions.add(usersSubscriber);
         let addingEventSubscriber = this.calendar.addingEvent$.subscribe(res => this.addEvent(res));
         this.subscriptions.add(addingEventSubscriber);
 
@@ -118,11 +115,6 @@ export class Calendar implements AfterViewInit, OnDestroy {
         }
     }
 
-    get calendarContentStyle() {
-        return {height: `calc(100vh - ${this.calendarcontent.element.nativeElement.offsetTop +1}px)`
-        };
-    }
-
     get sidebarStyle() {
         return {
             'width': this.calendar.sidebarwidth + 'px',
@@ -142,7 +134,9 @@ export class Calendar implements AfterViewInit, OnDestroy {
     }
 
     public ngAfterViewInit() {
-        setTimeout(() => this.calendar.isMobileView = this.calendarContainer.element.nativeElement.getBoundingClientRect().width < 768, 10);
+        this.calendar.isMobileView = this.calendarContainer.element.nativeElement.getBoundingClientRect().width < 768;
+        this.cdr.detectChanges();
+
     }
 
     public ngOnDestroy() {
@@ -223,4 +217,5 @@ export class Calendar implements AfterViewInit, OnDestroy {
                     });
             });
     }
+
 }

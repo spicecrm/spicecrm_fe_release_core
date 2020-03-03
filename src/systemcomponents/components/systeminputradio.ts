@@ -15,7 +15,11 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
  */
 import {Component, forwardRef, Input} from '@angular/core';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from "@angular/forms";
+import {modelutilities} from "../../services/modelutilities.service";
 
+/**
+ * a radio button with the Lightning Design
+ */
 @Component({
     selector: 'system-input-radio',
     templateUrl: './src/systemcomponents/templates/systeminputradio.html',
@@ -29,38 +33,49 @@ import {ControlValueAccessor, NG_VALUE_ACCESSOR} from "@angular/forms";
 })
 export class SystemInputRadio implements ControlValueAccessor {
 
+    /**
+     * the name for the radio button
+     */
     @Input() private name: string;
+
+    /**
+     * the value to be set
+     */
     @Input() private value: any;
 
+    /**
+     * the value to be set
+     */
+    @Input() private disabled: boolean = false;
+
+    /**
+     * for the control accessor
+     */
     private onChange: (value: string) => void;
     private onTouched: () => void;
+
+    /**
+     * internal variable if checked
+     */
     private checked: any;
+
+    /**
+     * internal generated id to be used for the Radio Button in the Lightning Design
+     */
     private id: string;
 
-    constructor() {
-        this.id = this.generateGuid();
+    constructor(private modelutilities: modelutilities) {
+        this.id = this.modelutilities.generateGuid();
     }
 
+    /**
+     * set the radio button toi checked
+     */
     private setChecked(event) {
         console.log(event);
         if (event.srcElement.checked) {
             this.onChange(this.value);
         }
-    }
-
-    /*
-     * for the GUID Generation
-    */
-    private getRand() {
-        return Math.random();
-    }
-
-    private S4() {
-        return (((1 + this.getRand()) * 0x10000) | 0).toString(16).substring(1);
-    }
-
-    public generateGuid() {
-        return (this.S4() + this.S4() + "-" + this.S4() + "-" + this.S4() + "-" + this.S4() + "-" + this.S4() + this.S4() + this.S4());
     }
 
     // ControlValueAccessor Interface: >>
@@ -81,6 +96,4 @@ export class SystemInputRadio implements ControlValueAccessor {
             this.checked = false;
         }
     }
-
-
 }

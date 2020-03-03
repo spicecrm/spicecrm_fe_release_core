@@ -39,6 +39,8 @@ export class SystemModuleTree implements AfterViewInit {
      */
     @Output() private itemSelected: EventEmitter<any> = new EventEmitter<any>();
 
+    private selectedNodeId: string = '';
+
     constructor(private language: language) {
 
     }
@@ -47,10 +49,12 @@ export class SystemModuleTree implements AfterViewInit {
      * emit the root path
      */
     public ngAfterViewInit(): void {
-        this.itemSelected.emit({path: 'root::' + this.module, module: this.module});
+        this.selectedNodeId = 'root';
+        this.itemSelected.emit({path: 'root:' + this.module, module: this.module, nodeId: 'root'});
     }
 
     private emitSelected(data) {
+        this.selectedNodeId = data.nodeId;
         this.itemSelected.emit(data);
     }
 }
