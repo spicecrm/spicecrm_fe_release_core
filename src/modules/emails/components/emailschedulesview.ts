@@ -11,57 +11,50 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 */
 
 /**
- * @module ObjectComponents
+ * @module ModuleEmails
  */
-import {
-    Component,
-    OnInit
-} from '@angular/core';
-import {Router} from '@angular/router';
-import {metadata} from '../../services/metadata.service';
-import {model} from '../../services/model.service';
-import {view} from '../../services/view.service';
-import {language} from '../../services/language.service';
 
-/**
-* @ignore
-*/
-declare var _: any;
+import {Component} from '@angular/core';
+import {model} from '../../../services/model.service';
+import {language} from '../../../services/language.service';
+import {view} from "../../../services/view.service";
+import {metadata} from "../../../services/metadata.service";
+import {backend} from "../../../services/backend.service";
 
 @Component({
-    selector: 'object-page-header',
-    templateUrl: './src/objectcomponents/templates/objectpageheader.html',
-    providers: [view]
+    selector: "email-schedules-view",
+    templateUrl: "./src/modules/emails/templates/emailschedulesview.html",
+    providers: [view],
 })
-export class ObjectPageHeader implements OnInit {
 
-    public componentconfig: any = {};
-    private actionSet: string = '';
-    private fieldset: string = '';
-    private fieldsetitems: any[];
-
-    get moduleName() {
-        return this.model.module;
+export class EmailSchedulesView {
+    private emailschedules: any[] = [];
+    private locked: boolean = false;
+    private isLoading: boolean = false;
+    constructor(private language: language,
+                private model: model,
+                private view: view,
+                private metadata: metadata,
+                private backend: backend
+    ) {
+        this.getData(this.model.id);
     }
 
-    constructor(public language: language, public router: Router, public model: model, public metadata: metadata) {
 
+    /**
+     * get the data from the backend
+     */
+    private getData(id) {
+        this.isLoading = true;
+        this.backend.getRequest(`/module/${this.model.module}/${id}/myOpenSchedules`).subscribe(result => {
+                if (result.status) {
+                    this.isLoading = false;
+                    this.emailschedules = result.openschedules;
+                } else {
+                    this.locked = true;
+                }
+            });
     }
 
-    public ngOnInit() {
-        // get the Componentconfig if not set yet
-        let componentconfig = this.componentconfig && !_.isEmpty(this.componentconfig) ? this.componentconfig : this.metadata.getComponentConfig('ObjectPageHeader', this.model.module);
-
-        // set the actionset & fiedset
-        this.actionSet = componentconfig.actionset;
-        this.fieldset = componentconfig.fieldset;
-        if (this.fieldset) {
-            this.fieldsetitems = this.metadata.getFieldSetFields(this.fieldset);
-        }
-    }
-
-    public goToModule() {
-        this.router.navigate(['/module/' + this.moduleName]);
-    }
 
 }

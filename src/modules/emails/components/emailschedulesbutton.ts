@@ -11,57 +11,52 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 */
 
 /**
- * @module ObjectComponents
+ * @module ModuleEmails
  */
-import {
-    Component,
-    OnInit
-} from '@angular/core';
-import {Router} from '@angular/router';
-import {metadata} from '../../services/metadata.service';
-import {model} from '../../services/model.service';
-import {view} from '../../services/view.service';
-import {language} from '../../services/language.service';
+import {Component, Injector} from '@angular/core';
+import {metadata} from '../../../services/metadata.service';
+import {model} from '../../../services/model.service';
+import {language} from '../../../services/language.service';
+import {modellist} from '../../../services/modellist.service';
+import {modal} from '../../../services/modal.service';
+import {toast} from "../../../services/toast.service";
 
-/**
-* @ignore
-*/
-declare var _: any;
 
 @Component({
-    selector: 'object-page-header',
-    templateUrl: './src/objectcomponents/templates/objectpageheader.html',
-    providers: [view]
+    selector: "email-schedules-button",
+    templateUrl: "./src/modules/emails/templates/emailschedulesbutton.html",
 })
-export class ObjectPageHeader implements OnInit {
+export class EmailSchedulesButton {
+    public disabled: boolean = false;
 
-    public componentconfig: any = {};
-    private actionSet: string = '';
-    private fieldset: string = '';
-    private fieldsetitems: any[];
-
-    get moduleName() {
-        return this.model.module;
+    constructor(
+        private language: language,
+        private metadata: metadata,
+        private model: model,
+        private modellist: modellist,
+        private modal: modal,
+        private injector: Injector,
+        private toast: toast
+    ) {
     }
 
-    constructor(public language: language, public router: Router, public model: model, public metadata: metadata) {
-
+    /**
+     * get the count of the selected objects
+     */
+    get exportcount() {
+        let selectedCount = this.modellist.getSelectedCount();
+        return selectedCount ? selectedCount : this.modellist.listData.totalcount;
     }
 
-    public ngOnInit() {
-        // get the Componentconfig if not set yet
-        let componentconfig = this.componentconfig && !_.isEmpty(this.componentconfig) ? this.componentconfig : this.metadata.getComponentConfig('ObjectPageHeader', this.model.module);
-
-        // set the actionset & fiedset
-        this.actionSet = componentconfig.actionset;
-        this.fieldset = componentconfig.fieldset;
-        if (this.fieldset) {
-            this.fieldsetitems = this.metadata.getFieldSetFields(this.fieldset);
+    /**
+     * throw error if the field emails doesnt exist
+     */
+    public execute() {
+        if(this.model.fields.hasOwnProperty('emails')) {
+            this.modal.openModal('EmailSchedulesModal', true, this.injector);
+        } else {
+            this.toast.sendToast(this.language.getLabel('LBL_ERROR'), 'error');
         }
-    }
-
-    public goToModule() {
-        this.router.navigate(['/module/' + this.moduleName]);
     }
 
 }

@@ -34,7 +34,11 @@ import /*embed*/ {EmailsPopoverBody} from "./components/emailspopoverbody";
 import /*embed*/ {fieldEmailStatus} from "./components/fieldemailstatus";
 import /*embed*/ {EmailReplyButton} from "./components/emailreplybutton";
 import /*embed*/ {EmailReplyModal} from "./components/emailreplymodal";
-
+import /*embed*/ {EmailSchedulesButton} from "./components/emailschedulesbutton";
+import /*embed*/ {EmailSchedulesModal} from "./components/emailschedulesmodal";
+import /*embed*/ {EmailSchedulesRelatedButton} from "./components/emailschedulesrelatedbutton";
+import /*embed*/ {EmailSchedulesRelatedModal} from "./components/emailschedulesrelatedmodal";
+import /*embed*/ {EmailSchedulesView} from "./components/emailschedulesview";
 
 @NgModule({
     imports: [
@@ -55,7 +59,12 @@ import /*embed*/ {EmailReplyModal} from "./components/emailreplymodal";
         EmailsPopoverBody,
         fieldEmailStatus,
         EmailReplyButton,
-        EmailReplyModal
+        EmailReplyModal,
+        EmailSchedulesButton,
+        EmailSchedulesModal,
+        EmailSchedulesRelatedButton,
+        EmailSchedulesRelatedModal,
+        EmailSchedulesView
     ]
 })
 export class ModuleEmails {
