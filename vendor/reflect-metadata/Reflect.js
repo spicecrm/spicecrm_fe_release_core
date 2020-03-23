@@ -15,38 +15,38 @@ and limitations under the License.
 var Reflect;
 (function (Reflect) {
     "use strict";
-    var hasOwn = Object.prototype.hasOwnProperty;
+    const hasOwn = Object.prototype.hasOwnProperty;
     // feature test for Symbol support
-    var supportsSymbol = typeof Symbol === "function";
-    var toPrimitiveSymbol = supportsSymbol && typeof Symbol.toPrimitive !== "undefined" ? Symbol.toPrimitive : "@@toPrimitive";
-    var iteratorSymbol = supportsSymbol && typeof Symbol.iterator !== "undefined" ? Symbol.iterator : "@@iterator";
-    var HashMap;
+    const supportsSymbol = typeof Symbol === "function";
+    const toPrimitiveSymbol = supportsSymbol && typeof Symbol.toPrimitive !== "undefined" ? Symbol.toPrimitive : "@@toPrimitive";
+    const iteratorSymbol = supportsSymbol && typeof Symbol.iterator !== "undefined" ? Symbol.iterator : "@@iterator";
+    let HashMap;
     (function (HashMap) {
-        var supportsCreate = typeof Object.create === "function"; // feature test for Object.create support
-        var supportsProto = { __proto__: [] } instanceof Array; // feature test for __proto__ support
-        var downLevel = !supportsCreate && !supportsProto;
+        const supportsCreate = typeof Object.create === "function"; // feature test for Object.create support
+        const supportsProto = { __proto__: [] } instanceof Array; // feature test for __proto__ support
+        const downLevel = !supportsCreate && !supportsProto;
         // create an object in dictionary mode (a.k.a. "slow" mode in v8)
         HashMap.create = supportsCreate
-            ? function () { return MakeDictionary(Object.create(null)); }
+            ? () => MakeDictionary(Object.create(null))
             : supportsProto
-                ? function () { return MakeDictionary({ __proto__: null }); }
-                : function () { return MakeDictionary({}); };
+                ? () => MakeDictionary({ __proto__: null })
+                : () => MakeDictionary({});
         HashMap.has = downLevel
-            ? function (map, key) { return hasOwn.call(map, key); }
-            : function (map, key) { return key in map; };
+            ? (map, key) => hasOwn.call(map, key)
+            : (map, key) => key in map;
         HashMap.get = downLevel
-            ? function (map, key) { return hasOwn.call(map, key) ? map[key] : undefined; }
-            : function (map, key) { return map[key]; };
+            ? (map, key) => hasOwn.call(map, key) ? map[key] : undefined
+            : (map, key) => map[key];
     })(HashMap || (HashMap = {}));
     // Load global or shim versions of Map, Set, and WeakMap
-    var functionPrototype = Object.getPrototypeOf(Function);
-    var usePolyfill = typeof process === "object" && process.env && process.env["REFLECT_METADATA_USE_MAP_POLYFILL"] === "true";
-    var _Map = !usePolyfill && typeof Map === "function" && typeof Map.prototype.entries === "function" ? Map : CreateMapPolyfill();
-    var _Set = !usePolyfill && typeof Set === "function" && typeof Set.prototype.entries === "function" ? Set : CreateSetPolyfill();
-    var _WeakMap = !usePolyfill && typeof WeakMap === "function" ? WeakMap : CreateWeakMapPolyfill();
+    const functionPrototype = Object.getPrototypeOf(Function);
+    const usePolyfill = typeof process === "object" && process.env && process.env["REFLECT_METADATA_USE_MAP_POLYFILL"] === "true";
+    const _Map = !usePolyfill && typeof Map === "function" && typeof Map.prototype.entries === "function" ? Map : CreateMapPolyfill();
+    const _Set = !usePolyfill && typeof Set === "function" && typeof Set.prototype.entries === "function" ? Set : CreateSetPolyfill();
+    const _WeakMap = !usePolyfill && typeof WeakMap === "function" ? WeakMap : CreateWeakMapPolyfill();
     // [[Metadata]] internal slot
     // https://rbuckton.github.io/reflect-metadata/#ordinary-object-internal-methods-and-internal-slots
-    var Metadata = new _WeakMap();
+    const Metadata = new _WeakMap();
     /**
       * Applies a set of decorators to a property of a target object.
       * @param decorators An array of decorators.
@@ -497,14 +497,14 @@ var Reflect;
             throw new TypeError();
         if (!IsUndefined(propertyKey))
             propertyKey = ToPropertyKey(propertyKey);
-        var metadataMap = GetOrCreateMetadataMap(target, propertyKey, /*Create*/ false);
+        const metadataMap = GetOrCreateMetadataMap(target, propertyKey, /*Create*/ false);
         if (IsUndefined(metadataMap))
             return false;
         if (!metadataMap.delete(metadataKey))
             return false;
         if (metadataMap.size > 0)
             return true;
-        var targetMetadata = Metadata.get(target);
+        const targetMetadata = Metadata.get(target);
         targetMetadata.delete(propertyKey);
         if (targetMetadata.size > 0)
             return true;
@@ -513,9 +513,9 @@ var Reflect;
     }
     Reflect.deleteMetadata = deleteMetadata;
     function DecorateConstructor(decorators, target) {
-        for (var i = decorators.length - 1; i >= 0; --i) {
-            var decorator = decorators[i];
-            var decorated = decorator(target);
+        for (let i = decorators.length - 1; i >= 0; --i) {
+            const decorator = decorators[i];
+            const decorated = decorator(target);
             if (!IsUndefined(decorated) && !IsNull(decorated)) {
                 if (!IsConstructor(decorated))
                     throw new TypeError();
@@ -525,9 +525,9 @@ var Reflect;
         return target;
     }
     function DecorateProperty(decorators, target, propertyKey, descriptor) {
-        for (var i = decorators.length - 1; i >= 0; --i) {
-            var decorator = decorators[i];
-            var decorated = decorator(target, propertyKey, descriptor);
+        for (let i = decorators.length - 1; i >= 0; --i) {
+            const decorator = decorators[i];
+            const decorated = decorator(target, propertyKey, descriptor);
             if (!IsUndefined(decorated) && !IsNull(decorated)) {
                 if (!IsObject(decorated))
                     throw new TypeError();
@@ -537,14 +537,14 @@ var Reflect;
         return descriptor;
     }
     function GetOrCreateMetadataMap(O, P, Create) {
-        var targetMetadata = Metadata.get(O);
+        let targetMetadata = Metadata.get(O);
         if (IsUndefined(targetMetadata)) {
             if (!Create)
                 return undefined;
             targetMetadata = new _Map();
             Metadata.set(O, targetMetadata);
         }
-        var metadataMap = targetMetadata.get(P);
+        let metadataMap = targetMetadata.get(P);
         if (IsUndefined(metadataMap)) {
             if (!Create)
                 return undefined;
@@ -556,10 +556,10 @@ var Reflect;
     // 3.1.1.1 OrdinaryHasMetadata(MetadataKey, O, P)
     // https://rbuckton.github.io/reflect-metadata/#ordinaryhasmetadata
     function OrdinaryHasMetadata(MetadataKey, O, P) {
-        var hasOwn = OrdinaryHasOwnMetadata(MetadataKey, O, P);
+        const hasOwn = OrdinaryHasOwnMetadata(MetadataKey, O, P);
         if (hasOwn)
             return true;
-        var parent = OrdinaryGetPrototypeOf(O);
+        const parent = OrdinaryGetPrototypeOf(O);
         if (!IsNull(parent))
             return OrdinaryHasMetadata(MetadataKey, parent, P);
         return false;
@@ -567,7 +567,7 @@ var Reflect;
     // 3.1.2.1 OrdinaryHasOwnMetadata(MetadataKey, O, P)
     // https://rbuckton.github.io/reflect-metadata/#ordinaryhasownmetadata
     function OrdinaryHasOwnMetadata(MetadataKey, O, P) {
-        var metadataMap = GetOrCreateMetadataMap(O, P, /*Create*/ false);
+        const metadataMap = GetOrCreateMetadataMap(O, P, /*Create*/ false);
         if (IsUndefined(metadataMap))
             return false;
         return ToBoolean(metadataMap.has(MetadataKey));
@@ -575,10 +575,10 @@ var Reflect;
     // 3.1.3.1 OrdinaryGetMetadata(MetadataKey, O, P)
     // https://rbuckton.github.io/reflect-metadata/#ordinarygetmetadata
     function OrdinaryGetMetadata(MetadataKey, O, P) {
-        var hasOwn = OrdinaryHasOwnMetadata(MetadataKey, O, P);
+        const hasOwn = OrdinaryHasOwnMetadata(MetadataKey, O, P);
         if (hasOwn)
             return OrdinaryGetOwnMetadata(MetadataKey, O, P);
-        var parent = OrdinaryGetPrototypeOf(O);
+        const parent = OrdinaryGetPrototypeOf(O);
         if (!IsNull(parent))
             return OrdinaryGetMetadata(MetadataKey, parent, P);
         return undefined;
@@ -586,7 +586,7 @@ var Reflect;
     // 3.1.4.1 OrdinaryGetOwnMetadata(MetadataKey, O, P)
     // https://rbuckton.github.io/reflect-metadata/#ordinarygetownmetadata
     function OrdinaryGetOwnMetadata(MetadataKey, O, P) {
-        var metadataMap = GetOrCreateMetadataMap(O, P, /*Create*/ false);
+        const metadataMap = GetOrCreateMetadataMap(O, P, /*Create*/ false);
         if (IsUndefined(metadataMap))
             return undefined;
         return metadataMap.get(MetadataKey);
@@ -594,34 +594,32 @@ var Reflect;
     // 3.1.5.1 OrdinaryDefineOwnMetadata(MetadataKey, MetadataValue, O, P)
     // https://rbuckton.github.io/reflect-metadata/#ordinarydefineownmetadata
     function OrdinaryDefineOwnMetadata(MetadataKey, MetadataValue, O, P) {
-        var metadataMap = GetOrCreateMetadataMap(O, P, /*Create*/ true);
+        const metadataMap = GetOrCreateMetadataMap(O, P, /*Create*/ true);
         metadataMap.set(MetadataKey, MetadataValue);
     }
     // 3.1.6.1 OrdinaryMetadataKeys(O, P)
     // https://rbuckton.github.io/reflect-metadata/#ordinarymetadatakeys
     function OrdinaryMetadataKeys(O, P) {
-        var ownKeys = OrdinaryOwnMetadataKeys(O, P);
-        var parent = OrdinaryGetPrototypeOf(O);
+        const ownKeys = OrdinaryOwnMetadataKeys(O, P);
+        const parent = OrdinaryGetPrototypeOf(O);
         if (parent === null)
             return ownKeys;
-        var parentKeys = OrdinaryMetadataKeys(parent, P);
+        const parentKeys = OrdinaryMetadataKeys(parent, P);
         if (parentKeys.length <= 0)
             return ownKeys;
         if (ownKeys.length <= 0)
             return parentKeys;
-        var set = new _Set();
-        var keys = [];
-        for (var _i = 0, ownKeys_1 = ownKeys; _i < ownKeys_1.length; _i++) {
-            var key = ownKeys_1[_i];
-            var hasKey = set.has(key);
+        const set = new _Set();
+        const keys = [];
+        for (const key of ownKeys) {
+            const hasKey = set.has(key);
             if (!hasKey) {
                 set.add(key);
                 keys.push(key);
             }
         }
-        for (var _a = 0, parentKeys_1 = parentKeys; _a < parentKeys_1.length; _a++) {
-            var key = parentKeys_1[_a];
-            var hasKey = set.has(key);
+        for (const key of parentKeys) {
+            const hasKey = set.has(key);
             if (!hasKey) {
                 set.add(key);
                 keys.push(key);
@@ -632,20 +630,20 @@ var Reflect;
     // 3.1.7.1 OrdinaryOwnMetadataKeys(O, P)
     // https://rbuckton.github.io/reflect-metadata/#ordinaryownmetadatakeys
     function OrdinaryOwnMetadataKeys(O, P) {
-        var keys = [];
-        var metadataMap = GetOrCreateMetadataMap(O, P, /*Create*/ false);
+        const keys = [];
+        const metadataMap = GetOrCreateMetadataMap(O, P, /*Create*/ false);
         if (IsUndefined(metadataMap))
             return keys;
-        var keysObj = metadataMap.keys();
-        var iterator = GetIterator(keysObj);
-        var k = 0;
+        const keysObj = metadataMap.keys();
+        const iterator = GetIterator(keysObj);
+        let k = 0;
         while (true) {
-            var next = IteratorStep(iterator);
+            const next = IteratorStep(iterator);
             if (!next) {
                 keys.length = k;
                 return keys;
             }
-            var nextValue = IteratorValue(next);
+            const nextValue = IteratorValue(next);
             try {
                 keys[k] = nextValue;
             }
@@ -708,10 +706,10 @@ var Reflect;
             case 4 /* Symbol */: return input;
             case 5 /* Number */: return input;
         }
-        var hint = PreferredType === 3 /* String */ ? "string" : PreferredType === 5 /* Number */ ? "number" : "default";
-        var exoticToPrim = GetMethod(input, toPrimitiveSymbol);
+        const hint = PreferredType === 3 /* String */ ? "string" : PreferredType === 5 /* Number */ ? "number" : "default";
+        const exoticToPrim = GetMethod(input, toPrimitiveSymbol);
         if (exoticToPrim !== undefined) {
-            var result = exoticToPrim.call(input, hint);
+            const result = exoticToPrim.call(input, hint);
             if (IsObject(result))
                 throw new TypeError();
             return result;
@@ -722,29 +720,29 @@ var Reflect;
     // https://tc39.github.io/ecma262/#sec-ordinarytoprimitive
     function OrdinaryToPrimitive(O, hint) {
         if (hint === "string") {
-            var toString_1 = O.toString;
-            if (IsCallable(toString_1)) {
-                var result = toString_1.call(O);
+            const toString = O.toString;
+            if (IsCallable(toString)) {
+                const result = toString.call(O);
                 if (!IsObject(result))
                     return result;
             }
-            var valueOf = O.valueOf;
+            const valueOf = O.valueOf;
             if (IsCallable(valueOf)) {
-                var result = valueOf.call(O);
+                const result = valueOf.call(O);
                 if (!IsObject(result))
                     return result;
             }
         }
         else {
-            var valueOf = O.valueOf;
+            const valueOf = O.valueOf;
             if (IsCallable(valueOf)) {
-                var result = valueOf.call(O);
+                const result = valueOf.call(O);
                 if (!IsObject(result))
                     return result;
             }
-            var toString_2 = O.toString;
-            if (IsCallable(toString_2)) {
-                var result = toString_2.call(O);
+            const toString = O.toString;
+            if (IsCallable(toString)) {
+                const result = toString.call(O);
                 if (!IsObject(result))
                     return result;
             }
@@ -764,7 +762,7 @@ var Reflect;
     // 7.1.14 ToPropertyKey(argument)
     // https://tc39.github.io/ecma262/#sec-topropertykey
     function ToPropertyKey(argument) {
-        var key = ToPrimitive(argument, 3 /* String */);
+        const key = ToPrimitive(argument, 3 /* String */);
         if (IsSymbol(key))
             return key;
         return ToString(key);
@@ -806,7 +804,7 @@ var Reflect;
     // 7.3.9 GetMethod(V, P)
     // https://tc39.github.io/ecma262/#sec-getmethod
     function GetMethod(V, P) {
-        var func = V[P];
+        const func = V[P];
         if (func === undefined || func === null)
             return undefined;
         if (!IsCallable(func))
@@ -816,10 +814,10 @@ var Reflect;
     // 7.4 Operations on Iterator Objects
     // https://tc39.github.io/ecma262/#sec-operations-on-iterator-objects
     function GetIterator(obj) {
-        var method = GetMethod(obj, iteratorSymbol);
+        const method = GetMethod(obj, iteratorSymbol);
         if (!IsCallable(method))
             throw new TypeError(); // from Call
-        var iterator = method.call(obj);
+        const iterator = method.call(obj);
         if (!IsObject(iterator))
             throw new TypeError();
         return iterator;
@@ -832,13 +830,13 @@ var Reflect;
     // 7.4.5 IteratorStep(iterator)
     // https://tc39.github.io/ecma262/#sec-iteratorstep
     function IteratorStep(iterator) {
-        var result = iterator.next();
+        const result = iterator.next();
         return result.done ? false : result;
     }
     // 7.4.6 IteratorClose(iterator, completion)
     // https://tc39.github.io/ecma262/#sec-iteratorclose
     function IteratorClose(iterator) {
-        var f = iterator["return"];
+        const f = iterator["return"];
         if (f)
             f.call(iterator);
     }
@@ -847,7 +845,7 @@ var Reflect;
     // 9.1.1.1 OrdinaryGetPrototypeOf(O)
     // https://tc39.github.io/ecma262/#sec-ordinarygetprototypeof
     function OrdinaryGetPrototypeOf(O) {
-        var proto = Object.getPrototypeOf(O);
+        const proto = Object.getPrototypeOf(O);
         if (typeof O !== "function" || O === functionPrototype)
             return proto;
         // TypeScript doesn't set __proto__ in ES5, as it's non-standard.
@@ -860,12 +858,12 @@ var Reflect;
         if (proto !== functionPrototype)
             return proto;
         // If the super prototype is Object.prototype, null, or undefined, then we cannot determine the heritage.
-        var prototype = O.prototype;
-        var prototypeProto = prototype && Object.getPrototypeOf(prototype);
+        const prototype = O.prototype;
+        const prototypeProto = prototype && Object.getPrototypeOf(prototype);
         if (prototypeProto == null || prototypeProto === Object.prototype)
             return proto;
         // If the constructor was not a function, then we cannot determine the heritage.
-        var constructor = prototypeProto.constructor;
+        const constructor = prototypeProto.constructor;
         if (typeof constructor !== "function")
             return proto;
         // If we have some kind of self-reference, then we cannot determine the heritage.
@@ -876,21 +874,21 @@ var Reflect;
     }
     // naive Map shim
     function CreateMapPolyfill() {
-        var cacheSentinel = {};
-        var arraySentinel = [];
-        var MapIterator = /** @class */ (function () {
-            function MapIterator(keys, values, selector) {
+        const cacheSentinel = {};
+        const arraySentinel = [];
+        class MapIterator {
+            constructor(keys, values, selector) {
                 this._index = 0;
                 this._keys = keys;
                 this._values = values;
                 this._selector = selector;
             }
-            MapIterator.prototype["@@iterator"] = function () { return this; };
-            MapIterator.prototype[iteratorSymbol] = function () { return this; };
-            MapIterator.prototype.next = function () {
-                var index = this._index;
+            "@@iterator"() { return this; }
+            [iteratorSymbol]() { return this; }
+            next() {
+                const index = this._index;
                 if (index >= 0 && index < this._keys.length) {
-                    var result = this._selector(this._keys[index], this._values[index]);
+                    const result = this._selector(this._keys[index], this._values[index]);
                     if (index + 1 >= this._keys.length) {
                         this._index = -1;
                         this._keys = arraySentinel;
@@ -902,52 +900,47 @@ var Reflect;
                     return { value: result, done: false };
                 }
                 return { value: undefined, done: true };
-            };
-            MapIterator.prototype.throw = function (error) {
+            }
+            throw(error) {
                 if (this._index >= 0) {
                     this._index = -1;
                     this._keys = arraySentinel;
                     this._values = arraySentinel;
                 }
                 throw error;
-            };
-            MapIterator.prototype.return = function (value) {
+            }
+            return(value) {
                 if (this._index >= 0) {
                     this._index = -1;
                     this._keys = arraySentinel;
                     this._values = arraySentinel;
                 }
                 return { value: value, done: true };
-            };
-            return MapIterator;
-        }());
-        return /** @class */ (function () {
-            function Map() {
+            }
+        }
+        return class Map {
+            constructor() {
                 this._keys = [];
                 this._values = [];
                 this._cacheKey = cacheSentinel;
                 this._cacheIndex = -2;
             }
-            Object.defineProperty(Map.prototype, "size", {
-                get: function () { return this._keys.length; },
-                enumerable: true,
-                configurable: true
-            });
-            Map.prototype.has = function (key) { return this._find(key, /*insert*/ false) >= 0; };
-            Map.prototype.get = function (key) {
-                var index = this._find(key, /*insert*/ false);
+            get size() { return this._keys.length; }
+            has(key) { return this._find(key, /*insert*/ false) >= 0; }
+            get(key) {
+                const index = this._find(key, /*insert*/ false);
                 return index >= 0 ? this._values[index] : undefined;
-            };
-            Map.prototype.set = function (key, value) {
-                var index = this._find(key, /*insert*/ true);
+            }
+            set(key, value) {
+                const index = this._find(key, /*insert*/ true);
                 this._values[index] = value;
                 return this;
-            };
-            Map.prototype.delete = function (key) {
-                var index = this._find(key, /*insert*/ false);
+            }
+            delete(key) {
+                const index = this._find(key, /*insert*/ false);
                 if (index >= 0) {
-                    var size = this._keys.length;
-                    for (var i = index + 1; i < size; i++) {
+                    const size = this._keys.length;
+                    for (let i = index + 1; i < size; i++) {
                         this._keys[i - 1] = this._keys[i];
                         this._values[i - 1] = this._values[i];
                     }
@@ -960,19 +953,19 @@ var Reflect;
                     return true;
                 }
                 return false;
-            };
-            Map.prototype.clear = function () {
+            }
+            clear() {
                 this._keys.length = 0;
                 this._values.length = 0;
                 this._cacheKey = cacheSentinel;
                 this._cacheIndex = -2;
-            };
-            Map.prototype.keys = function () { return new MapIterator(this._keys, this._values, getKey); };
-            Map.prototype.values = function () { return new MapIterator(this._keys, this._values, getValue); };
-            Map.prototype.entries = function () { return new MapIterator(this._keys, this._values, getEntry); };
-            Map.prototype["@@iterator"] = function () { return this.entries(); };
-            Map.prototype[iteratorSymbol] = function () { return this.entries(); };
-            Map.prototype._find = function (key, insert) {
+            }
+            keys() { return new MapIterator(this._keys, this._values, getKey); }
+            values() { return new MapIterator(this._keys, this._values, getValue); }
+            entries() { return new MapIterator(this._keys, this._values, getEntry); }
+            "@@iterator"() { return this.entries(); }
+            [iteratorSymbol]() { return this.entries(); }
+            _find(key, insert) {
                 if (this._cacheKey !== key) {
                     this._cacheIndex = this._keys.indexOf(this._cacheKey = key);
                 }
@@ -982,9 +975,8 @@ var Reflect;
                     this._values.push(undefined);
                 }
                 return this._cacheIndex;
-            };
-            return Map;
-        }());
+            }
+        };
         function getKey(key, _) {
             return key;
         }
@@ -997,61 +989,55 @@ var Reflect;
     }
     // naive Set shim
     function CreateSetPolyfill() {
-        return /** @class */ (function () {
-            function Set() {
+        return class Set {
+            constructor() {
                 this._map = new _Map();
             }
-            Object.defineProperty(Set.prototype, "size", {
-                get: function () { return this._map.size; },
-                enumerable: true,
-                configurable: true
-            });
-            Set.prototype.has = function (value) { return this._map.has(value); };
-            Set.prototype.add = function (value) { return this._map.set(value, value), this; };
-            Set.prototype.delete = function (value) { return this._map.delete(value); };
-            Set.prototype.clear = function () { this._map.clear(); };
-            Set.prototype.keys = function () { return this._map.keys(); };
-            Set.prototype.values = function () { return this._map.values(); };
-            Set.prototype.entries = function () { return this._map.entries(); };
-            Set.prototype["@@iterator"] = function () { return this.keys(); };
-            Set.prototype[iteratorSymbol] = function () { return this.keys(); };
-            return Set;
-        }());
+            get size() { return this._map.size; }
+            has(value) { return this._map.has(value); }
+            add(value) { return this._map.set(value, value), this; }
+            delete(value) { return this._map.delete(value); }
+            clear() { this._map.clear(); }
+            keys() { return this._map.keys(); }
+            values() { return this._map.values(); }
+            entries() { return this._map.entries(); }
+            "@@iterator"() { return this.keys(); }
+            [iteratorSymbol]() { return this.keys(); }
+        };
     }
     // naive WeakMap shim
     function CreateWeakMapPolyfill() {
-        var UUID_SIZE = 16;
-        var keys = HashMap.create();
-        var rootKey = CreateUniqueKey();
-        return /** @class */ (function () {
-            function WeakMap() {
+        const UUID_SIZE = 16;
+        const keys = HashMap.create();
+        const rootKey = CreateUniqueKey();
+        return class WeakMap {
+            constructor() {
                 this._key = CreateUniqueKey();
             }
-            WeakMap.prototype.has = function (target) {
-                var table = GetOrCreateWeakMapTable(target, /*create*/ false);
+            has(target) {
+                const table = GetOrCreateWeakMapTable(target, /*create*/ false);
                 return table !== undefined ? HashMap.has(table, this._key) : false;
-            };
-            WeakMap.prototype.get = function (target) {
-                var table = GetOrCreateWeakMapTable(target, /*create*/ false);
+            }
+            get(target) {
+                const table = GetOrCreateWeakMapTable(target, /*create*/ false);
                 return table !== undefined ? HashMap.get(table, this._key) : undefined;
-            };
-            WeakMap.prototype.set = function (target, value) {
-                var table = GetOrCreateWeakMapTable(target, /*create*/ true);
+            }
+            set(target, value) {
+                const table = GetOrCreateWeakMapTable(target, /*create*/ true);
                 table[this._key] = value;
                 return this;
-            };
-            WeakMap.prototype.delete = function (target) {
-                var table = GetOrCreateWeakMapTable(target, /*create*/ false);
+            }
+            delete(target) {
+                const table = GetOrCreateWeakMapTable(target, /*create*/ false);
                 return table !== undefined ? delete table[this._key] : false;
-            };
-            WeakMap.prototype.clear = function () {
+            }
+            clear() {
                 // NOTE: not a real clear, just makes the previous data unreachable
                 this._key = CreateUniqueKey();
-            };
-            return WeakMap;
-        }());
+            }
+        };
         function CreateUniqueKey() {
-            var key;
+            let key;
             do
                 key = "@@WeakMap@@" + CreateUUID();
             while (HashMap.has(keys, key));
@@ -1067,7 +1053,7 @@ var Reflect;
             return target[rootKey];
         }
         function FillRandomBytes(buffer, size) {
-            for (var i = 0; i < size; ++i)
+            for (let i = 0; i < size; ++i)
                 buffer[i] = Math.random() * 0xff | 0;
             return buffer;
         }
@@ -1082,13 +1068,13 @@ var Reflect;
             return FillRandomBytes(new Array(size), size);
         }
         function CreateUUID() {
-            var data = GenRandomBytes(UUID_SIZE);
+            const data = GenRandomBytes(UUID_SIZE);
             // mark as random - RFC 4122 § 4.4
             data[6] = data[6] & 0x4f | 0x40;
             data[8] = data[8] & 0xbf | 0x80;
-            var result = "";
-            for (var offset = 0; offset < UUID_SIZE; ++offset) {
-                var byte = data[offset];
+            let result = "";
+            for (let offset = 0; offset < UUID_SIZE; ++offset) {
+                const byte = data[offset];
                 if (offset === 4 || offset === 6 || offset === 8)
                     result += "-";
                 if (byte < 16)
@@ -1108,7 +1094,7 @@ var Reflect;
     (function (__global) {
         if (typeof __global.Reflect !== "undefined") {
             if (__global.Reflect !== Reflect) {
-                for (var p in Reflect) {
+                for (const p in Reflect) {
                     if (hasOwn.call(Reflect, p)) {
                         __global.Reflect[p] = Reflect[p];
                     }
