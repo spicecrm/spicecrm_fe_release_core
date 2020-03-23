@@ -42,7 +42,6 @@ declare var moment: any;
 export class fieldWorklog extends fieldGeneric {
     private _new_log_entry: string;
     private origin_logs = [];
-    private initialized = false;
 
     constructor(
         public model: model,
@@ -69,16 +68,7 @@ export class fieldWorklog extends fieldGeneric {
     public ngOnInit() {
         super.ngOnInit();
         if (this.view.isEditMode()) {
-            // SPICEUI-223: subscribe for Inline editing
-            this.view.mode$.subscribe(
-                (mode) => {
-                    if (mode == "edit") {
-                        this.origin_logs = this.logs;
-                    }
-                }
-            );
-            // this.origin_logs = this.logs;
-            this.initialized = true;
+            this.origin_logs = this.logs;
         }
     }
 
@@ -106,8 +96,8 @@ export class fieldWorklog extends fieldGeneric {
         this._new_log_entry = val;
 
         // SPICEUI-223: check on content. Inline editing won't have any origin:logs loaded
-        if(!this.initialized) {
-            this.ngOnInit();
+        if(this.origin_logs.length < 1) {
+            this.origin_logs = this.logs;
         }
 
         let new_logs = [...this.origin_logs];
