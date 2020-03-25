@@ -13,7 +13,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 /**
  * @module ModuleReports
  */
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, OnDestroy} from '@angular/core';
 import {backend} from '../../../services/backend.service';
 import {modellist} from "../../../services/modellist.service";
 import {metadata} from "../../../services/metadata.service";
@@ -27,7 +27,7 @@ import {language} from "../../../services/language.service";
     selector: 'reporter-cockpit',
     templateUrl: './src/modules/reports/templates/reportercockpit.html'
 })
-export class ReporterCockpit implements OnInit {
+export class ReporterCockpit implements OnInit, OnDestroy {
 
     public componentconfig: any = {};
     /**
@@ -74,6 +74,13 @@ export class ReporterCockpit implements OnInit {
         } else {
             this.loadList(categories);
         }
+    }
+
+    /**
+     * reset the buckets on destroy
+     */
+    public ngOnDestroy(): void {
+        this.modellist.buckets = {};
     }
 
     /**
