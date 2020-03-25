@@ -41,6 +41,8 @@ export class DashboardSelectPanelAddButton {
     }
 
     private addDashboard() {
+        this.model.reset();
+        this.model.module = 'Dashboards';
         this.model.addModel();
     }
 }

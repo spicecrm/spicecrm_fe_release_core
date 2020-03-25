@@ -24,11 +24,11 @@ import {fieldGeneric} from "./fieldgeneric";
 import {session} from "../../services/session.service";
 
 /**
- * @ignore
- */
+* @ignore
+*/
 /**
- * @ignore
- */
+* @ignore
+*/
 declare var moment: any;
 
 /**
@@ -82,7 +82,7 @@ export class fieldWorklog extends fieldGeneric {
         }
     }
 
-    get logs() {
+        get logs() {
         if (this.value) {
             if (typeof this.value == "string") {
                 return JSON.parse(this.value);
@@ -107,7 +107,7 @@ export class fieldWorklog extends fieldGeneric {
 
         // SPICEUI-223: check on content. Inline editing won't have any origin:logs loaded
         if(!this.initialized) {
-            this.ngOnInit();
+             this.ngOnInit();
         }
 
         let new_logs = [...this.origin_logs];

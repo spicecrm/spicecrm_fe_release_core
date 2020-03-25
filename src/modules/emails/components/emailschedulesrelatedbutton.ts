@@ -43,6 +43,7 @@ export class EmailSchedulesRelatedButton {
     ) {
     }
 
+
     /**
      *  execute checkemailslink and await the response
      *  subscribe and save the instances of linkedbeans, modelid and currentmodule to use them in the modal that will open
@@ -75,8 +76,8 @@ export class EmailSchedulesRelatedButton {
         Object.keys(this.model.fields).forEach(item => {
             if (this.model.fields[item].type == 'link' && this.model.fields[item].hasOwnProperty('vname') && !this.model.fields[item].hasOwnProperty('link_type')) {
                 let module = this.model.fields[item].name;
-                for(let key in this.metadata.fieldDefs) {
-                    if(key.toLowerCase() == module) {
+                for (let key in this.metadata.fieldDefs) {
+                    if (key.toLowerCase() == module) {
                         arrayOfModules.push(key);
                     }
                 }
@@ -115,6 +116,4 @@ export class EmailSchedulesRelatedButton {
         });
         return responseSubject.asObservable();
     }
-
 }
-
