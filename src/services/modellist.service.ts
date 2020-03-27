@@ -73,6 +73,11 @@ export class modellist implements OnDestroy {
     };
 
     /**
+     * emits when the selection of the list has been changed via select all .. to trigger chanmge detection on the components
+     */
+    public selectionChanged$: EventEmitter<boolean> = new EventEmitter<boolean>();
+
+    /**
      * keeps the last retrieved fields
      * ToDo: check if keep that
      */
@@ -1031,6 +1036,9 @@ export class modellist implements OnDestroy {
         for (let listItem of this.listData.list) {
             listItem.selected = true;
         }
+
+        // emit so items can trigger change detection
+        this.selectionChanged$.emit(true);
     }
 
     public setAllUnselected() {
@@ -1038,6 +1046,9 @@ export class modellist implements OnDestroy {
         for (let listItem of this.listData.list) {
             listItem.selected = false;
         }
+
+        // emit so items can trigger change detection
+        this.selectionChanged$.emit(true);
     }
 
     /**
