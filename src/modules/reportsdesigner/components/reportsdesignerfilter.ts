@@ -94,7 +94,8 @@ export class ReportsDesignerFilter implements OnChanges, OnDestroy {
             type: 'AND',
             parent: parent,
             conditions: [],
-            children: []
+            children: [],
+            group: parent !== '-' ? null : 'root',
         };
     }
 
