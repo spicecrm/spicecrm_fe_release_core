@@ -12,7 +12,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 <field-label *ngIf="displayLabel" [fieldname]="fieldname" [fieldconfig]="fieldconfig"></field-label>
 <field-generic-display [fielddisplayclass]="fielddisplayclass" [fieldconfig]="fieldconfig" [editable]="false">
-    <div [systemPopOver]="{injector: injector, componentset: popovercomponentset}">
+    <div [system-pop-over]="{injector: injector, componentset: popovercomponentset}">
         <spice-attachments-count></spice-attachments-count>
     </div>
 </field-generic-display>

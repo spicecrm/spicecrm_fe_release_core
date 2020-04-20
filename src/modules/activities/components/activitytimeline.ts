@@ -13,13 +13,15 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 /**
  * @module ModuleActivities
  */
-import {Component, Injector, OnDestroy, OnInit} from '@angular/core';
+import {Component, Injector, OnDestroy, OnInit, Optional} from '@angular/core';
 import {language} from '../../../services/language.service';
+import {navigationtab} from '../../../services/navigationtab.service';
 import {model} from '../../../services/model.service';
 import {activitiytimeline} from '../../../services/activitiytimeline.service';
 import {modelattachments} from "../../../services/modelattachments.service";
 import {modelutilities} from "../../../services/modelutilities.service";
 import {metadata} from "../../../services/metadata.service";
+import {layout} from "../../../services/layout.service";
 import {Router} from "@angular/router";
 
 /**
@@ -52,7 +54,10 @@ export class ActivityTimeline implements OnInit, OnDestroy {
                 public activitiytimeline: activitiytimeline,
                 public metadata: metadata,
                 public utils: modelutilities,
-                public injector: Injector) {
+                public layout: layout,
+                @Optional() public navigationtab: navigationtab,
+                public injector: Injector
+    ) {
     }
 
     /**
@@ -110,13 +115,18 @@ export class ActivityTimeline implements OnInit, OnDestroy {
         this.activitiytimeline.getTimeLineData('History');
     }
 
+    private toggleAggregates(module: string, e: MouseEvent) {
+        e.stopPropagation();
+        this.displayaggregates[module] = !this.displayaggregates[module];
+    }
+
     /**
      * loads more items
      *
      * @param module
      */
     public loadMore(module) {
-        this.activitiytimeline.getMoreTimeLineData(module, this.componentconfig.defaultentries)
+        this.activitiytimeline.getMoreTimeLineData(module, this.componentconfig.defaultentries);
     }
 
     /**
@@ -124,5 +134,12 @@ export class ActivityTimeline implements OnInit, OnDestroy {
      */
     private toggleOpen() {
         this.activitiytimeline.openness = !this.activitiytimeline.openness;
+    }
+
+    /**
+     * returns if the formfactor in teh layout servic eis small
+     */
+    get isSmall() {
+        return this.layout.screenwidth == 'small';
     }
 }

@@ -208,6 +208,12 @@ export class SystemFilterBuilderFilterExpression implements OnInit {
                 operator: 'lastnmonths',
                 name: 'LBL_OP_LASTNMONTHS',
                 value1: 'integer'
+            }, {
+                operator: 'untilyesterday',
+                name: 'LBL_OP_UNTILYESTERDAY'
+            }, {
+                operator: 'fromtomorrow',
+                name: 'LBL_OP_FROMTOMORROW'
             }
         ],
         bool: [
@@ -250,7 +256,7 @@ export class SystemFilterBuilderFilterExpression implements OnInit {
                 name: 'LBL_OP_NOTEMPTY'
             }
         ]
-    }
+    };
 
     constructor(
         public backend: backend,

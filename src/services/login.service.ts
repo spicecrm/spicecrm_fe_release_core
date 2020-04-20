@@ -23,6 +23,8 @@ import {session} from './session.service';
 import {toast} from './toast.service';
 import {helper} from './helper.service';
 import {broadcast} from './broadcast.service';
+import { modal } from './modal.service';
+import { metadata } from './metadata.service';
 
 interface loginAuthDataIf {
     userName: string;
@@ -51,8 +53,18 @@ export class loginService {
         private toast: toast,
         private helper: helper,
         public session: session,
-        public broadcast: broadcast
+        public broadcast: broadcast,
+        public modal: modal, public metadata: metadata
     ) {
+
+        this.broadcast.message$.subscribe( ( message: any ) => {
+            if ( message.messagetype === 'loader.completed' && message.messagedata === 'loadUserData' ) {
+                if ( this.session.authData.obtainGDPRconsent ) {
+                    this.modal.openModal('GlobalObtainGDPRConsentContainer');
+                }
+            }
+        });
+
     }
 
     public login(): Observable<boolean> {
@@ -107,6 +119,7 @@ export class loginService {
                     this.session.authData.portalOnly = response.portal_only === '1' ? true : false;
                     this.session.authData.renewPass = response.renewPass === '1' ? true : false;
                     this.session.authData.googleToken = response.access_token;
+                    this.session.authData.obtainGDPRconsent = response.obtainGDPRconsent;
                     sessionStorage['OAuth-Token'] = this.session.authData.sessionId;
                     sessionStorage[btoa(this.session.authData.sessionId + ':backendurl')] =
                         btoa(this.configurationService.getBackendUrl());
@@ -115,6 +128,9 @@ export class loginService {
                     if (!this.session.authData.renewPass) {
                         this.load();
                     }
+
+                    // broadcast taht we have a login
+                    this.broadcast.broadcastMessage('login');
 
                     this.loginSuccessful.next(true);
                     this.loginSuccessful.complete();

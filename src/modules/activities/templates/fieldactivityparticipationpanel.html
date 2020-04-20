@@ -27,7 +27,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
                                 <div class="slds-media slds-listbox__option slds-listbox__option_plain slds-media_small" role="option">
                                     <div class="slds-grid slds-grid--vertical-align-center">
                                         <system-icon [module]="lookuplink.module" size="x-small"></system-icon>
-                                        <div class="slds-truncate">{{language.getModuleName(lookuplink.module)}}</div>
+                                        <div class="slds-truncate"><system-label-modulename [module]="lookuplink.module"></system-label-modulename></div>
                                     </div>
                                 </div>
                             </li>
@@ -44,7 +44,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
                 </div>
                 <div class="slds-dropdown slds-dropdown_length-with-icon-7 slds-dropdown_fluid" role="listbox">
                     <field-lookup-recent *ngIf="lookupSearchOpen && lookupSearchTerm === ''" [module]="lookuplinks[lookupType].module" (selectedObject)="addItem($event)"></field-lookup-recent>
-                    <field-lookup-search *ngIf="lookupSearchOpen && lookupSearchTerm !== ''" [module]="lookuplinks[lookupType].module" (selectedObject)="addItem($event)" (searchWithModal)="searchWithModal()" [searchterm]="lookupSearchTerm"></field-lookup-search>
+                    <field-lookup-search *ngIf="lookupSearchOpen && lookupSearchTerm !== ''" [module]="lookuplinks[lookupType].module" [relatefilter]="relateFilter" (selectedObject)="addItem($event)" (searchWithModal)="searchWithModal()" [searchterm]="lookupSearchTerm"></field-lookup-search>
                 </div>
             </div>
         </div>

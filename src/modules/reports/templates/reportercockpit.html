@@ -10,7 +10,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 -->
 
-<div class="slds-scrollable" style="height: 100%;" [overlayLoadingSpinner]="modellist.isLoading">
+<div class="slds-scrollable" style="height: 100%;" [system-overlay-loading-spinner]="modellist.isLoading">
     <ng-container *ngFor="let category of modellist.buckets?.bucketitems">
         <article *ngIf="category?.items > 0" class="slds-card slds-m-around--medium" >
             <div class="slds-card__header slds-grid">
@@ -29,11 +29,11 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
             </div>
             <div *ngIf="category.items < category.total" class="slds-card__footer slds-grid">
                 <div>
-                    {{category.items}} {{language.getLabel('LBL_OF')}} {{category.total}}
+                    {{category.items}} <system-label label="LBL_OF"></system-label> {{category.total}}
                 </div>
                 <div class="slds-grow">
                     <a href="javascript:void(0);" (click)="loadMore(category.bucket)">
-                        {{language.getLabel('LBL_MORE')}}
+                        <system-label label="LBL_MORE"></system-label>
                     </a>
                 </div>
             </div>

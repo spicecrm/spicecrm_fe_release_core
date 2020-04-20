@@ -31,6 +31,10 @@ import {ObjectListViewAggregate} from './objectlistviewaggregate';
 })
 export class ObjectListViewTagsAggregate extends ObjectListViewAggregate {
 
+    public aggregate = {
+        indexfieldname: 'tags'
+    }
+
     constructor(public language: language, public modellist: modellist, public model: model) {
         super(language, modellist, model);
     }
@@ -40,7 +44,7 @@ export class ObjectListViewTagsAggregate extends ObjectListViewAggregate {
      */
     get hasItems() {
         try {
-            return this.aggregate.buckets.length > 0;
+            return this.aggregateBuckets.length > 0;
         } catch (e) {
             return false;
         }

@@ -25,6 +25,7 @@ import {backend} from '../../../services/backend.service';
 export class reporterconfig {
 
     public userFilters: any[] = [];
+    public whereFunctions: any[] = [];
     public defaultUserFilters: string = '';
 
     public operatorCount: any = {};
@@ -52,6 +53,14 @@ export class reporterconfig {
         } else {
             this.parseConfifg(repConfig);
         }
+
+        this.getWhereFunctions();
+    }
+
+    private getWhereFunctions() {
+        this.backend.getRequest('KReporter/core/wherefunctions').subscribe(res => {
+           this.whereFunctions = res;
+        });
     }
 
     /**

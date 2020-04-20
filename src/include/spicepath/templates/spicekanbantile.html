@@ -11,7 +11,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 -->
 
 <div class="slds-tile slds-box--border slds-theme--default">
-    <div class="slds-p-around--x-small" [overlayLoadingSpinner]="model.isSaving">
+    <div class="slds-p-around--x-small" [system-overlay-loading-spinner]="model.isSaving">
         <div class="slds-grid slds-grid--align-spread">
             <ng-container *ngIf="headerFieldset; else noheaderfieldset">
                 <object-record-fieldset-horizontal-list [fieldset]="headerFieldset"></object-record-fieldset-horizontal-list>

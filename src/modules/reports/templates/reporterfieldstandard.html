@@ -10,4 +10,6 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 -->
 
-<div class="slds-truncate">{{record[field.fieldid]}}</div>
+<div *ngIf="record" class="slds-truncate">
+    {{record[field.fieldid]}}
+</div>

@@ -44,6 +44,7 @@ export class ObjectActionMenu extends ObjectActionContainer implements OnInit {
     @Input() private buttonsize: string = '';
 
     @Input() public actionset: string = '';
+
     /**
      * an array with the action items.
      */
@@ -60,8 +61,9 @@ export class ObjectActionMenu extends ObjectActionContainer implements OnInit {
                 private renderer: Renderer2,
                 private helper: helper,
                 private layout: layout,
+                public cdRef: ChangeDetectorRef,
                 public ngZone: NgZone) {
-        super(language, metadata, model,  ngZone);
+        super(language, metadata, model,  ngZone, cdRef);
     }
 
     public ngOnInit() {
@@ -91,6 +93,10 @@ export class ObjectActionMenu extends ObjectActionContainer implements OnInit {
                 actionconfig: actionitem.actionconfig
             });
         }
+
+        // trigger Change detection to ensure the changes are renderd if cdref is on push mode on the parent component
+        // happens amongst other scenarios in the list view
+        this.cdRef.detectChanges();
     }
 
     get isSmall() {

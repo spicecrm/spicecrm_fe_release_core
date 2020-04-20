@@ -23,7 +23,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
         <tr>
             <td></td>
             <td class="slds-truncate" *ngFor="let item of getSelected()">
-                <a href="javascript:void(0)" (click)="selectAllFields(item.id)">{{language.getLabel('LBL_SELECT_ALL_FIELDS')}}</a>
+                <a href="javascript:void(0)" (click)="selectAllFields(item.id)"><system-label label="LBL_SELECT_ALL_FIELDS"></system-label></a>
 
             </td>
         </tr>
@@ -37,7 +37,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
                                    [(ngModel)]="objectmerge.masterId"/>
                             <label class="slds-radio__label" [attr.for]="'master'+item.id">
                                 <span class="slds-radio--faux"></span>
-                                <span class="slds-form-element__label">{{language.getLabel('LBL_USE_AS_MASTER')}}</span>
+                                <span class="slds-form-element__label"><system-label label="LBL_USE_AS_MASTER"></system-label></span>
                             </label>
                         </div>
                     </div>
@@ -47,7 +47,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
         <tr *ngFor="let mergeField of objectmerge.mergeFields">
             <ng-container *ngIf="showField(mergeField)">
                 <td class="slds-truncate">
-                    {{language.getFieldDisplayName(modellist.module, mergeField.name)}}
+                    <system-label-fieldname [module]="modellist.module" [field]="mergeField.name"></system-label-fieldname>
                 </td>
                 <td class="slds-truncate" *ngFor="let item of getSelected()">
                     <div class="slds-grid">

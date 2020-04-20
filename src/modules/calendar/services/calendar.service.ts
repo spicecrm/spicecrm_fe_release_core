@@ -68,7 +68,6 @@ export class calendar implements OnDestroy {
     public isMobileView: boolean = false;
     public isDashlet: boolean = false;
     public isLoading: boolean = false;
-    public usersCalendarsLoaded: boolean = false;
     public sheettype: 'Day' | 'Three_Days' | 'Week' | 'Month' | 'Schedule' = 'Week';
     public timeZone: any;
     public duration: any = {
@@ -100,6 +99,13 @@ export class calendar implements OnDestroy {
         this.subscribeToLanguage();
         this.getCalendarPreferences();
         this.broadcastSubscriber();
+    }
+
+    /**
+     * @return user calendar loaded boolean true if we have users
+     */
+    get usersCalendarsLoaded(): boolean {
+        return !!this.usersCalendars && this.usersCalendars.length > 0;
     }
 
     /**
@@ -812,7 +818,6 @@ export class calendar implements OnDestroy {
                 this.setUserCalendars(calendars.Users, false);
                 this.setOtherCalendars(calendars.Other, false);
                 if (calendars.Users && calendars.Users.length > 0) {
-                    this.usersCalendarsLoaded = true;
                     this.usersCalendarsLoad$.emit();
                 }
             });

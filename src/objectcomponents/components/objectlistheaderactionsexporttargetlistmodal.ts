@@ -49,7 +49,7 @@ export class ObjectListHeaderActionsExportTargetlistModal {
     }
 
     get itemcount() {
-        return this.modellist.listData.totalcount
+        return this.modellist.listData.totalcount;
     }
 
     private export() {

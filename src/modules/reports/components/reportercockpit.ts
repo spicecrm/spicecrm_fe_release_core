@@ -13,7 +13,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 /**
  * @module ModuleReports
  */
-import {Component, OnInit, OnDestroy} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {backend} from '../../../services/backend.service';
 import {modellist} from "../../../services/modellist.service";
 import {metadata} from "../../../services/metadata.service";

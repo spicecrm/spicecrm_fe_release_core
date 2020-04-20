@@ -28,10 +28,10 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
                             <tr class="slds-line-height_reset">
                                 <th class="slds-cell-shrink"></th>
                                 <th scope="col">
-                                    <div class="slds-truncate">{{language.getLabel('LBL_FIELD')}}</div>
+                                    <div class="slds-truncate"><system-label label="LBL_FIELD"></system-label></div>
                                 </th>
                                 <th scope="col">
-                                    <div class="slds-truncate">{{language.getLabel('LBL_NAME')}}</div>
+                                    <div class="slds-truncate"><system-label label="LBL_NAME"></system-label></div>
                                 </th>
                             </tr>
                         </thead>
@@ -44,7 +44,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
                                     <div class="slds-truncate">{{nodefield.name}}</div>
                                 </td>
                                 <td>
-                                    <div class="slds-truncate">{{language.getLabel(nodefield.label)}}</div>
+                                    <div class="slds-truncate"><system-label [label]="nodefield.label"></system-label></div>
                                 </td>
                             </tr>
                         </tbody>
@@ -57,6 +57,6 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
         </div>
     </system-modal-content>
     <system-modal-footer>
-        <button class="slds-button slds-button--brand" (click)="close()">{{language.getLabel('LBL_OK')}}</button>
+        <button class="slds-button slds-button--brand" (click)="close()"><system-label label="LBL_OK"></system-label></button>
     </system-modal-footer>
 </system-modal>

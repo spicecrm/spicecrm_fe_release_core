@@ -19,7 +19,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
                     <a class="slds-tabs--default__link slds-grid" href="javascript:void(0);" role="tab" aria-selected="false">
                         <system-icon [module]="module.module" size="small" divClass="slds-m-right--x-small"></system-icon>
                         <span class="slds-truncate">
-                        {{language.getModuleName(module.module)}}
+                        <system-label-modulename [module]="module.module"></system-label-modulename>
                     </span>
                     </a>
                     <div *ngIf="module.unionid != 'root'" class="slds-col_bump-left slds-p-left_none slds-p-right_none">
@@ -53,10 +53,10 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
            <tr class="slds-line-height_reset">
                <th class="slds-cell-shrink"></th>
                <th scope="col">
-                   <div class="slds-truncate">{{language.getLabel('LBL_FIELD')}}</div>
+                   <div class="slds-truncate"><system-label label="LBL_FIELD"></system-label></div>
                </th>
                <th scope="col">
-                   <div class="slds-truncate">{{language.getLabel('LBL_NAME')}}</div>
+                   <div class="slds-truncate"><system-label label="LBL_NAME"></system-label></div>
                </th>
            </tr>
            </thead>
@@ -70,7 +70,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
                    <div class="slds-truncate" [title]="reportField.name">{{reportField.name}}</div>
                </td>
                <td>
-                   <div class="slds-truncate" [title]="language.getLabel(reportField.label)">{{language.getLabel(reportField.label)}}</div>
+                   <div class="slds-truncate" [title]="language.getLabel(reportField.label)"><system-label [label]="reportField.label"></system-label></div>
                </td>
            </tr>
            </tbody>

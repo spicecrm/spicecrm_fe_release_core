@@ -13,8 +13,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 /**
  * @module ObjectFields
  */
-import {Component, Input} from '@angular/core';
+import {Component, Input, Optional} from '@angular/core';
 import {model} from '../../services/model.service';
+import {navigationtab} from '../../services/navigationtab.service';
 import {view} from '../../services/view.service';
 import {language} from '../../services/language.service';
 
@@ -50,7 +51,8 @@ export class fieldGenericDisplay {
     constructor(
         public model: model,
         public view: view,
-        public language: language
+        public language: language,
+        @Optional() private navigationtab: navigationtab
     ) {
     }
 
@@ -91,7 +93,7 @@ export class fieldGenericDisplay {
      */
     public goRecord() {
         if (this.link) {
-            this.model.goDetail();
+            this.model.goDetail(this.navigationtab?.tabid);
         }
     }
 

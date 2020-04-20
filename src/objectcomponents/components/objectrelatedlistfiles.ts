@@ -114,7 +114,8 @@ export class ObjectRelatedlistFiles implements AfterViewInit {
     /**
      * toggle open and closed .. called from teh template button
      */
-    private toggleOpen() {
+    private toggleOpen(e: MouseEvent) {
+        e.stopPropagation();
         this.isopen = !this.isopen;
     }
 

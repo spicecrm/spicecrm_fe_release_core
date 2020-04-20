@@ -45,4 +45,10 @@ export class GmailGroupware extends GroupwareService {
 
     public getEmailAddressData() {
     }
+
+    public getCalenderItemId() {
+    }
+
+    public getCustomProperties() {
+    }
 }

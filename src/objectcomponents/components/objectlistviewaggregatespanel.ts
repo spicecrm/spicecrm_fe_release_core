@@ -14,12 +14,11 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
  * @module ObjectComponents
  */
 import {
-    Component, ElementRef
+    Component, ElementRef, OnInit
 } from '@angular/core';
 import {metadata} from '../../services/metadata.service';
 import {language} from '../../services/language.service';
 import {modellist} from '../../services/modellist.service';
-import {model} from '../../services/model.service';
 
 /**
  * renders a panel with the actual aggregtaes retrieved for the current search
@@ -42,15 +41,8 @@ export class ObjectListViewAggregatesPanel {
     /**
      * a getter for the aggregates
      */
-    private getAggregates() {
-        let aggArray = [];
-        for (let aggregate in this.modellist.searchAggregates) {
-            if (aggregate != 'tags' && this.modellist.searchAggregates.hasOwnProperty(aggregate)) {
-                aggArray.push(this.modellist.searchAggregates[aggregate]);
-            }
-        }
-
-        return aggArray;
+    get aggregates() {
+        return this.modellist.moduleAggregates;
     }
 
     /**
@@ -60,14 +52,11 @@ export class ObjectListViewAggregatesPanel {
         return this.metadata.checkTagging(this.modellist.module);
     }
 
-    get tagsaggregate(): any[] {
-        return this.modellist.searchAggregates && this.modellist.searchAggregates.hasOwnProperty('tags') ? this.modellist.searchAggregates.tags : [];
-    }
-
     /**
      * reset all aggregate filters
      */
     private clearAggregates() {
         this.modellist.removeAllAggregates();
     }
+
 }

@@ -164,6 +164,8 @@ import /*embed*/ {ObjectRecordTabbedDetailsTab} from './components/objectrecordt
 import /*embed*/ {ObjectRecordDetailsRelatedListTab} from './components/objectrecorddetailsrelatedlisttab';
 
 import /*embed*/ {ObjectModalModuleLookup} from './components/objectmodalmodulelookup';
+import /*embed*/ {ObjectModalModuleLookupHeader} from './components/objectmodalmodulelookupheader';
+import /*embed*/ {ObjectModalModuleLookupAggregates} from './components/objectmodalmodulelookupaggregates';
 import /*embed*/ {ObjectSelectButton} from './components/objectselectbutton';
 
 
@@ -176,8 +178,6 @@ import /*embed*/ {ObjectAddress} from './components/objectaddress';
 import /*embed*/ {ObjectGDPRModal} from './components/objectgdprmodal';
 
 import /*embed*/ {ObjectRowItemComponent} from "./components/objectrowitem";
-import /*embed*/ {ObjectActionOutputBeanModal} from "./components/objectactionoutputbeanmodal";
-import /*embed*/ {ObjectActionOutputBeanButton} from "./components/objectactionoutputbeanbutton";
 import /*embed*/ {ObjectActionVCardButton} from "./components/objectactionvcardbutton";
 
 
@@ -208,12 +208,14 @@ import /*embed*/ {ObjectActionDeactivateBeansModal} from "./components/objectact
         DirectivesModule,
         RouterModule.forRoot([
             // {path: 'module/Home', component: ModuleHome, canActivate: [loginCheck]},
+            /*
             {
                 path: 'module/:module',
-                    component: ObjectListViewContainer,
+                component: SystemNavigationCollector,
                 canActivate: [loginCheck, canNavigateAway, aclCheck],
                 data: {aclaction: 'list'}
             },
+            */
             /*
             {
                 path: 'module/:module/historysummary/:id',
@@ -222,12 +224,15 @@ import /*embed*/ {ObjectActionDeactivateBeansModal} from "./components/objectact
                 data: {aclaction: 'view'}
             },
             */
+            /*
             {
                 path: 'module/:module/:id',
-                component: ObjectRecordViewContainer,
+                component: SystemNavigationCollector,
                 canActivate: [loginCheck, canNavigateAway, aclCheck],
                 data: {aclaction: 'view'}
             },
+            */
+            /*
             {path: 'module/:module/:id/:related/:link', component: ObjectRelatedlistAll, canActivate: [loginCheck]},
             {
                 path: 'module/:module/:id/:related/:link/:fieldset',
@@ -235,6 +240,7 @@ import /*embed*/ {ObjectActionDeactivateBeansModal} from "./components/objectact
                 canActivate: [loginCheck, aclCheck],
                 data: {aclaction: 'view'}
             }
+            */
         ])],
     declarations: [
         ObjectListViewContainer,
@@ -352,6 +358,8 @@ import /*embed*/ {ObjectActionDeactivateBeansModal} from "./components/objectact
         ObjectRecordTabbedDetailsTab,
         ObjectRecordDetailsRelatedListTab,
         ObjectModalModuleLookup,
+        ObjectModalModuleLookupHeader,
+        ObjectModalModuleLookupAggregates,
         ObjectSelectButton,
         ObjectReminderButton,
         ObjectActionBeanToMailButton,
@@ -365,8 +373,6 @@ import /*embed*/ {ObjectActionDeactivateBeansModal} from "./components/objectact
         ObjectRecordFieldsetHorizontalList,
         ObjectRecordFieldsetContainer,
         ObjectRowItemComponent,
-        ObjectActionOutputBeanModal,
-        ObjectActionOutputBeanButton,
         ObjectActionVCardButton,
         ObjectStatusNetworkButton,
         ObjectStatusNetworkButtonItem,
@@ -420,7 +426,10 @@ import /*embed*/ {ObjectActionDeactivateBeansModal} from "./components/objectact
         ObjectListHeaderSort,
         ObjectRelatedlistFiles,
         ObjectKeyValuesPipe,
-        ObjectPageHeaderTags
+        ObjectPageHeaderTags,
+        ObjectModalModuleLookup,
+        ObjectModalModuleLookupHeader,
+        ObjectModalModuleLookupAggregates
     ]
 })
 export class ObjectComponents {

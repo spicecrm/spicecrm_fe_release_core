@@ -50,17 +50,17 @@ export class EmailSchedulesRelatedButton {
      */
     public execute() {
         let await = this.modal.await(this.language.getLabel('LBL_LOADING'));
-        this.checkEmailsLink().subscribe( response => {
-                await.emit(true);
-                if(response) {
-                    this.modal.openModal('EmailSchedulesRelatedModal', true, this.injector).subscribe( modal => {
-                        modal.instance.linkedBeans = this.linkedBeans;
-                        modal.instance.modelId = this.modelId;
-                        modal.instance.currentModule = this.model.module;
-                    });
-                }
-            });
-        }
+        this.checkEmailsLink().subscribe(response => {
+            await.emit(true);
+            if (response) {
+                this.modal.openModal('EmailSchedulesRelatedModal', true, this.injector).subscribe(modal => {
+                    modal.instance.linkedBeans = this.linkedBeans;
+                    modal.instance.modelId = this.modelId;
+                    modal.instance.currentModule = this.model.module;
+                });
+            }
+        });
+    }
 
     /**
      * iterate through the model fields, find each field that is of type link, get the module name, and find these modules have an emails link and an email address, by iterating through
@@ -87,11 +87,11 @@ export class EmailSchedulesRelatedButton {
         // then loop through the fielddefs of metadata and verify if email and email1 are properties of each module in arrayOfModule, if both check true than push
         // the module into filteredModules
         let filteredModules = [];
-        for(let pos in arrayOfModules) {
+        for (let pos in arrayOfModules) {
             let module = arrayOfModules[pos];
             Object.keys(this.metadata.fieldDefs).forEach(item => {
-                if(this.metadata.fieldDefs[item] != null && item == module) {
-                    if(this.metadata.fieldDefs[item].hasOwnProperty('email') && this.metadata.fieldDefs[item].hasOwnProperty('email1')) {
+                if (this.metadata.fieldDefs[item] != null && item == module) {
+                    if (this.metadata.fieldDefs[item].hasOwnProperty('email') && this.metadata.fieldDefs[item].hasOwnProperty('email1')) {
                         filteredModules.push(module);
                     }
                 }
@@ -108,7 +108,7 @@ export class EmailSchedulesRelatedButton {
                 this.toast.sendToast(this.language.getLabel('LBL_ERROR'), 'error');
             }
             // add the corresponding labels
-            for(let bean in this.linkedBeans) {
+            for (let bean in this.linkedBeans) {
                 let link = this.linkedBeans[bean];
                 link.vname = this.model.fields[link.link].vname;
             }

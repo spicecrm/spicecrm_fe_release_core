@@ -13,7 +13,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 /**
  * @module ObjectComponents
  */
-import {Component} from '@angular/core';
+import {ChangeDetectorRef, Component} from '@angular/core';
 import {Router} from "@angular/router";
 import {model} from '../../services/model.service';
 import {metadata} from '../../services/metadata.service';
@@ -35,9 +35,10 @@ export class ObjectModelPopoverRelated extends ObjectRelatedlistList {
         public metadata: metadata,
         public relatedmodels: relatedmodels,
         public model: model,
+        public cdref: ChangeDetectorRef,
         private router: Router
     ) {
-        super(language, metadata, relatedmodels, model);
+        super(language, metadata, relatedmodels, model, cdref);
     }
 
 

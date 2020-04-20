@@ -16,6 +16,6 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
         <span *ngFor="let category of categories; let last=last">{{category.name}}: {{category.value}}<span *ngIf="!last"> • </span></span>
     </span>
     <span *ngIf="!isEvaluationAvailable">
-        <i>{{language.getLabel('LBL_NO_EVALUATION_AVAILABLE')}}</i>
+        <i><system-label label="LBL_NO_EVALUATION_AVAILABLE"></system-label></i>
     </span>
 </field-generic-display>
