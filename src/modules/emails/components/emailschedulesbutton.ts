@@ -27,6 +27,7 @@ import {toast} from "../../../services/toast.service";
     templateUrl: "./src/modules/emails/templates/emailschedulesbutton.html",
 })
 export class EmailSchedulesButton {
+
     public disabled: boolean = false;
 
     constructor(
@@ -41,6 +42,13 @@ export class EmailSchedulesButton {
     }
 
     /**
+     * do nmot display if emails cannot be assigned to the bean
+     */
+    get hidden() {
+        return !this.model.fields.hasOwnProperty('emails');
+    }
+
+    /**
      * get the count of the selected objects
      */
     get exportcount() {
@@ -52,7 +60,7 @@ export class EmailSchedulesButton {
      * throw error if the field emails doesnt exist
      */
     public execute() {
-        if(this.model.fields.hasOwnProperty('emails')) {
+        if (this.model.fields.hasOwnProperty('emails')) {
             this.modal.openModal('EmailSchedulesModal', true, this.injector);
         } else {
             this.toast.sendToast(this.language.getLabel('LBL_ERROR'), 'error');
