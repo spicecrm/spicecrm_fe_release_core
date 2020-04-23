@@ -30,6 +30,7 @@ import /*embed*/ {MapCenterI,MapFixedCircleI,MapCircleI,RecordComponentConfigI,M
 
 import /*embed*/ {SpiceMap} from './components/spicemap';
 import /*embed*/ {SpiceGoogleMapsList} from './components/spicegooglemapslist';
+import /*embed*/ {SpiceGoogleMapsRecordContainer} from './components/spicegooglemapsrecordcontainer';
 import /*embed*/ {SpiceGoogleMapsRecord} from './components/spicegooglemapsrecord';
 import /*embed*/ {SpiceMapSelector} from './components/spicemapselector';
 import /*embed*/ {SpiceGoogleMaps} from './components/spicegooglemaps';
@@ -49,6 +50,7 @@ import /*embed*/ {SpiceGoogleMapsDirectionModal} from './components/spicegooglem
     declarations: [
         SpiceMap,
         SpiceGoogleMapsList,
+        SpiceGoogleMapsRecordContainer,
         SpiceGoogleMapsRecord,
         SpiceGoogleMaps,
         SpiceMapSelector,
@@ -57,7 +59,8 @@ import /*embed*/ {SpiceGoogleMapsDirectionModal} from './components/spicegooglem
     ],
     exports: [
         SpiceGoogleMaps,
-        SpiceMapGeoDataField
+        SpiceMapGeoDataField,
+        SpiceGoogleMapsRecord
     ]
 })
 export class ModuleSpiceMap {

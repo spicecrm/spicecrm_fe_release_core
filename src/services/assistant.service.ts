@@ -43,7 +43,7 @@ export class assistant {
         });
     }
 
-    handleMessage(message: any) {
+    private handleMessage(message: any) {
         let itemIndex = 0;
         switch (message.messagetype) {
             case 'model.delete':
@@ -75,14 +75,14 @@ export class assistant {
     }
 
 
-    initlaize() {
+    public initialize() {
         if (!this.initialized) {
             this.loadItems();
             this.initialized = true;
         }
     }
 
-    loadItems(): Observable<any> {
+    public loadItems(): Observable<any> {
 
         this.loading = true;
 
@@ -114,7 +114,7 @@ export class assistant {
             retSubject.complete();
 
             this.loading = false;
-        })
+        });
         return retSubject.asObservable();
     }
 }

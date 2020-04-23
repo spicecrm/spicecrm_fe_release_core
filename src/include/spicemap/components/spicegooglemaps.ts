@@ -309,7 +309,6 @@ export class SpiceGoogleMaps implements OnChanges, AfterViewInit, OnDestroy {
             radius = this.setRadiusFromMapDimensions(percentage);
         }
 
-
         return {
             strokeColor: optionsCircle.color,
             fillOpacity: 0,
@@ -447,13 +446,14 @@ export class SpiceGoogleMaps implements OnChanges, AfterViewInit, OnDestroy {
         this.removeCircle();
         this.removeFixedCircle();
 
-        if (!(window as any).google || this.routes.length == 0) return;
+        if (!(window as any).google || this.routes.length == 0) {
+            return this.clearRoutes();
+        }
 
         if (!this.directionsService) {
             this.directionsService = new google.maps.DirectionsService();
         }
 
-        this.clearRoutes();
 
         this.routes.forEach(route => {
             if (route.length < 2) return;
@@ -717,7 +717,7 @@ export class SpiceGoogleMaps implements OnChanges, AfterViewInit, OnDestroy {
 
         this.circle.addListener('center_changed', () => {
             if (this.circle.getCenter().toString() !== this.options.circle.center.toString()) {
-                if (!this.options.circle.draggable && !this.options.circle.editable) {
+                if (!this.options.circle.draggable || !this.options.circle.editable) {
                     this.zone.runOutsideAngular(() =>
                         this.createCircle()
                     );

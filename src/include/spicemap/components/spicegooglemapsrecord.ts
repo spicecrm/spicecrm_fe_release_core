@@ -14,6 +14,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
  * @module ModuleSpiceMap
  */
 import {
+    AfterViewInit,
     ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
@@ -36,6 +37,7 @@ import {userpreferences} from "../../../services/userpreferences.service";
 import {broadcast} from "../../../services/broadcast.service";
 import {navigationtab} from "../../../services/navigationtab.service";
 import {InputRadioOptionI} from "../../../systemcomponents/interfaces/systemcomponents.interfaces";
+import {toast} from "../../../services/toast.service";
 
 /** @ignore */
 declare var _: any;
@@ -46,10 +48,9 @@ declare var _: any;
 @Component({
     selector: 'spice-google-maps-record',
     templateUrl: './src/include/spicemap/templates/spicegooglemapsrecord.html',
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [modellist]
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SpiceGoogleMapsRecord extends SpiceGoogleMapsList implements OnInit {
+export class SpiceGoogleMapsRecord extends SpiceGoogleMapsList implements OnInit, AfterViewInit {
     /**
      * routes array to be rendered on the map by the direction service
      */
@@ -123,7 +124,7 @@ export class SpiceGoogleMapsRecord extends SpiceGoogleMapsList implements OnInit
         public metadata: metadata,
         public backend: backend,
         public iterableDiffers: IterableDiffers,
-        public cdr: ChangeDetectorRef,
+        public cdRef: ChangeDetectorRef,
         public zone: NgZone,
         public session: session,
         public model: model,
@@ -131,9 +132,10 @@ export class SpiceGoogleMapsRecord extends SpiceGoogleMapsList implements OnInit
         public renderer: Renderer2,
         public broadcast: broadcast,
         public navigationtab: navigationtab,
+        public toast: toast,
         private userpreferences: userpreferences,
     ) {
-        super(language, modelList, metadata, iterableDiffers, cdr, model, navigationtab, broadcast);
+        super(language, modelList, metadata, iterableDiffers, cdRef, model, navigationtab, broadcast);
     }
 
     /**
@@ -174,13 +176,7 @@ export class SpiceGoogleMapsRecord extends SpiceGoogleMapsList implements OnInit
         this.directionStartType = undefined;
         this.directionResult = undefined;
 
-        if (value == 'search') {
-            this.setCenterFromModel();
-            this.setMapOptionsForSearchUse();
-        } else {
-            this.setMapOptionsForDirectionUse();
-            this.setFocusedRecord();
-        }
+        this.adjustMap();
     }
 
     /**
@@ -257,22 +253,20 @@ export class SpiceGoogleMapsRecord extends SpiceGoogleMapsList implements OnInit
     }
 
     /**
-     * set the component name to load the component configuration for it
-     * initialize the model list
-     * call the parents initialize
-     * set the map component height
      * set the distance unit system from preferences
-     * prepare for map use and set map options
+     * call parent on init
      */
     public ngOnInit() {
-        this.initializeModelList();
-        this.setComponentName();
         this.setDistanceUnitSystemFromPreferences();
         super.ngOnInit();
     }
 
+    /**
+     * adjust the map by the use purpose
+     * reset use map for to render the appropriate items on the map
+     */
     public ngAfterViewInit() {
-        this.setCenterFromModel();
+        this.adjustMap();
         super.ngAfterViewInit();
     }
 
@@ -280,12 +274,30 @@ export class SpiceGoogleMapsRecord extends SpiceGoogleMapsList implements OnInit
      * set records from model list results or set the focused record for direction search.
      */
     public setRecords() {
-
-        if (this.useMapFor != 'direction') {
+        if (this.useMapFor == 'search') {
             super.setRecords();
-        } else {
-            this.setFocusedRecord();
         }
+    }
+
+    /**
+     * subscribe to broadcast message to reset the distance unit system and recenter the map
+     */
+    public handleBroadcastMessage(msg) {
+        switch (msg.messagetype) {
+            case 'userpreferences.save':
+                this.unitSystem = this.userpreferences.toUse.distance_unit_system || 'METRIC';
+                if (!!this.directionResult) {
+                    this.directionResult.distance.text = this.convertDistanceToString(this.directionResult.distance.value);
+                }
+                break;
+            case 'model.save':
+                if (msg.messagedata.module == this.model.module) {
+                    this.adjustMap();
+                }
+                break;
+        }
+        super.handleBroadcastMessage(msg);
+        this.cdRef.detectChanges();
     }
 
     /**
@@ -293,17 +305,6 @@ export class SpiceGoogleMapsRecord extends SpiceGoogleMapsList implements OnInit
      * set the distance unit system from user preferences for the direction service result
      */
     protected setDistanceUnitSystemFromPreferences() {
-        this.subscriptions.add(
-            this.broadcast.message$.subscribe(msg => {
-                if (msg.messagetype == 'userpreferences.save') {
-                    this.unitSystem = this.userpreferences.toUse.distance_unit_system || 'METRIC';
-                    if (!!this.directionResult) {
-                        this.directionResult.distance.text = this.convertDistanceToString(this.directionResult.distance.value);
-                    }
-                    this.cdr.detectChanges();
-                }
-            })
-        );
         this.unitSystem = this.userpreferences.toUse.distance_unit_system || 'METRIC';
     }
 
@@ -311,7 +312,7 @@ export class SpiceGoogleMapsRecord extends SpiceGoogleMapsList implements OnInit
      * convert distance to string with the unit on measure
      * @param distance
      */
-    protected convertDistanceToString(distance) {
+    protected convertDistanceToString(distance: number): string {
 
         if (this.unitSystem == 'IMPERIAL') {
             const feetDistance = distance * 3.2808;
@@ -332,38 +333,36 @@ export class SpiceGoogleMapsRecord extends SpiceGoogleMapsList implements OnInit
      * check if the route entries are correct
      * @param routePoint
      */
-    protected verifyPlaceLatLng(routePoint: RoutePointI) {
+    protected verifyPlaceLatLng(routePoint: RoutePointI): boolean {
         return (!!routePoint.placeId) || this.verifyLatLng((routePoint as any));
+    }
+
+    /**
+     * adjust the map options and pass it through
+     */
+    private adjustMap() {
+        if (this._useMapFor == 'search') {
+            this.setCenterFromModel();
+            this.setMapOptionsForSearchUse();
+        } else {
+            this.setMapOptionsForDirectionUse();
+            this.setRecordsFromModel(this.componentconfig.focusColor);
+        }
     }
 
     /**
      * set focused record from model
      */
-    private setFocusedRecord() {
+    private setRecordsFromModel(color?) {
         this.records = [{
             id: this.model.id,
-            module: this.modelList.module,
+            module: this.model.module,
             title: '' + this.model.data.summary_text,
             lng: +this.model.data[this.lngName],
             lat: +this.model.data[this.latName],
-            color: this.componentconfig.focusColor
+            color: color
         }];
-        this.cdr.detectChanges();
-    }
-
-    /**
-     * set the module for the module list service and activate cache
-     */
-    private initializeModelList() {
-        this.modelList._listcomponent = 'SpiceGoogleMapsRecord';
-        this.modelList.module = this.model.module;
-    }
-
-    /**
-     * set componentName to load component config by the parent
-     */
-    private setComponentName() {
-        this.componentName = 'SpiceGoogleMapsRecord';
+        this.cdRef.detectChanges();
     }
 
     /**
@@ -382,7 +381,7 @@ export class SpiceGoogleMapsRecord extends SpiceGoogleMapsList implements OnInit
                 circle: true
             }
         };
-        this.cdr.detectChanges();
+        this.cdRef.detectChanges();
     }
 
     /**
@@ -403,10 +402,12 @@ export class SpiceGoogleMapsRecord extends SpiceGoogleMapsList implements OnInit
                 unitSystem: true,
             }
         };
-        this.cdr.detectChanges();
+        this.cdRef.detectChanges();
     }
 
     /**
+     * reset the map circle
+     * set the records from the model data
      * set circle center from record geo data
      */
     private setCenterFromModel() {
@@ -421,7 +422,7 @@ export class SpiceGoogleMapsRecord extends SpiceGoogleMapsList implements OnInit
             editable: true
         };
         if (!this.verifyLatLng(this.mapOptions.circle.center)) {
-            return this.mapOptions.circle = undefined;
+            this.mapOptions.circle = undefined;
         }
     }
 
@@ -466,8 +467,11 @@ export class SpiceGoogleMapsRecord extends SpiceGoogleMapsList implements OnInit
         this.isLoadingDirection = true;
 
         this.backend.get('Users', this.session.authData.userId, 'details').subscribe((user: any) => {
-            if (!user) {
-                return this.isLoadingDirection = false;
+            if (!user || !(!!user.address_street) || !(!!user.address_postalcode) || !(!!user.address_city)) {
+                this.toast.sendToast(this.language.getLabel('MSG_NO_OFFICE_ADDRESSE_DEFINED'), 'error');
+                this.routes = [];
+                this.isLoadingDirection = false;
+                return this.cdRef.detectChanges();
             }
             const userAddress = `${user.address_street}, ${user.address_postalcode} ${user.address_city}, ${user.address_country}`;
 
@@ -477,7 +481,9 @@ export class SpiceGoogleMapsRecord extends SpiceGoogleMapsList implements OnInit
                         const directionStart: RoutePointI = {placeId: res.predictions[0].place_id};
                         this.setMapRoute(directionStart);
                     } else {
+                        this.routes = [];
                         this.isLoadingDirection = false;
+                        this.cdRef.detectChanges();
                     }
                 });
         });
@@ -495,7 +501,11 @@ export class SpiceGoogleMapsRecord extends SpiceGoogleMapsList implements OnInit
                     lng: position.coords.longitude
                 };
                 this.setMapRoute(directionStart);
-            }, () => this.isLoadingDirection = false);
+            }, () => {
+                this.routes = [];
+                this.isLoadingDirection = false;
+                this.cdRef.detectChanges();
+            });
         }
     }
 
@@ -514,11 +524,12 @@ export class SpiceGoogleMapsRecord extends SpiceGoogleMapsList implements OnInit
     }
 
     /**
-     * set model list search term and reload list
+     * set model list search term
      */
     private triggerSearch() {
         this.zone.run(() => {
             this.modelList.searchTerm = this.listSearchTerm;
+            this.modelList.reLoadList();
         });
     }
 

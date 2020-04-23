@@ -25,9 +25,12 @@ import {SystemComponents} from "../../systemcomponents/systemcomponents";
 
 import /*embed*/ {OutputTemplatesEditor} from "./components/outputtemplateseditor";
 import /*embed*/ {OutputTemplatesPreview} from "./components/outputtemplatespreview";
+import /*embed*/ {OutputTemplatesPreviewSelector} from "./components/outputtemplatespreviewselector";
 import /*embed*/ {ObjectActionOutputBeanButton} from "./components/objectactionoutputbeanbutton";
 import /*embed*/ {ObjectActionOutputBeanModal} from "./components/objectactionoutputbeanmodal";
 import /*embed*/ {fieldOutputTemplates} from "./fields/fieldoutputtemplates";
+
+
 
 @NgModule({
     imports: [
@@ -42,6 +45,7 @@ import /*embed*/ {fieldOutputTemplates} from "./fields/fieldoutputtemplates";
     declarations: [
         OutputTemplatesEditor,
         OutputTemplatesPreview,
+        OutputTemplatesPreviewSelector,
         ObjectActionOutputBeanButton,
         ObjectActionOutputBeanModal,
         fieldOutputTemplates
