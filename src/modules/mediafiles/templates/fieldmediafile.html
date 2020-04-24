@@ -14,7 +14,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
     <ng-container *ngIf="isEditMode()">
         <system-spinner *ngIf="isLoadingOriginal" size="large" class="spice-vertically-centered"></system-spinner>
-        <system-input-media *ngIf="!isLoadingOriginal" [(ngModel)]="imageUrlOriginal" [fileformat]="fileformat" (mediaChange)="mediaChange($event)" style="height:100%">
+        <system-input-media *ngIf="!isLoadingOriginal" [(ngModel)]="imageUrlOriginal" style="height:100%"><!--[fileformat]="fileformat" (mediaChange)="mediaChange($event)" -->
         </system-input-media>
     </ng-container>
 

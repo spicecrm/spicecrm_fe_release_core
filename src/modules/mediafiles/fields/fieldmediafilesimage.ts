@@ -34,7 +34,7 @@ export class fieldMediaFilesImage extends fieldGeneric {
     /**
      * reference to the image upload component
      */
-    @ViewChild(SystemInputMedia) private media: SystemInputMedia;
+    @ViewChild(SystemInputMedia) private systemInputMedia: SystemInputMedia;
 
     /**
      * the base64 image string
@@ -73,16 +73,16 @@ export class fieldMediaFilesImage extends fieldGeneric {
         let fieldValues: any = {};
 
         fieldValues.file = value;
-        fieldValues.filetype = this.media.mediaMetaData.mimetype;
+        fieldValues.filetype = this.systemInputMedia.mediaMetaData.mimetype;
 
         let name = this.model.getField('name');
         if (!name) {
-            fieldValues.name = this.media.mediaMetaData.filename;
+            fieldValues.name = this.systemInputMedia.mediaMetaData.filename;
             this.model.setFields(fieldValues);
         } else if (!this._value) {
             this.modal.prompt('confirm', this.language.getLabel('MSG_OVERWRITE_FILENAME', '', 'long'), this.language.getLabel('MSG_OVERWRITE_FILENAME')).subscribe(response => {
-                if(response){
-                    fieldValues.name = this.media.mediaMetaData.filename;
+                if ( response ) {
+                    fieldValues.name = this.systemInputMedia.mediaMetaData.filename;
                 }
                 this.model.setFields(fieldValues);
             });
@@ -110,7 +110,7 @@ export class fieldMediaFilesImage extends fieldGeneric {
     /**
      * loads the image from the backend
      */
-    private loadImage(){
+    private loadImage() {
         this.mediafiles.getImageBase64(this.model.id).subscribe(image => {
             this._value = image.img;
         });
