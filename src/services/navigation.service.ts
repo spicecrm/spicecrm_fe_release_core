@@ -339,9 +339,9 @@ export class navigation {
      *
      * @param paradigm
      */
-    public enforceNavigationParadigm(paradigm: 'simple'|'tabbed'|'subtabbed'){
-       this.enforcednavigationparadigm = true;
-       this.navigationparadigm = paradigm;
+    public enforceNavigationParadigm(paradigm: 'simple' | 'tabbed' | 'subtabbed') {
+        this.enforcednavigationparadigm = true;
+        this.navigationparadigm = paradigm;
     }
 
 
@@ -353,7 +353,7 @@ export class navigation {
         switch (message.messagetype) {
             case "loader.completed":
                 // once the laoder completed set the paradigm
-                if (!this.enforcednavigationparadigm &&  message.messagedata == 'loadUserData') {
+                if (!this.enforcednavigationparadigm && message.messagedata == 'loadUserData') {
                     let navparadigm = this.userpreferences.getPreference('navigation_paradigm');
                     this.navigationparadigm = navparadigm ? navparadigm : 'simple';
                 }
@@ -482,12 +482,23 @@ export class navigation {
      */
     public anyDirtyModel(tabid?: string): boolean {
         if (this.modelregister.some(model => {
-            if (model.model.isDirty() && (!tabid || (tabid && model.tabid == tabid))) {
+            if (model.model.isDirty() && (!tabid || (tabid && (model.tabid == tabid || this.parentTabId(tabid) == tabid)))) {
                 return true;
             }
         })) {
             return true;
-        } else return false;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * get the parent tab id
+     *
+     * @param tabId
+     */
+    private parentTabId(tabId) {
+        return this.objectTabs.find(tab => tab.id == tabId).parentid;
     }
 
     /**
@@ -707,7 +718,7 @@ export class navigation {
 
         // check dirty tab
         if (!force && this.anyDirtyModel(tabid)) {
-            this.modal.confirm(this.language.getLabel('MSG_NAVIGATIONSTOP', '', 'long'), this.language.getLabel('MSG_NAVIGATIONSTOP')).subscribe(retval => {
+            this.modal.confirm(this.language.getLabel('MSG_CLOSETAB', '', 'long'), this.language.getLabel('MSG_CLOSETAB')).subscribe(retval => {
                 if (retval) {
                     this.unsetObjectTab(tabid);
                 }
@@ -751,9 +762,11 @@ export class navigation {
         }
 
         // find any tab that has the id as a parent id
-        index = 0;
-        for (let objectTab of this.objectTabs) {
+        index = this.objectTabs.length - 1;
+        while (index >= 0) {
+            // for (let objectTab of this.objectTabs){
             // if the id matched splice the array otherwise increase the index
+            let objectTab = this.objectTabs[index];
             if (objectTab.parentid == tabid) {
                 this.objectTabs.splice(index, 1);
 
@@ -762,9 +775,9 @@ export class navigation {
                 while ((modelIndex = this.modelregister.findIndex(model => model.tabid == tabid)) >= 0) {
                     this.modelregister.splice(modelIndex, 1);
                 }
-            } else {
-                index++;
             }
+            index--;
+
         }
 
         // emit the change

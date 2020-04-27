@@ -1,4 +1,4 @@
-<!--
+/*
 SpiceUI 2018.10.001
 
 Copyright (c) 2016-present, aac services.k.s - All rights reserved.
@@ -8,28 +8,56 @@ Redistribution and use in source and binary forms, without modification, are per
 - If used the SpiceCRM Logo needs to be displayed in the upper left corner of the screen in a minimum dimension of 31x31 pixels and be clearly visible, the icon needs to provide a link to http://www.spicecrm.io
 THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
--->
+*/
 
-<div class="slds-context-bar__item" >
-    <a href="javascript:void(0);" class="slds-context-bar__label-action slds-scrollable--none" (click)="setActive()" >
-        <div class="slds-truncate slds-grid slds-grid--vertical-align-center">
-            <ng-container *ngIf="tabname; else tabloading">
-                <system-utility-icon *ngIf="tabicon" [icon]="tabicon" size="x-small" class="slds-p-right--x-small"></system-utility-icon>
-                <system-icon *ngIf="tabmodule" [module]="tabmodule" size="x-small" divClass="slds-p-right--x-small"></system-icon>
-                <div class="slds-truncate" style="white-space: nowrap;">{{tabname}}</div>
-            </ng-container>
-            <ng-template #tabloading>
-                <system-spinner size="10" class="slds-p-right--x-small"></system-spinner>
-                <div><system-label label="LBL_LOADING"></system-label></div>
-            </ng-template>
-        </div>
-    </a>
-    <div class="slds-context-bar__icon-action">
-        <button class="slds-button slds-button_icon slds-button_icon-container slds-button_icon-x-small slds-m-around--none" (click)="pintab()">
-            <system-button-icon [icon]="pinned ? 'pinned' : 'pin'"></system-button-icon>
-        </button>
-        <button class="slds-button slds-button_icon slds-button_icon-container slds-button_icon-x-small slds-m-around--none" aria-haspopup="true" (click)="closetab()">
-            <system-button-icon icon="close"></system-button-icon>
-        </button>
-    </div>
-</div>
+/**
+ * @module GlobalComponents
+ */
+import {
+    AfterViewInit, Component, QueryList, ViewChildren, Input, ElementRef, Output, EventEmitter
+} from '@angular/core';
+import {navigation, objectTab} from '../../services/navigation.service';
+import {language} from '../../services/language.service';
+
+/**
+ * renders the info for one tab in the tab browser modal
+ */
+@Component({
+    selector: 'global-navigation-tabbed-browser-modal-tab',
+    templateUrl: './src/globalcomponents/templates/globalnavigationtabbedbrowsermodaltab.html'
+})
+export class GlobalNavigationTabbedBrowserModalTab {
+
+    /**
+     * reference to the modal component
+     */
+    @Input() private tab: objectTab;
+
+    /**
+     * inicates that this is a subtab and shoudl be indented
+     */
+    @Input() private subtab: boolean = false;
+
+    @Output() private activate: EventEmitter<string> = new EventEmitter<string>();
+
+    constructor(private navigation: navigation, private language: language) {
+
+    }
+
+    /**
+     * return the count of models for a given tab
+     *
+     * @param tabid
+     */
+    private modelCount() {
+        return this.navigation.modelregister.filter(m => m.tabid == this.tab.id).length;
+    }
+
+    /**
+     * activate the current tab
+     */
+    private activateTab() {
+        this.activate.emit(this.tab.id);
+    }
+
+}
