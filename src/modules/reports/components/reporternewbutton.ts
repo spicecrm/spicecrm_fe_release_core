@@ -10,6 +10,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module ModuleReports
+ */
 import {Component} from "@angular/core";
 import {language} from "../../../services/language.service";
 import {Router} from "@angular/router";

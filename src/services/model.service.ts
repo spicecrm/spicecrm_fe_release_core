@@ -14,7 +14,8 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
  * @module services
  */
 import {Injectable, EventEmitter, Injector, OnDestroy, Optional} from "@angular/core";
-import {of, BehaviorSubject, Subject, Observable} from "rxjs";
+import {of, BehaviorSubject, Subject, Observable, Subscription} from "rxjs";
+import {Router} from "@angular/router";
 
 import {session} from "./session.service";
 import {modal} from "./modal.service";
@@ -27,7 +28,8 @@ import {metadata} from "./metadata.service";
 import {backend} from "./backend.service";
 import {recent} from "./recent.service";
 import {configurationService} from "./configuration.service";
-import {Router} from "@angular/router";
+import {socket} from "./socket.service";
+
 
 // import {GlobalHeader} from '../globalcomponents/components/globalheader';
 // import {GlobalFooter} from '../globalcomponents/components/globalfooter';
@@ -205,14 +207,17 @@ export class model implements OnDestroy {
      * indicating that the current model created is a duplicate. this avoids that the model when begin created, creates a new set of backupdata as this woudl limit the data being sent to the backend when saviong the model
      */
     public duplicate: boolean = false;
+
     /**
      * Holds the ID of the template model, in case the model is a duplicate.
      */
     public templateId: string = null;
+
     /**
      * inidctaes thata duplicate check is ongoing
      */
     public duplicateChecking: boolean = false;
+
     /**
      * an array with duplicates the duplicate check on the model returned
      */
@@ -238,6 +243,8 @@ export class model implements OnDestroy {
      */
     public savingProgress: BehaviorSubject<number> = new BehaviorSubject(1);
 
+    private subscriptions: Subscription = new Subscription();
+
     constructor(
         public backend: backend,
         private broadcast: broadcast,
@@ -251,18 +258,23 @@ export class model implements OnDestroy {
         private modal: modal,
         private navigation: navigation,
         private configuration: configurationService,
-        public injector: Injector
+        public injector: Injector,
+        public socket: socket
     ) {
         this.modelRegisterId = this.navigation.registerModel(this);
 
         this.data$ = new BehaviorSubject(this.data);
-        this.broadcast.message$.subscribe(data => {
-            if (data.messagetype === 'timezone.changed') {
-                this.utils.timezoneChanged(this.data, data.messagedata);
-                this.utils.timezoneChanged(this.backupData, data.messagedata);
-            }
-        });
+
+        this.subscriptions.add(
+            this.broadcast.message$.subscribe(data => {
+                if (data.messagetype === 'timezone.changed') {
+                    this.utils.timezoneChanged(this.data, data.messagedata);
+                    this.utils.timezoneChanged(this.backupData, data.messagedata);
+                }
+            })
+        );
     }
+
 
     get messages(): any[] {
         return this._messages;
@@ -360,7 +372,7 @@ export class model implements OnDestroy {
         if (this.checkAccess("detail")) {
             let objectlink = "/module/" + this.module + "/" + this.id;
             // if we have a tabid and it is not th emain tab add it
-            if(tabid) objectlink = '/tab/'+tabid + '/'+ objectlink;
+            if (tabid) objectlink = '/tab/' + tabid + '/' + objectlink;
             // navigate to the route
             this.router.navigate([objectlink]);
         } else {
@@ -418,6 +430,7 @@ export class model implements OnDestroy {
         );
         return responseSubject.asObservable();
     }
+
 
     /**
      * validates the model
@@ -756,7 +769,7 @@ export class model implements OnDestroy {
 
         // shift to backend format .. no objects like date embedded
         if (withbackup && !this.duplicate) {
-            this.backupData = {...this.data};
+            this.backupData = JSON.parse(JSON.stringify(this.data));
         }
 
         /**
@@ -794,13 +807,19 @@ export class model implements OnDestroy {
      * @param value
      */
     public setFieldValue(field, value) {
+        return this.setField(field, value);
+    }
+
+    /**
+     * initializes a single field on the model
+     * similar to the setField but does not trigger the emitter and no duplicate check and no validation
+     *
+     * @param field
+     * @param value
+     */
+    public initializeField(field, value) {
         if (!field) return false;
         this.data[field] = value;
-        this.data$.next(this.data);
-        this.evaluateValidationRules(field, "change");
-
-        // run the duplicate check
-        this.duplicateCheckOnChange([field]);
     }
 
     /**
@@ -810,7 +829,13 @@ export class model implements OnDestroy {
      * @param value
      */
     public setField(field, value) {
-        return this.setFieldValue(field, value);
+        if (!field) return false;
+        this.data[field] = value;
+        this.data$.next(this.data);
+        this.evaluateValidationRules(field, "change");
+
+        // run the duplicate check
+        this.duplicateCheckOnChange([field]);
     }
 
     /**
@@ -842,7 +867,7 @@ export class model implements OnDestroy {
         this.navigation.removeModelEditing(this.module, this.id);
 
         if (this.backupData) {
-            this.data = {...this.backupData};
+            this.data = this.backupData;
             this.data$.next(this.data);
             this.backupData = null;
             // todo: evaluate all fields because they have changed back???
@@ -907,7 +932,7 @@ export class model implements OnDestroy {
             changedData = this.data;
         }
 
-        this.backend.save(this.module, this.id, changedData, this.savingProgress, this.templateId )
+        this.backend.save(this.module, this.id, changedData, this.savingProgress, this.templateId)
             .subscribe(
                 res => {
                     this.data = res;
@@ -919,7 +944,7 @@ export class model implements OnDestroy {
                         module: this.module,
                         data: this.data,
                         changed: this.getDirtyFields(),
-                        backupdata: {...this.backupData}
+                        backupdata: this.backupData
                     });
 
                     // saving is done
@@ -934,7 +959,7 @@ export class model implements OnDestroy {
 
                     // emit the save$
                     // redetermin the dirty fields since the backend call might have changed also additonal fields
-                    this.saved$.emit({changed: this.getDirtyFields(), backupdata: {...this.backupData}});
+                    this.saved$.emit({changed: this.getDirtyFields(), backupdata: this.backupData});
 
 
                     // end the edit process
@@ -1143,7 +1168,7 @@ export class model implements OnDestroy {
         let copyrules = this.metadata.getCopyRules("*", this.module);
         for (let copyrule of copyrules) {
             if (copyrule.tofield && copyrule.fixedvalue) {
-                this.setFixedValue( copyrule.tofield, copyrule.fixedvalue );
+                this.setFixedValue(copyrule.tofield, copyrule.fixedvalue);
             } else if (copyrule.tofield && copyrule.calculatedvalue) {
                 this.setFieldValue(copyrule.tofield, this.getCalculatdValue(copyrule.calculatedvalue));
             }
@@ -1176,7 +1201,7 @@ export class model implements OnDestroy {
         let fieldDef = this.metadata.getFieldDefs(this.module, toField);
 
         // if not found just set the field attribute
-        if(!fieldDef) this.setField(toField, value);
+        if (!fieldDef) this.setField(toField, value);
 
         // handle links
         switch (fieldDef.type) {
@@ -1200,18 +1225,18 @@ export class model implements OnDestroy {
      * @param toField
      * @param value
      */
-    private setFixedValue( toField, value ) {
+    private setFixedValue(toField, value) {
         let fieldDef = this.metadata.getFieldDefs(this.module, toField);
 
         // if no field definition found just set the field attribute
-        if ( !fieldDef ) this.setField( toField, value );
+        if (!fieldDef) this.setField(toField, value);
 
-        switch ( fieldDef.type ) {
+        switch (fieldDef.type) {
             case 'bool':
-                this.setField( toField, ( value === 'true' || value === '1' ) ? true : (( value === 'false' || value === '0' ) ? false : null ));
+                this.setField(toField, (value === 'true' || value === '1') ? true : ((value === 'false' || value === '0') ? false : null));
                 break;
             default:
-                this.setField( toField, value );
+                this.setField(toField, value);
                 break;
         }
     }
@@ -1535,8 +1560,41 @@ export class model implements OnDestroy {
         return true;
     }
 
+    /**
+     * remove an array of records from the given link name
+     * add the item to the 'beans_relations_to_delete'-array
+     * @param {string} relation_link_name
+     * @param {any[]} records
+     * @returns {boolean}
+     */
+    public removeRelatedRecords(relation_link_name: string, records: any[]): boolean {
+        if (!this.isFieldARelationLink(relation_link_name)) {
+            return false;
+        }
+
+        if (!this.data[relation_link_name]) {
+            this.data[relation_link_name] = {beans: []};
+        }
+
+        for(let record of records) {
+
+            for (let id in this.data[relation_link_name].beans) {
+                if (record == id) {
+                    delete this.data[relation_link_name].beans[id];
+                    this.data[relation_link_name].beans_relations_to_delete[id] = record;
+                }
+            }
+        }
+
+        return true;
+    }
+
+
     public ngOnDestroy(): void {
         this.navigation.unregisterModel(this.modelRegisterId);
+
+        // unsubscribe from any subscriptions we might have
+        this.subscriptions.unsubscribe();
     }
 
     public isDirty(): boolean {

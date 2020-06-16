@@ -98,7 +98,6 @@ import /*embed*/ {fieldWorklog} from "./components/fieldworklog";
 import /*embed*/ {FieldModelInfoComponent} from "./components/fieldmodelinfo";
 import /*embed*/ {FieldEnumModulesComponent} from "./components/fieldenummodules";
 import /*embed*/ {fieldGDPR} from "./components/fieldgdpr";
-import /*embed*/ {fieldServiceQueue} from "./components/fieldservicequeue";
 import /*embed*/ {fieldSelectTree,} from "./components/fieldselecttree";
 import /*embed*/ {fieldSelectTreeSearch} from "./components/fieldselecttreesearch";
 import /*embed*/ {fieldSelectTreeTree} from "./components/fieldselecttreetree";
@@ -221,7 +220,6 @@ declare var _: any;
         FieldEnumModulesComponent,
         FieldModelInfoComponent,
         fieldGDPR,
-        fieldServiceQueue,
         fieldSelectTree,
         fieldSelectTreeSearch,
         fieldSelectTreeTree,

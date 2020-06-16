@@ -21,6 +21,7 @@ import {broadcast} from './broadcast.service';
 
 import {Router} from '@angular/router';
 import {HttpClient} from "@angular/common/http";
+import {Title} from "@angular/platform-browser";
 
 /**
  * @ignore
@@ -28,7 +29,7 @@ import {HttpClient} from "@angular/common/http";
 declare var _: any;
 
 /**
- * holds aplication configuration
+ * holds application configuration
  */
 @Injectable()
 export class configurationService {
@@ -37,6 +38,11 @@ export class configurationService {
      * set to true once the service loaded itself
      */
     public initialized: boolean = false;
+
+    /**
+     * set to true if the sysinfo is getting reloaded
+     */
+    public reloading: boolean = false;
 
     /**
      * holds the sites from the frontend config
@@ -49,7 +55,9 @@ export class configurationService {
     public data: any = {
         backendUrl: 'proxy',
         backendextensions: {},
-        systemparameters: {}
+        systemparameters: {},
+        theme: {},
+        name: 'SpiceCRM'
     };
 
     /**
@@ -71,13 +79,13 @@ export class configurationService {
                 private cookie: cookie,
                 private session: session,
                 private broadcast: broadcast,
+                private title: Title,
                 private router: Router,) {
 
         let storedSites = localStorage.spiceuisites;
 
         if (storedSites) {
             this.sites = JSON.parse(atob(storedSites));
-
             let selectedsite = this.cookie.getValue('spiceuibackend');
             let siteFound = false;
             this.sites.some(site => {
@@ -96,17 +104,19 @@ export class configurationService {
             this.broadcast.message$.subscribe(message => this.handleLogout(message));
         }
 
+        // Update Theme when configuration has been loaded.
+        this.loaded$.subscribe(() => this.updateThemeColors());
+
         // reload the sites
         http.get('config/sites/')
             .subscribe(
                 (data: any) => {
-
                     let dataObject = data;
                     let sites = dataObject.sites;
 
                     // if no site is set naviogate to setup screen
                     if (sites.length == 0) {
-                        this.router.navigate(['/setup']);
+                        this.router.navigate(['/install']);
                     }
 
                     for (let attrname in dataObject.general) {
@@ -137,7 +147,7 @@ export class configurationService {
                         }
                     }
 
-                    this.initialized = true;
+                    // this.initialized = true;
                 }
             );
 
@@ -210,9 +220,17 @@ export class configurationService {
     }
 
     /**
+     * returns the system name
+     */
+    get systemName() {
+        return this.data.name ? this.data.name : 'SpiceCRM';
+    }
+
+    /**
      * calls sysinfo on the backend and stores the data
      */
     public getSysinfo() {
+        this.reloading = true;
         let sysinfo = this.http.get(this.getBackendUrl() + '/sysinfo');
         sysinfo.subscribe(
             (res: any) => {
@@ -220,10 +238,29 @@ export class configurationService {
                     this.data.languages = res.languages;
                     this.data.backendextensions = res.extensions;
                     this.data.systemparameters = res.systemsettings;
-                    this.loaded$.emit(true);
+                    this.data.socket_frontend = res.socket_frontend;
+                    this.data.unique_key = res.unique_key;
+                    this.data.name = res.name ? res.name : 'SpiceCRM',
+                        this.loaded$.emit(true);
                 }
+                this.initialized = true;
+                this.reloading = false;
+
+                // set the favicon
+                // ToDo: move to separate theming service
+                this.setFavIcon();
+
+                // set the title
+                this.title.setTitle(this.systemName);
             },
             (err: any) => {
+                this.reloading = false;
+                this.initialized = true;
+
+                // set the favicon
+                // ToDo: move to separate theming service
+                this.setFavIcon();
+
                 // this.toast.sendToast('error connecting to Backend', 'error', 'please contact your System administrator');
             });
         return sysinfo;
@@ -258,10 +295,19 @@ export class configurationService {
      */
     public getCapabilityConfig(capability) {
         try {
-            return (this.data.backendextensions[capability] && this.data.backendextensions[capability].config) ? this.data.backendextensions[capability].config : {}
+            return (this.data.backendextensions[capability] && this.data.backendextensions[capability].config) ? this.data.backendextensions[capability].config : {};
         } catch (e) {
             return {};
         }
+    }
+
+    /**
+     * Is there a configuration for a specific backend extension?
+     *
+     * @param capability
+     */
+    public hasCapabilityConfig(capability): boolean {
+        return this.data.backendextensions[capability] && this.data.backendextensions[capability].config && Object.keys(this.data.backendextensions[capability].config).length > 0;
     }
 
     /**
@@ -285,4 +331,65 @@ export class configurationService {
     public getData(key) {
         return this.appdata[key] ? this.appdata[key] : false;
     }
+
+    public updateThemeColors() {
+        // if ( !this.hasCapabilityConfig('theme') ) return;
+
+        /* list of colors that can be used for theming */
+        let allColors = ['color-white',
+            'color-grey-3',
+            'color-grey-9',
+            'color-grey-13',
+            'brand-background-primary',
+            'brand-primary',
+            'brand-primary-active',
+            'brand-accessible',
+            'brand-accessible-active',
+            'brand-header-contrast-cool',
+            'brand-text-link',
+            'color-background-inverse',
+            'color-border-inverse',
+            'color-background-success',
+            'color-background-success-dark',
+            'color-text-link-active',
+            'color-progressbar_item-completed',
+            'brand-primary-transparent',
+            'color-background-alt-inverse',
+            'color-border-brand'
+        ];
+
+        let theme = this.getCapabilityConfig('theme');
+        let colorsOfTheme: {};
+        // The in the theme defined colors are stored as json in the config field 'colors'. Parse it:
+        try {
+            colorsOfTheme = JSON.parse(theme.colors);
+        } catch (e) {
+            colorsOfTheme = {};
+            // console.warn("Color configuration of theme is invalid or empty.", [theme.colors] );
+        }
+        // Set all possible colors, either with the value of the config or with null. In case of null the browser uses the value set in the css file.
+        for (let colorname of allColors) {
+            document.documentElement.style.setProperty('--' + colorname, colorsOfTheme[colorname] ? colorsOfTheme[colorname] : null);
+        }
+
+        // color brand-primary may be set also by css file. we need it now to set the theme color in meta tag:
+        let colorBrandPrimary = document.documentElement.style.getPropertyValue('--brand-primary');
+        if (colorBrandPrimary) document.querySelector('meta[name="theme-color"]').setAttribute('content', colorBrandPrimary);
+    }
+
+    /**
+     * sets the favicon
+     */
+    private setFavIcon() {
+        let icon = document.querySelectorAll("link[ rel ~= 'icon' i]")[0];
+        if (icon) {
+            let config = this.getCapabilityConfig('theme');
+            if (config.icon_image) {
+                icon.setAttribute('href', 'data:' + config.icon_image);
+            } else {
+                icon.setAttribute('href', './config/favicon');
+            }
+        }
+    }
+
 }

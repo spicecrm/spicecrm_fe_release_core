@@ -10,6 +10,10 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module QuillEditorModule
+ */
+
 import {Component} from '@angular/core';
 import {SystemRichTextSourceModal} from "../../../systemcomponents/components/systemrichtextsourcemodal";
 

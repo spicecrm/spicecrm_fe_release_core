@@ -26,7 +26,7 @@ export class GlobalNavigationMenuItemIcon {
     @Input() icon: string = '';
 
     getSvgHRef() {
-        return './sldassets/icons/utility-sprite/svg/symbols.svg#' + this.icon;
+        return './vendor/sldassets/icons/utility-sprite/svg/symbols.svg#' + this.icon;
     }
 
 }

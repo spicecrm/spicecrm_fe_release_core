@@ -24,14 +24,13 @@ import {
     ViewContainerRef
 } from '@angular/core';
 import {Router}   from '@angular/router';
-import {MenuService} from '../services/menu.service';
 import {broadcast} from '../../services/broadcast.service';
 import {language} from '../../services/language.service';
 import {navigation} from '../../services/navigation.service';
 
 interface menuItem {
     module: string;
-    name: string
+    name: string;
 }
 
 @Component({

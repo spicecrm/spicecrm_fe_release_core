@@ -11,7 +11,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 */
 
 /**
- * @module directives
+ * @module DirectivesModule
  */
 import { Directive, HostListener, Input } from '@angular/core';
 
@@ -19,7 +19,6 @@ import { Directive, HostListener, Input } from '@angular/core';
  *  For input fields. Keeps the input value trimmed from white spaces.
  *  https://github.com/KingMario/packages/tree/master/projects/ngx-trim-directive
  */
-
 @Directive({
     selector: 'input[system-trim-input]',
 })

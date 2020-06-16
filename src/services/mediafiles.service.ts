@@ -91,7 +91,7 @@ export class mediafiles {
         return this._getImage(mediaId, 'sq/' + size);
     }
 
-
+    /*
     public uploadFile(files): Observable<any> {
 
         if (files.length === 0) return;
@@ -130,6 +130,7 @@ export class mediafiles {
 
         return retSub.asObservable();
     }
+    */
 
     public getMediaFile( noImagePicker = false, noMetaData = false, category: string): Observable<any> {
 

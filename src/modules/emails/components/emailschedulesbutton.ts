@@ -13,7 +13,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 /**
  * @module ModuleEmails
  */
-import {Component, Injector} from '@angular/core';
+import {Component, Injector, OnInit} from '@angular/core';
 import {metadata} from '../../../services/metadata.service';
 import {model} from '../../../services/model.service';
 import {language} from '../../../services/language.service';
@@ -26,9 +26,10 @@ import {toast} from "../../../services/toast.service";
     selector: "email-schedules-button",
     templateUrl: "./src/modules/emails/templates/emailschedulesbutton.html",
 })
-export class EmailSchedulesButton {
+export class EmailSchedulesButton implements OnInit {
 
     public disabled: boolean = false;
+    public hidden: boolean = true;
 
     constructor(
         private language: language,
@@ -41,11 +42,8 @@ export class EmailSchedulesButton {
     ) {
     }
 
-    /**
-     * do nmot display if emails cannot be assigned to the bean
-     */
-    get hidden() {
-        return !this.model.fields.hasOwnProperty('emails');
+    public ngOnInit(): void {
+        this.findEmailsLink();
     }
 
     /**
@@ -54,6 +52,18 @@ export class EmailSchedulesButton {
     get exportcount() {
         let selectedCount = this.modellist.getSelectedCount();
         return selectedCount ? selectedCount : this.modellist.listData.totalcount;
+    }
+
+    private findEmailsLink() {
+        let moduleFields = this.metadata.getModuleFields(this.model.module);
+        for (let fieldname in moduleFields) {
+            let field = moduleFields[fieldname];
+            // also check by name to be sure we catch the field
+            // ToDo: with vardef manager cleanup and rely on module alone
+            if (fieldname == 'emails' || (field.type == 'link' && field.module == 'Emails')) {
+                this.hidden = false;
+            }
+        }
     }
 
     /**

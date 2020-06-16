@@ -13,20 +13,28 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 /**
  * @module ModuleCalendar
  */
-import {Component, ElementRef, ViewChild, ViewContainerRef} from '@angular/core';
+import {ChangeDetectionStrategy, Component, ElementRef, ViewChild, ViewContainerRef} from '@angular/core';
 import {language} from '../../../services/language.service';
 import {calendar} from '../services/calendar.service';
 
+/**
+ * Display a day view to be rendered in a dashboard as dashlet
+ */
 @Component({
     selector: 'calendar-day-dashlet',
     templateUrl: './src/modules/calendar/templates/calendardaydashlet.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [calendar]
 })
 
 export class CalendarDayDashlet {
-
+    /**
+     * reference of calendar content div
+     */
     @ViewChild('calendarcontent', {read: ViewContainerRef, static: true}) private calendarContent: ViewContainerRef;
-
+    /**
+     * holds the dashlet label
+     */
     private dashletLabel: any = null;
 
     constructor(private language: language,

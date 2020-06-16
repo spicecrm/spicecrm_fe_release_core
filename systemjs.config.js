@@ -30,11 +30,12 @@
             'tslib': 'vendor:tslib/tslib.js',
             'google-auth-library': 'vendor:google-auth-library',
             'hammerjs': 'vendor:hammerjs/hammer.min.js',
+            'ts-md5': 'vendor:ts-md5/md5.js',
         },
         packages: {
             'app': {
                 main: './spiceui',
-                defaultExtension: 'js?v=202001001'
+                defaultExtension: 'js?v=2020.02.001.1592302380763'
             },
             rxjs: {
                 main: "index.js",

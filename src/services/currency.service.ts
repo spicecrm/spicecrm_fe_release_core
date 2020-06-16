@@ -16,12 +16,14 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 import {Injectable} from '@angular/core';
 
 import {configurationService} from './configuration.service';
+import {backend} from "./backend.service";
 
 @Injectable()
 export class currency {
-
+    public currenciesFromBackend: any = [];
     constructor(
-        private configuration: configurationService
+        private configuration: configurationService,
+        private backend: backend
     ) {
     }
 
@@ -52,4 +54,5 @@ export class currency {
             return '';
         }
     }
+
 }

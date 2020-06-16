@@ -63,10 +63,17 @@ import {VersionManagerService} from "./services/versionmanager.service";
 import {modal} from "./services/modal.service";
 import {layout} from "./services/layout.service";
 import {libloader} from "./services/libloader.service";
+import {telephony} from "./services/telephony.service";
+import {socket} from "./services/socket.service";
 
 import {GlobalLogin} from "./globalcomponents/components/globallogin";
 import {SystemDynamicRouteInterceptor} from "./systemcomponents/components/systemdynamicrouteinterceptor";
 import {GlobalHeader} from "./globalcomponents/components/globalheader";
+// spiceinstaller
+import {SpiceInstallerModule} from './include/spiceinstaller/spiceinstallermodule';
+import {spiceinstaller} from './include/spiceinstaller/services/spiceinstaller.service';
+import {SpiceInstaller} from './include/spiceinstaller/components/spiceinstaller';
+
 
 // declarations for TS
 /**
@@ -132,11 +139,13 @@ export class SpiceUI {
         SystemComponents,
         GlobalComponents,
         ObjectComponents,
+        SpiceInstallerModule,
         RouterModule.forRoot(
             [
                 {path: "login", component: GlobalLogin},
                 {path: "", redirectTo: "/module/Home", pathMatch: "full"},
-                {path: '**', component: SystemDynamicRouteInterceptor, canActivate: [loginCheck]}
+                {path: '**', component: SystemDynamicRouteInterceptor, canActivate: [loginCheck]},
+                {path: "install", component: SpiceInstaller}
                 // {path: '**', redirectTo: 'module/Home'/*, canActivate: [loginCheck]*/}
             ]
         )
@@ -145,52 +154,50 @@ export class SpiceUI {
     entryComponents: [],
     bootstrap: [SpiceUI],
     providers: [
-        {provide: LocationStrategy, useClass: HashLocationStrategy},
+        aclCheck,
+        assistant,
         backend,
         broadcast,
-        layout,
-        navigation,
         canNavigateAway,
-        session,
-        metadata,
-        aclCheck,
-        loginCheck,
-        helper,
-        loginService,
-        loader,
         configurationService,
-        language,
-        dockedComposer,
-        fts,
-        recent,
-        SystemJsNgModuleLoader,
-        modelutilities,
-        toast,
-        favorite,
-        reminder,
-        territories,
-        currency,
-        footer,
-        userpreferences,
         cookie,
+        currency,
+        dockedComposer,
+        favorite,
+        footer,
+        fts,
+        helper,
+        language,
+        layout,
+        libloader,
+        loader,
+        {provide: LocationStrategy, useClass: HashLocationStrategy},
+        loggerService,
+        loginCheck,
+        loginService,
         MathExpressionCompilerService,
-        assistant,
-        VersionManagerService,
+        metadata,
         modal,
+        modelutilities,
+        navigation,
+        recent,
+        reminder,
+        session,
+        socket,
+        telephony,
+        territories,
         Title,
         loggerService,
-        libloader
+        libloader,
+        spiceinstaller,
+        toast,
+        userpreferences,
+        VersionManagerService
     ]
 })
 export class SpiceUIModule {
-    public version = "1.0";
-    public build_date = "/*build_date*/";
+    constructor(private socket: socket) {
 
-    constructor(
-        public metadata: metadata,
-        private vms: VersionManagerService,
-    ) {
-        this.vms.registerModule(this);
     }
 }
 

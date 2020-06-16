@@ -10,4 +10,4 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 -->
 
-<system-utility-icon icon="tabset" size="x-small" class="slds-p-around--x-small slds-border--left" (click)="openModal()"></system-utility-icon>
+<system-utility-icon @browsertabbutton *ngIf="hasTabs" icon="tabset" size="x-small" class="slds-p-around--x-small slds-border--left" (click)="openModal()"></system-utility-icon>

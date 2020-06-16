@@ -28,12 +28,6 @@ export class dockedComposer {
     public composers: any[] = [];
 
     /**
-     * specific for the Telphony Integration
-     * this holds active calls
-     */
-    public calls: any[] = [];
-
-    /**
      * the hidden composers. They are folded away in a separate tab
      */
     public hiddenComposers: number[] = []
@@ -47,7 +41,6 @@ export class dockedComposer {
     private handleLogout(message) {
         if (message.messagetype == 'logout') {
             this.composers = [];
-            this.calls = [];
             this.hiddenComposers = [];
         }
     }

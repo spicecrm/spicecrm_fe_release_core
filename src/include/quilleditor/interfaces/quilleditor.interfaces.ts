@@ -10,6 +10,10 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module QuillEditorModule
+ */
+
 export type QuillToolbarConfigT = Array<Array<string | {
     indent?: string
     list?: string

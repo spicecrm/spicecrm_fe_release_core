@@ -10,6 +10,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
+/**
+ * @module SystemComponents
+ */
 import {Component, Input, ViewChild, ViewContainerRef, AfterViewInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 

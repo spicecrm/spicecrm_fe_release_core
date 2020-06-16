@@ -79,7 +79,8 @@ export class ObjectList implements OnDestroy {
         this.modellist.loadlimit = 50;
 
         // load the list and initialize from sesson data if this is set
-        this.loadList(true);
+        // handled in the list service
+        // this.loadList(true);
 
         // subscribe to changes of the listtype
         this.subscriptions.add(this.modellist.listtype$.subscribe(newType => this.switchListtype()));
@@ -125,7 +126,8 @@ export class ObjectList implements OnDestroy {
      * handle the listtype when this is switched and reload the listdefs and the listdata
      */
     private switchListtype() {
-        this.loadList();
+        // shoudl be handled in the listservice
+        // this.loadList();
     }
 
     /**

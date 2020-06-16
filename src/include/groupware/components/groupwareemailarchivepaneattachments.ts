@@ -39,7 +39,7 @@ export class GroupwareEmailArchivePaneAttachments {
      * List of attachments.
      */
     get attachments() {
-        return this.groupware.outlookAttachments.attachments;
+        return this.groupware.attachments.attachments;
     }
 
     /**

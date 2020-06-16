@@ -11,7 +11,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 */
 
 /**
- * @module SpiceImporterModule
+ * @module ModuleExchange
  */
 import {CommonModule} from "@angular/common";
 import {NgModule} from '@angular/core';

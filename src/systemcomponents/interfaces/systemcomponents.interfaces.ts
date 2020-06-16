@@ -11,6 +11,10 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 */
 
 /**
+ * @module SystemComponents
+ */
+
+/**
  * used for input radio group input
  */
 export interface InputRadioOptionI {

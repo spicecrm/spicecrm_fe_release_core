@@ -41,7 +41,7 @@ export class SystemIcon {
     }
 
     private getSvgHRef() {
-        return "./sldassets/icons/" + this.getSprite() + "-sprite/svg/symbols.svg#" + this.getIcon();
+        return "./vendor/sldassets/icons/" + this.getSprite() + "-sprite/svg/symbols.svg#" + this.getIcon();
     }
 
     private getIconClass() {

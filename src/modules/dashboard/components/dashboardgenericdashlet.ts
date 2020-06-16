@@ -63,7 +63,6 @@ export class DashboardGenericDashlet implements OnInit {
 
     get tableContainerStyle() {
         return {
-            width: '100%',
             height: `calc(100% - ${this.headercontainer.element.nativeElement.getBoundingClientRect().height}px)`
         };
     }
@@ -135,7 +134,6 @@ export class DashboardGenericDashlet implements OnInit {
         let element = this.tablecontainer.element.nativeElement;
         if (element.scrollTop + element.clientHeight >= element.scrollHeight - 5) {
             this.loadMore();
-            console.log('loading more');
         }
     }
 

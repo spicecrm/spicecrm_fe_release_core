@@ -51,6 +51,10 @@ foreach ($headers as $element => $value) {
             $headerarray[$element] = $element . ': ' . $value;
             break;
         default:
+            // add google callback elements
+            if(strpos(strtolower($element), 'x-goog') !== false || strpos(strtolower($element), 'x_goog') !== false){
+                $headerarray[$element] = $element . ': ' . $value;
+            }
             break;
     }
 }
