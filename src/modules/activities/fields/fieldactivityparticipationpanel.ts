@@ -13,7 +13,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 /**
  * @module ModuleActivities
  */
-import {Component, ElementRef, OnInit, Renderer2} from '@angular/core';
+import {Component, ElementRef, Renderer2, OnInit, OnDestroy} from '@angular/core';
 import {Router} from '@angular/router';
 import {model} from '../../../services/model.service';
 import {view} from '../../../services/view.service';
@@ -23,6 +23,7 @@ import {broadcast} from '../../../services/broadcast.service';
 import {modal} from '../../../services/modal.service';
 import {fieldGeneric} from "../../../objectfields/components/fieldgeneric";
 import {relateFilter} from "../../../services/modellist.service";
+import {Subscription} from "rxjs";
 
 @Component({
     templateUrl: './src/modules/activities/templates/fieldactivityparticipationpanel.html'
@@ -30,17 +31,20 @@ import {relateFilter} from "../../../services/modellist.service";
 export class fieldActivityParticipationPanel extends fieldGeneric implements OnInit {
 
     /**
-     * the index of the type of lookup (index of the aray above
-     */
-    public lookupType = 0;
-    /**
      * listens to the click
      */
     private clickListener: any;
+
     /**
      * the links that can be selected with the lookup
      */
     private lookuplinks = [];
+
+    /**
+     * the index of the type of lookup (index of the aray above
+     */
+    public lookupType = 0;
+
     /**
      * indicate tha the typoe selector is open
      */
@@ -105,17 +109,6 @@ export class fieldActivityParticipationPanel extends fieldGeneric implements OnI
     }
 
     /**
-     * returns the name for the link resp the module
-     */
-    get lookupTypeName() {
-        return this.language.getModuleName(this.lookuplinks[this.lookupType].module);
-    }
-
-    get relateFilterActive() {
-        return this.lookuplinks[this.lookupType].module != 'Users';
-    }
-
-    /**
      * load the links and the table fieldset
      */
     public ngOnInit() {
@@ -132,15 +125,12 @@ export class fieldActivityParticipationPanel extends fieldGeneric implements OnI
     }
 
     /**
-     * click handler for the
-     * @param event
+     * returns the name for the link resp the module
      */
-    public onClick(event: MouseEvent): void {
-        const clickedInside = this.elementRef.nativeElement.contains(event.target);
-        if (!clickedInside) {
-            this.closePopups();
-        }
+    get lookupTypeName() {
+        return this.language.getModuleName(this.lookuplinks[this.lookupType].module);
     }
+
 
     /**
      * checks if we have a relate filter field and if yes sets the filter accordingly
@@ -283,6 +273,17 @@ export class fieldActivityParticipationPanel extends fieldGeneric implements OnI
     }
 
     /**
+     * click handler for the
+     * @param event
+     */
+    public onClick(event: MouseEvent): void {
+        const clickedInside = this.elementRef.nativeElement.contains(event.target);
+        if (!clickedInside) {
+            this.closePopups();
+        }
+    }
+
+    /**
      * closes all open dropdowns
      */
     private closePopups() {
@@ -298,6 +299,10 @@ export class fieldActivityParticipationPanel extends fieldGeneric implements OnI
     private toggleLookupTypeSelect() {
         this.lookuplinkSelectOpen = !this.lookuplinkSelectOpen;
         this.lookupSearchOpen = false;
+    }
+
+    get relateFilterActive() {
+        return this.lookuplinks[this.lookupType].module != 'Users';
     }
 
     /**
@@ -321,16 +326,16 @@ export class fieldActivityParticipationPanel extends fieldGeneric implements OnI
 
     /**
      * removes on of the participants linked
-     * @param participant the pill item
+     * @param item the pill item
      */
     private removeItem(participant) {
-
         if (!this.model.data[participant.link].beans_relations_to_delete) this.model.data[participant.link].beans_relations_to_delete = {};
         this.model.data[participant.link].beans_relations_to_delete[participant.id] = participant;
         delete (this.model.data[participant.link].beans[participant.id]);
 
         // remove th pill
-        this.participants = this.participants.filter(item => item.id != participant.id);
+        let index = this.participants.findIndex(pill => pill.id == participant.id);
+        this.participants.splice(index, 1);
     }
 
     /**

@@ -70,9 +70,8 @@ export class ActivityParticipationPanel{
      * trackby function for the participant to imporve rendering and performance
      *
      * @param participant
-     * @param index
      */
-    private participantid(index, participant) {
+    private participantid(participant) {
         return participant.id;
     }
 
