@@ -57,6 +57,8 @@ import /*embed*/ { AdministrationSysTrashcanManager } from './components/adminis
 import /*embed*/ { AdministrationSysTrashcanRecover } from './components/administrationsystrashcanrecover';
 
 import /*embed*/ { AdministrationDictRepair } from './components/administrationdictrepair';
+import /*embed*/ {AdministrationDictRepairItem} from "./components/administrationdictrepairitem";
+import /*embed*/ {AdministrationDictRepairModal} from "./components/administrationdictrepairmodal";
 
 import /*embed*/ { AdministrationConfigEditor } from './components/administrationconfigeditor';
 
@@ -101,6 +103,8 @@ import /*embed*/ {AdministrationLanguages} from "./components/administrationlang
         AdministrationSysTrashcanManager,
         AdministrationSysTrashcanRecover,
         AdministrationDictRepair,
+        AdministrationDictRepairItem,
+        AdministrationDictRepairModal,
         AdministrationConfigEditor,
         AdministrationSchedulerJobsEnum,
         AdministrationSchedulerJobLog,

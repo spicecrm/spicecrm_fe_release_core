@@ -13,7 +13,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 /**
  * @module SystemComponents
  */
-import {Component, Output, EventEmitter, ElementRef, Renderer2, Input, ChangeDetectorRef} from "@angular/core";
+import {Component, Output, EventEmitter, ElementRef, Renderer2, Input, ChangeDetectorRef, OnDestroy} from "@angular/core";
 import {backend} from "../../services/backend.service";
 import {language} from "../../services/language.service";
 import {configurationService} from "../../services/configuration.service";
@@ -22,7 +22,7 @@ import {configurationService} from "../../services/configuration.service";
     selector: "system-googleplaces-autocomplete",
     templateUrl: "./src/systemcomponents/templates/systemgoogleplacesautocomplete.html"
 })
-export class SystemGooglePlacesAutocomplete {
+export class SystemGooglePlacesAutocomplete implements OnDestroy {
     @Output() private address: EventEmitter<any> = new EventEmitter<any>();
     @Input() private disabled: boolean = false;
 
@@ -58,6 +58,12 @@ export class SystemGooglePlacesAutocomplete {
             window.clearTimeout(this.autocompleteTimeout);
         }
         this.autocompleteTimeout = window.setTimeout(() => this.doAutocomplete(), 500);
+    }
+
+    public ngOnDestroy() {
+        if (this.autocompleteClickListener) {
+            this.autocompleteClickListener();
+        }
     }
 
     private onSearchFocus() {

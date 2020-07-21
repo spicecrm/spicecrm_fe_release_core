@@ -49,7 +49,8 @@ export class DashboardAddElement {
     get dashboardDashlets() {
         return this.dashboarddashlets
             .filter(dashlet => (this.dashletModule == '*' || dashlet.module == this.dashletModule) &&
-                (this.searchKey.length == 0 || this.language.getLabel(dashlet.label).toLowerCase().indexOf(this.searchKey.toLowerCase()) > -1));
+                (this.searchKey.length == 0 || this.language.getLabel(dashlet.label).toLowerCase().indexOf(this.searchKey.toLowerCase()) > -1)
+                && this.metadata.checkModuleAcl(dashlet.module, 'list'));
     }
 
     get dashletType() {
