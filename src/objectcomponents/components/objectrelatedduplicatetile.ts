@@ -35,6 +35,10 @@ export class ObjectRelatedDuplicateTile implements OnInit {
      * to enable the link on the tile
      */
     @Input() private enableLink: boolean = true;
+
+    /**
+     * show a button .. used in the edit modal since the link would lead to leavin gthe modal and navigate in teh back behind the modal
+     */
     @Input() private enableButtonLink: boolean = false;
 
     /**

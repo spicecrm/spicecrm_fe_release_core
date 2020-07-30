@@ -28,6 +28,7 @@ import {toast} from "./toast.service";
  * @ignore
  */
 declare var moment: any;
+declare var _: any;
 
 interface geoSearch {
     radius: number;
@@ -454,17 +455,19 @@ export class modellist implements OnDestroy {
      * @param listcomponent
      */
     set listcomponent(listcomponent) {
-        this._listcomponent = listcomponent;
-        this.listcomponent$.next(listcomponent);
+        if(this._listcomponent != listcomponent) {
+            this._listcomponent = listcomponent;
+            this.listcomponent$.next(listcomponent);
 
-        // set it to the preferences when we are on a general list
-        if (this.currentList.id == 'all' || this.currentList.id == 'owner') {
-            this.userpreferences.setPreference('defaultlisttype', listcomponent, false, 'SpiceUI_' + this.module);
+            // set it to the preferences when we are on a general list
+            if (this.currentList.id == 'all' || this.currentList.id == 'owner') {
+                this.userpreferences.setPreference('defaultlisttype', listcomponent, false, 'SpiceUI_' + this.module);
+            }
+
+            // reset current list fielddefs and redetermine its fields from the component config
+
+            this.determineListFields();
         }
-
-        // reset current list fielddefs and redetermine its fields from the component config
-        this.currentList.fielddefs = undefined;
-        this.determineListFields();
     }
 
     /**
@@ -562,7 +565,7 @@ export class modellist implements OnDestroy {
      * @param listType
      * @param setPreference
      */
-    public setListType(listType: string, setPreference = true, sortArray = []): void {
+    public setListType(listType: string, setPreference = true, sortArray = [], loadlist: boolean = true): void {
 
         // close filters and aggegarts if they are being displayed
         this.displayAggregates = false;
@@ -577,7 +580,7 @@ export class modellist implements OnDestroy {
         }
 
         // determine the listfields
-        this.determineListFields();
+        this.determineListFields(listType);
 
         // set the user preferences
         if (setPreference) {
@@ -614,14 +617,16 @@ export class modellist implements OnDestroy {
         this.listtype$.next(listType);
 
         // get the list data
-        this.getListData();
+        if(loadlist) {
+            this.getListData();
+        }
     }
 
 
     /**
      * build the listfields based on the listtype
      */
-    private determineListFields() {
+    private determineListFields(listtype?) {
         this._listfields = [];
 
         // check if we have fielddefs
@@ -1009,6 +1014,9 @@ export class modellist implements OnDestroy {
             list: [],
             totalcount: 0
         };
+
+        // emit that the data changed
+        this.listDataChanged$.next(true);
     }
 
     /**
@@ -1194,10 +1202,11 @@ export class modellist implements OnDestroy {
     public loadList(fields: any[], quiet: boolean = false): Observable<boolean> {
         let retSub = new Subject<boolean>();
         if (!quiet) {
-            this.resetListData();
-
             // set the service to loading state
             this.isLoading = true;
+
+            // reset the list data
+            this.resetListData();
         } else {
             // just reset the bucket items if we have any
             if (this.buckets && this.buckets.bucketitems) {
