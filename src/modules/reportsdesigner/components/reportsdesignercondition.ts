@@ -28,6 +28,11 @@ export class ReportsDesignerCondition {
     * @input whereCondition: object
      */
     @Input() private whereCondition: any = {};
+    /**
+     * true if the operator contains oneof
+     * @private
+     */
+    private isMultiSelect: boolean = false;
 
     constructor(private language: language,
                 private model: model,
@@ -43,6 +48,8 @@ export class ReportsDesignerCondition {
 
         switch (this.whereCondition.type) {
             case 'enum':
+            case 'multienum':
+            case 'radioenum':
                 switch (this.whereCondition.operator) {
                     case 'equals':
                     case 'notequal':

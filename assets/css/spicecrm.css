@@ -8,6 +8,8 @@
 @import "./imports/spicecdk.css";
 @import "./imports/spicetables.css";
 @import "./imports/spicescrollbar.css";
+@import "./imports/spicetimeline.css";
+@import "./imports/spicepagebuilder.css";
 
 :root {
     --color-white: white;
@@ -190,8 +192,11 @@ global-navigation-menu-item li.slds-dropdown-trigger, global-navigation-menu-mor
 /* reduce padding */
 @media (max-width: 48em) {
     .slds-max-medium-table--stacked-horizontal tr > td:first-child,
+    .slds-max-medium-table_stacked-horizontal tr > td:first-child,
     .slds-max-medium-table--stacked-horizontal td,
-    .slds-max-medium-table--stacked-horizontal tr > td:last-child {
+    .slds-max-medium-table_stacked-horizontal td,
+    .slds-max-medium-table--stacked-horizontal tr > td:last-child
+    .slds-max-medium-table_stacked-horizontal tr > td:last-child {
         padding: .5em;
     }
 }
@@ -301,7 +306,8 @@ global-navigation-menu-item li.slds-dropdown-trigger, global-navigation-menu-mor
     fill: var(--color-white);
 }
 
-field-generic-display .slds-button--icon {
+field-generic-display .slds-button--icon,
+field-generic-display .slds-button_icon {
     color: var(--color-grey-3);
 }
 
@@ -310,6 +316,63 @@ field-generic-display .slds-button--icon {
     color: var(--color-grey-9);
 }
 
-.slds-button.slds-button--brand {
+.slds-button.slds-button--brand, .slds-button.slds-button_brand {
     color: var(--color-white);
+}
+
+/* fix for scoped tabs when the second tba is selected */
+.slds-tabs--scoped__item, .slds-tabs_scoped__item{
+    margin-bottom: -1.1px;
+}
+
+.spice-display-block {
+    display: block;
+}
+
+
+.spice-drop-zone {
+    position:relative;
+    z-index:8000;
+    width: 100%;
+}
+.spice-drop-zone article:focus {
+    outline: 0;
+}
+.spice-drop-zone-label {
+    opacity:0;
+    background:#0070d2;
+    top: -20px;
+    position: absolute;
+    width: 100px;
+    height: 20px;
+    left: calc(50% - 50px);
+    color: #fff;
+    border-top-right-radius: .25rem;
+    border-top-left-radius: .25rem;
+}
+.spice-drop-zone-label .slds-media__figure {
+    margin: 0 .5rem !important;
+}
+.spice-drop-zone-actions {
+    opacity:0;
+    background:#0070d2;
+    position:absolute;
+    right:0;
+    top:0;
+}
+.spice-drop-zone.slds-is-hovered > .spice-drop-zone-label,
+.spice-drop-zone.slds-is-hovered > .spice-drop-zone-actions {
+    opacity:1;
+    z-index:8000;
+}
+.spice-drop-zone.slds-is-hovered > .spice-drop-zone-content {
+    border:1px solid #1589ee;
+}
+
+.spice-hover-display-children:hover .spice-hover-child {
+    display: block;
+}
+
+.spice-hover-display-children .spice-hover-child {
+    display: none;
 }

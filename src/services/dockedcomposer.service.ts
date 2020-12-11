@@ -16,6 +16,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 import {Injectable} from '@angular/core';
 import {modelutilities} from './modelutilities.service';
 import {broadcast} from './broadcast.service';
+import {model} from "./model.service";
 
 /**
  * holds all current composers
@@ -30,7 +31,7 @@ export class dockedComposer {
     /**
      * the hidden composers. They are folded away in a separate tab
      */
-    public hiddenComposers: number[] = []
+    public hiddenComposers: number[] = [];
 
     constructor(private modelutilities: modelutilities, private broadcast: broadcast) {
 
@@ -50,19 +51,21 @@ export class dockedComposer {
      *
      * @param module the module for which the composer is
      * @param model optional a model that can be passed in with the model data
+     * @param expanded optional set to true if the composer should automatically expand if expand is possible
      */
-    public addComposer(module, model?) {
+    public addComposer(module: string, model?: model, expanded?: boolean) {
 
         if (model) {
             this.composers.splice(0, 0, {
                 module,
                 id: model.id,
-                name: model.summary_text,
+                name: model.getField('summary_text'),
                 model: {
                     module,
                     id: model.id,
                     data: model.data
-                }
+                },
+                loadexpanded: expanded
             });
 
         } else {
@@ -70,7 +73,8 @@ export class dockedComposer {
                 module,
                 id: this.modelutilities.generateGuid(),
                 name: '',
-                model: {}
+                model: {},
+                loadexpanded: expanded
             });
         }
 

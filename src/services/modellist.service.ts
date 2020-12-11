@@ -304,11 +304,21 @@ export class modellist implements OnDestroy {
             // reset the list data
             this.resetListData();
 
-            // if we are in embedded mode stop processing and return
-            if(embedded) return;
+            // set the aggergates for the module
+            this.moduleAggregates = [];
+            for (let moduleAggregate of this.metadata.getModuleAggregates(module)) {
+                this.moduleAggregates.push({...moduleAggregate});
+            }
+            this.moduleAggregates.sort((a, b) => {
+                if (!a.priority && !b.priority) return 0;
+                return (!a.priority || a.priority > b.priority) ? 1 : -1;
+            });
 
             // load the list types for the module
             this.loadListTypes();
+
+            // if we are in embedded mode stop processing and return
+            if(embedded) return;
 
             // try to get the list data from the session if there is session data stored
             if (!this.getFromSession()) {
@@ -324,15 +334,7 @@ export class modellist implements OnDestroy {
                 this.reLoadList(true);
             }
 
-            // set the aggergates for the module
-            this.moduleAggregates = [];
-            for (let moduleAggregate of this.metadata.getModuleAggregates(module)) {
-                this.moduleAggregates.push({...moduleAggregate});
-            }
-            this.moduleAggregates.sort((a, b) => {
-                if (!a.priority && !b.priority) return 0;
-                return (!a.priority || a.priority > b.priority) ? 1 : -1;
-            });
+
         }
     }
 
@@ -461,7 +463,7 @@ export class modellist implements OnDestroy {
 
             // set it to the preferences when we are on a general list
             if (this.currentList.id == 'all' || this.currentList.id == 'owner') {
-                this.userpreferences.setPreference('defaultlisttype', listcomponent, false, 'SpiceUI_' + this.module);
+                this.userpreferences.setPreference('defaultlisttype', listcomponent, false, this.module);
             }
 
             // reset current list fielddefs and redetermine its fields from the component config

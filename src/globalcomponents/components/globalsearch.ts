@@ -20,6 +20,8 @@ import {language} from '../../services/language.service';
 import {navigation} from '../../services/navigation.service';
 import {navigationtab} from '../../services/navigationtab.service';
 
+declare var _: any;
+
 @Component({
     selector: 'global-search',
     templateUrl: './src/globalcomponents/templates/globalsearch.html',
@@ -76,7 +78,7 @@ export class GlobalSearch implements OnDestroy, OnInit {
     get totalcount() {
         let total = 0;
         for (let modres of this.fts.moduleSearchresults) {
-            total += modres.data.total;
+            total += _.isNumber(modres.data.total) ? modres.data.total : modres.data.total.value;
         }
         return total;
     }
@@ -84,7 +86,7 @@ export class GlobalSearch implements OnDestroy, OnInit {
     get totalmodules() {
         let total = 0;
         for (let modres of this.fts.moduleSearchresults) {
-            if (modres.data.total > 0) total++;
+            if ((_.isNumber(modres.data.total) ? modres.data.total : modres.data.total.value) > 0) total++;
         }
         return total;
     }
@@ -97,7 +99,7 @@ export class GlobalSearch implements OnDestroy, OnInit {
             this.fts.searchByModules({searchterm: this.searchTerm}).subscribe(results => {
                 let total = 0;
                 for(let sres of this.fts.moduleSearchresults){
-                    total += sres.data.total;
+                    total += _.isNumber(sres.data.total) ? sres.data.total : sres.data.total.value;
                 }
                 this.setTabName(total);
 
@@ -106,7 +108,7 @@ export class GlobalSearch implements OnDestroy, OnInit {
             this.fts.searchByModules({searchterm: this.searchTerm, modules: [this.searchScope], size: 50}).subscribe(results => {
                 let total = 0;
                 for(let sres of this.fts.moduleSearchresults){
-                    total += sres.data.total;
+                    total += _.isNumber(sres.data.total) ? sres.data.total : sres.data.total.value;
                 }
                 this.setTabName(total);
             });

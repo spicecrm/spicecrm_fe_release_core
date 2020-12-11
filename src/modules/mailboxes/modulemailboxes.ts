@@ -18,7 +18,6 @@ import {
     NgModule
 } from "@angular/core";
 import {FormsModule} from "@angular/forms";
-import {VersionManagerService} from "../../services/versionmanager.service";
 
 import {DirectivesModule} from "../../directives/directives";
 import {GlobalComponents} from "../../globalcomponents/globalcomponents";
@@ -39,6 +38,7 @@ import /*embed*/ {MailboxEmailToLeadEmailText} from "./components/mailboxemailto
 import /*embed*/ { MailboxesDashlet } from "./components/mailboxesdashlet";
 import /*embed*/ {MailboxManagerTextMessages} from "./components/mailboxmanagertextmessages";
 import /*embed*/  {MailboxManagerTextMessage} from "./components/mailboxmanagertextmessage";
+import /*embed*/  {fieldMailboxes} from "./fields/fieldmailboxes";
 
 @NgModule({
     declarations: [
@@ -53,6 +53,7 @@ import /*embed*/  {MailboxManagerTextMessage} from "./components/mailboxmanagert
         MailboxEmailToLeadModal,
         MailboxEmailToLeadEmailText,
         MailboxesDashlet,
+        fieldMailboxes
     ],
     imports: [
         CommonModule,
@@ -65,10 +66,5 @@ import /*embed*/  {MailboxManagerTextMessage} from "./components/mailboxmanagert
     ],
 })
 export class ModuleMailboxes {
-    readonly version = "1.0";
-    readonly build_date = "/*build_date*/";
 
-    constructor(private vms: VersionManagerService) {
-        this.vms.registerModule(this);
-    }
 }

@@ -14,7 +14,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
  * @module ObjectComponents
  */
 import {
-    Component, Input, OnInit,
+    Component, Input, OnInit, Optional,
     ViewChild,
     ViewContainerRef,
 } from '@angular/core';
@@ -27,6 +27,7 @@ import {language} from '../../services/language.service';
 import {view} from '../../services/view.service';
 import {metadata} from '../../services/metadata.service';
 import {modalwindow} from "../../services/modalwindow.service";
+import {navigationtab} from "../../services/navigationtab.service";
 
 /**
  * renders a modal window to add or edit an object record
@@ -94,9 +95,16 @@ export class ObjectEditModal implements OnInit {
         private view: view,
         private metadata: metadata,
         private modal: modal,
-        private modalwindow: modalwindow
+        private modalwindow: modalwindow,
+        @Optional() private navigationtab: navigationtab,
     ) {
+        // view is editable
         this.view.isEditable = true;
+
+        // do not follow links
+        this.view.displayLinks = false;
+
+        // set the edit mode
         this.view.setEditMode();
 
         // start editing
@@ -153,7 +161,7 @@ export class ObjectEditModal implements OnInit {
         switch (event) {
             case 'savegodetail':
                 this.actionSubject.next(event);
-                this.model.goDetail();
+                this.model.goDetail(this.navigationtab?.tabid);
                 break;
             case 'save':
                 this.actionSubject.next(event);

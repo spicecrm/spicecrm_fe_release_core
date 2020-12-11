@@ -38,10 +38,11 @@ import /*embed*/ {GroupwareEmailArchivePaneAttachments} from './components/group
 import /*embed*/ {GroupwareEmailArchivePaneBeans} from './components/groupwareemailarchivepanebeans';
 import /*embed*/ {GroupwareEmailArchivePaneLinked} from './components/groupwareemailarchivepanelinked';
 import /*embed*/ {GroupwareEmailArchivePaneSearch} from './components/groupwareemailarchivepanesearch';
-import /*embed*/ {GroupwareDetailPane} from './components/groupwaredetailpane';
+import /*embed*/ {GroupwareEmailArchivePaneItem} from './components/groupwareemailarchivepaneitem';
 import /*embed*/ {GroupwareDetailPanefooter} from './components/groupwaredetailpanefooter';
 import /*embed*/ {GroupwareDetailPaneHeader} from './components/groupwaredetailpaneheader';
 import /*embed*/ {GroupwareDetailPaneBean} from './components/groupwaredetailpanebean';
+import /*embed*/ {GroupwareDetailPane} from './components/groupwaredetailpane';
 
 @NgModule({
     imports: [
@@ -65,6 +66,7 @@ import /*embed*/ {GroupwareDetailPaneBean} from './components/groupwaredetailpan
         GroupwareEmailArchivePaneLinked,
         GroupwareEmailArchivePaneSearch,
         GroupwareDetailPane,
+        GroupwareEmailArchivePaneItem,
         GroupwareDetailPanefooter,
         GroupwareDetailPaneHeader,
         GroupwareDetailPaneBean

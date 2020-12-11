@@ -15,8 +15,11 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
     <div class="slds-align--absolute-center slds-size--1-of-1 slds-large-size--1-of-2">
         <div class="slds-size--1-of-1 slds-medium-size--2-of-3 slds-p-around--medium">
             <!--div class="spiceLoginLogo"-->
-            <div class="slds-align--absolute-center slds-p-vertical--medium">
+            <div *ngIf="displayimage"  class="slds-align--absolute-center slds-p-vertical--medium">
                 <global-login-image></global-login-image>
+            </div>
+            <div *ngIf="!displayimage" class="slds-align--absolute-center slds-p-vertical--medium">
+                <global-header-image></global-header-image>
             </div>
             <div class="slds-box--border slds-theme--shade" *ngIf="!loginService.session.authData.sessionId && promptUser">
                 <div class="slds-p-around--medium" [system-overlay-loading-spinner]="configuration.reloading">
@@ -59,7 +62,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
                         <global-login-google (googletoken)="doLogin()"></global-login-google>
                     </form>
                     <div class="slds-p-vertical--x-small slds-grid slds-grid--align-spread slds-grid_vertical-align-center"
-                         *ngIf="configuration.getData('allowForgotPass')">
+                         *ngIf="configuration.data.allowForgotPass">
                         <div class="slds-truncate slds-text-body_small" title="Forgot password">Forgot password</div>
                         <button class="slds-button" (click)="showForgotPassword()">
                             <system-button-icon *ngIf="!showForgotPass" [icon]="'chevrondown'" [size]="'xx-small'"></system-button-icon>
@@ -75,7 +78,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
             </ng-container>
         </div>
         <div class="slds-is-absolute" style="bottom: 10px;">
-        <global-copyright></global-copyright>
+            <global-copyright></global-copyright>
         </div>
     </div>
     <div *ngIf="promptUser && showSidebar" class="slds-size--1-of-1 slds-large-size--1-of-2 slds-height_full" [class.slds-scrollable--y]="!showExternalSidebar">

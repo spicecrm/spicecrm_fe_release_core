@@ -17,7 +17,6 @@ import {CommonModule} from "@angular/common";
 import {NgModule} from "@angular/core";
 import {FormsModule} from "@angular/forms";
 
-import {VersionManagerService} from "../../services/versionmanager.service";
 import {DirectivesModule} from "../../directives/directives";
 
 import {ObjectFields} from "../../objectfields/objectfields";
@@ -34,10 +33,10 @@ import /*embed*/ {UserRoles} from "./components/userroles";
 import /*embed*/ {UserRolesAddModal} from "./components/userrolesaddmodal";
 import /*embed*/ {UserAddButton} from "./components/useraddbutton";
 import /*embed*/ {UserAddModal} from "./components/useraddmodal";
-import /*embed*/ {UserPreferencesItem} from "./components/userpreferencesitem";
-import /*embed*/ {UserPreferencesItemDisplay} from "./components/userpreferencesitemdisplay";
-import /*embed*/ {UserPreferencesItemEdit} from "./components/userpreferencesitemedit";
 import /*embed*/ {UserPopoverHeader} from "./components/userpopoverheader";
+import /*embed*/ {UserDeactivateButton} from "./components/userdeactivatebutton";
+import /*embed*/ {UserDeactivateModal} from "./components/userdeactivatemodal";
+import /*embed*/ {UserDeactivateSelectUser} from "./components/userdeactivateselectuser";
 
 @NgModule({
     imports: [
@@ -59,19 +58,11 @@ import /*embed*/ {UserPopoverHeader} from "./components/userpopoverheader";
         UserRolesAddModal,
         UserAddButton,
         UserAddModal,
-        UserPreferencesItem,
-        UserPreferencesItemDisplay,
-        UserPreferencesItemEdit,
-        UserPopoverHeader
+        UserPopoverHeader,
+        UserDeactivateButton,
+        UserDeactivateModal,
+        UserDeactivateSelectUser
     ]
 })
 export class ModuleUsers {
-    public readonly version = "1.0";
-    public readonly build_date = "/*build_date*/";
-
-    constructor(
-        private vms: VersionManagerService,
-    ) {
-        this.vms.registerModule(this);
-    }
 }

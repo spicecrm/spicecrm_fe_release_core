@@ -13,8 +13,8 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 /**
  * @module ObjectFields
  */
-import {Component, OnDestroy, ViewChild, ViewContainerRef} from '@angular/core';
-import {DomSanitizer} from '@angular/platform-browser';
+import {ChangeDetectorRef, Component, Injector} from '@angular/core';
+import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
 import {model} from '../../services/model.service';
 import {view} from '../../services/view.service';
 import {language} from '../../services/language.service';
@@ -24,6 +24,7 @@ import {Router} from '@angular/router';
 import {broadcast} from "../../services/broadcast.service";
 import {backend} from "../../services/backend.service";
 import {toast} from "../../services/toast.service";
+import {modal} from "../../services/modal.service";
 
 declare var _;
 
@@ -32,26 +33,45 @@ declare var _;
     templateUrl: './src/objectfields/templates/fieldrichtext.html',
 })
 export class fieldRichText extends fieldGeneric {
-    private stylesheetField: string = '';
-    private useStylesheets: boolean;
-    private useStylesheetSwitcher: boolean;
-    private stylesheets: any[];
-    private stylesheetToUse: string = '';
-
     /**
-     *
+     * holds the spice page builder html code
+     * @private
      */
-    private _sanitizedValue;
-
+    private parsedHtml: SafeHtml = '';
+    /**
+     * holds the sanitized value for the iframe
+     * @private
+     */
+    private sanitizedValue: SafeHtml;
     /**
      * the cached full html code to prevent "flickering" of the iframe (change detection)
      */
     private fullValue_cached: string;
-
-
+    /**
+     * holds the full value for the iframe
+     * @private
+     */
     private fullValue: string = '';
-
-    @ViewChild('printframe', {read: ViewContainerRef, static: true}) private printframe: ViewContainerRef;
+    /**
+     * holds the stylesheet field name
+     * @private
+     */
+    private stylesheetField: string = '';
+    /**
+     * holds the stylesheet to be used in the iframe
+     * @private
+     */
+    private stylesheetToUse: string = '';
+    /**
+     * holds a list of the saved stylesheets
+     * @private
+     */
+    private stylesheets: any[];
+    /**
+     * when true use stylesheets in iframe
+     * @private
+     */
+    private useStylesheets: boolean;
 
     constructor(public model: model,
                 public view: view,
@@ -60,20 +80,26 @@ export class fieldRichText extends fieldGeneric {
                 public backend: backend,
                 public toast: toast,
                 public router: Router,
+                public injector: Injector,
                 public broadcast: broadcast,
+                public modal: modal,
+                public cdRef: ChangeDetectorRef,
                 public sanitized: DomSanitizer) {
         super(model, view, language, metadata, router);
-        this.stylesheets = this.metadata.getHtmlStylesheetNames();
         this.modelChangesSubscriber();
+        this.stylesheets = this.metadata.getHtmlStylesheetNames();
+    }
+
+    get heightStyle() {
+        return {height: this.fieldconfig.height ? this.fieldconfig.height : '500px'};
     }
 
     /**
-     * get the html representation of the corresponding value
-     * SPICEUI-88 - to prevent "flickering" of the iframe displaying this value, the value will be cached and should be rebuild on change
-     * @returns {any}
+     * returns the style for the given stylesheet
+     * used in the iframe display
      */
-    get htmlValue() {
-        return this.sanitized.bypassSecurityTrustHtml(this.value);
+    get styleTag() {
+        return (this.stylesheetId) ? '<style>' + this.metadata.getHtmlStylesheetCode(this.stylesheetId) + '</style>' : '';
     }
 
     /**
@@ -88,7 +114,6 @@ export class fieldRichText extends fieldGeneric {
 
     /**
      * setter for the stylesheet id
-     *
      * @param id
      */
     set stylesheetId(id: string) {
@@ -97,76 +122,27 @@ export class fieldRichText extends fieldGeneric {
         }
     }
 
-    /**
-     * simple getter to return if the editor mode shoudl be simple or extended
-     */
-    get extendedmode() {
-        return this.fieldconfig.simplemode ? false : true;
-    }
-
-    /**
-     * returns the style for the given stylesheet
-     * used in the iframe display
-     */
-    get styleTag() {
-        return (this.stylesheetId) ? '<style>' + this.metadata.getHtmlStylesheetCode(this.stylesheetId) + '</style>' : '';
-    }
-
-    /**
-     * simple getter to get the config if the field shoudl be rendered as iFrame in the view
-     */
-    get asiframe() {
-        return this.fieldconfig.asiframe ? true : false;
-    }
-
-    get heightStyle() {
-        return {height: this.fieldconfig.height ? this.fieldconfig.height : '500px'};
-    }
-
     public ngOnInit() {
         this.setStylesheetField();
         this.setStylesheetsToUse();
         this.setHtmlValue();
     }
 
-
     /**
-     * get the html representation of the corresponding value
-     * SPICEUI-88 - to prevent "flickering" of the iframe displaying this value, the value will be cached and should only be rebuild on change
-     * @returns {any}
+     * sets the edit mode on the view and the model into editmode itself
      */
-    get sanitizedValue() {
-        if (this.value) {
-            if (this.value.includes('</html>')) {
-                this.fullValue = this.value;
-            } else {
-                // added <base target="_blank"> so all links open in new window
-                this.fullValue = `<html><head><base target="_blank">${this.styleTag}</head><body class="spice">${this.value}</body></html>`;
-            }
-        }
-
-        // if value changed, generate sanitized html value
-        if (this.fullValue != this.fullValue_cached) {
-            this._sanitizedValue = this.sanitized.bypassSecurityTrustResourceUrl(this.fullValue ? 'data:text/html;charset=UTF-8,' + encodeURIComponent(this.fullValue) : '');
-            this.fullValue_cached = this.fullValue;
-        }
-        return this._sanitizedValue;
+    public setEditMode() {
+        this.model.startEdit();
+        this.view.setEditMode();
+        this.cdRef.detectChanges();
     }
 
-    private modelChangesSubscriber() {
-
-        this.subscriptions.add(this.model.saved$.subscribe(saved => this.setHtmlValue()));
-        this.subscriptions.add(this.model.data$.subscribe(saved => this.setHtmlValue()));
-
-        /*
-        this.broadcast.message$.subscribe(msg => {
-            switch (msg.messagetype) {
-                case 'model.save':
-                case 'model.loaded':
-                    this.setHtmlValue();
-            }
-        });
-        */
+    protected encodeHtml(value) {
+        return String(value)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;');
     }
 
     private setStylesheetField() {
@@ -187,7 +163,33 @@ export class fieldRichText extends fieldGeneric {
                 this.stylesheetToUse = this.metadata.getHtmlStylesheetToUse(this.model.module, this.fieldname);
             }
         }
-        this.useStylesheetSwitcher = this.useStylesheets && _.isEmpty(this.stylesheetToUse);
+    }
+
+    /**
+     * get the html representation of the corresponding value
+     * SPICEUI-88 - to prevent "flickering" of the iframe displaying this value, the value will be cached and should only be rebuild on change
+     * @returns {any}
+     */
+    private setSanitizedValue() {
+        if (this.value) {
+            if (this.value.includes('</html>')) {
+                this.fullValue = this.value;
+            } else {
+                // added <base target="_blank"> so all links open in new window
+                this.fullValue = `<html><head><base target="_blank">${this.styleTag}</head><body class="spice">${this.value}</body></html>`;
+            }
+        }
+
+        // if value changed, generate sanitized html value
+        if (this.fullValue != this.fullValue_cached) {
+            this.sanitizedValue = this.sanitized.bypassSecurityTrustResourceUrl(this.fullValue ? 'data:text/html;charset=UTF-8,' + encodeURIComponent(this.fullValue) : '');
+            this.fullValue_cached = this.fullValue;
+        }
+        return this.sanitizedValue;
+    }
+
+    private modelChangesSubscriber() {
+        this.subscriptions.add(this.model.data$.subscribe(() => this.setHtmlValue()));
     }
 
     private setHtmlValue() {
@@ -200,20 +202,8 @@ export class fieldRichText extends fieldGeneric {
                 .replace('&lt;/code&gt;', '</code>');
             match = regexp.exec(this.value);
         }
-    }
-
-    private encodeHtml(value) {
-        return String(value)
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;')
-            .replace(/"/g, '&quot;');
-    }
-
-    private updateStylesheet(stylesheetId) {
-        if (!_.isEmpty(this.stylesheetField) && _.isString(stylesheetId)) {
-            this.model.setField(this.stylesheetField, stylesheetId);
-        }
+        this.parsedHtml = this.sanitized.bypassSecurityTrustHtml(this.value);
+        this.setSanitizedValue();
     }
 
     private save(content) {

@@ -43,8 +43,7 @@ export class SystemInputInteger implements ControlValueAccessor {
     private _value: string;
 
 
-    constructor(
-    ) {
+    constructor() {
 
     }
 

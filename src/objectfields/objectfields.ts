@@ -42,7 +42,6 @@ import /*embed*/ {fieldWeightedAmount} from './components/fieldweightedamount';
 import /*embed*/ {fieldTotalAmount} from './components/fieldtotalamount';
 import /*embed*/ {fieldEnum} from './components/fieldenum';
 import /*embed*/ {fieldLanguage} from './components/fieldlanguage';
-import /*embed*/ {fieldMailboxes} from './components/fieldmailboxes';
 import /*embed*/ {fieldEmailTo} from './components/fieldemailto';
 import /*embed*/ {fieldEmailTemplates} from './components/fieldemailtemplates';
 import /*embed*/ {fieldTextMessageTemplates} from './components/fieldtextmessagetemplates';
@@ -127,6 +126,7 @@ import /*embed*/ {fieldPhone} from "./components/fieldphone";
 import /*embed*/ {fieldActionset} from "./components/fieldactionset";
 import /*embed*/ {fieldSlider} from "./components/fieldslider";
 import /*embed*/ {fieldImage} from './components/fieldimage';
+import /*embed*/ {fieldCompound} from './components/fieldcompound';
 
 /**
  * @ignore
@@ -141,7 +141,7 @@ declare var _: any;
         CommonModule,
         FormsModule,
         SystemComponents,
-        DirectivesModule,
+        DirectivesModule
     ],
     declarations: [
         fieldSet,
@@ -166,7 +166,6 @@ declare var _: any;
         fieldCompanies,
         fieldEnum,
         fieldLanguage,
-        fieldMailboxes,
         fieldEmailTo,
         fieldEmailTemplates,
         fieldTextMessageTemplates,
@@ -249,7 +248,8 @@ declare var _: any;
         fieldActionset,
         fieldImage,
         fieldActionset,
-        fieldSlider
+        fieldSlider,
+        fieldCompound
     ],
     exports: [
         fieldSet,
@@ -261,12 +261,12 @@ declare var _: any;
         fieldHtml,
         FieldMessagesComponent,
         FieldModuleLookupComponent,
+        fieldNotAuthorized,
         fieldLookup,
         fieldLookupRecent,
         fieldLookupSearch,
         fieldLookupSearchAdd,
         fieldTags,
-
     ]
 })
 export class ObjectFields {

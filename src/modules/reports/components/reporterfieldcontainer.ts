@@ -184,6 +184,8 @@ export class ReporterFieldContainer implements OnInit {
                     this.fieldType = 'ReporterFieldCurrency';
                     break;
                 case 'enum':
+                case 'multienum':
+                case 'radioenum':
                     this.fieldType = 'ReporterFieldEnum';
                     break;
                 case "datetimecombo":

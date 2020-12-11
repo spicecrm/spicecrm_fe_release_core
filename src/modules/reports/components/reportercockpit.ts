@@ -81,6 +81,7 @@ export class ReporterCockpit implements OnInit, OnDestroy {
      */
     public ngOnDestroy(): void {
         this.modellist.buckets = {};
+        this.modellist.reLoadList();
     }
 
     /**

@@ -15,11 +15,15 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
  */
 import { Component, OnChanges, Input, ElementRef } from '@angular/core';
 import {mediafiles} from '../../../services/mediafiles.service';
+import { modal } from '../../../services/modal.service';
 
 @Component({
     selector: 'media-file-image',
     templateUrl: './src/modules/mediafiles/templates/mediafileimage.html',
-    providers: [ mediafiles ]
+    providers: [ mediafiles ],
+    styles: [
+        'img:hover { cursor: pointer; }'
+    ]
 })
 export class MediaFileImage implements OnChanges {
 
@@ -127,7 +131,7 @@ export class MediaFileImage implements OnChanges {
 
     private withFrameHeight = true;
 
-    constructor( private mediafiles: mediafiles, private elRef: ElementRef ) {}
+    constructor( private mediafiles: mediafiles, private elRef: ElementRef, private modal: modal ) {}
 
     public ngOnChanges() {
 
@@ -251,6 +255,15 @@ export class MediaFileImage implements OnChanges {
      */
     private determineMaxHeightOfImage() {
         return Math.round( this.getHeightOfParent() );
+    }
+
+    private openImagePreview() {
+        this.modal.openModal('SystemImagePreviewModal').subscribe(modalref => {
+            this.mediafiles.getImageBase64( this.media_id ).subscribe( data => {
+                modalref.instance.imgtype = data.filetype;
+                modalref.instance.imgsrc = 'data:' + data.filetype  + ';base64,' + data.img;
+            });
+        });
     }
 
 }

@@ -29,6 +29,7 @@ import {SystemComponents} from "../../systemcomponents/systemcomponents";
 import /*embed*/ {MapCenterI,MapFixedCircleI,MapCircleI,RecordComponentConfigI,MapOptionsI,RecordI,DirectionResultI,RoutePointI} from './interfaces/spicemap.interfaces';
 
 import /*embed*/ {SpiceMap} from './components/spicemap';
+import /*embed*/ {SpiceGoogleMapsListHeader} from './components/spicegooglemapslistheader';
 import /*embed*/ {SpiceGoogleMapsList} from './components/spicegooglemapslist';
 import /*embed*/ {SpiceGoogleMapsRecordContainer} from './components/spicegooglemapsrecordcontainer';
 import /*embed*/ {SpiceGoogleMapsRecord} from './components/spicegooglemapsrecord';
@@ -49,6 +50,7 @@ import /*embed*/ {SpiceGoogleMapsDirectionModal} from './components/spicegooglem
     ],
     declarations: [
         SpiceMap,
+        SpiceGoogleMapsListHeader,
         SpiceGoogleMapsList,
         SpiceGoogleMapsRecordContainer,
         SpiceGoogleMapsRecord,

@@ -43,13 +43,9 @@ declare var _: any;
 @Injectable()
 export class calendar implements OnDestroy {
     /**
-     * emits when user calendars loads
-     */
-    public usersCalendarsLoad$ = new EventEmitter<void>();
-    /**
      * emits when a user calendar is refactored
      */
-    public userCalendarChange$ = new EventEmitter<any>();
+    public userCalendarChange$ = new EventEmitter<{id: string, name: string, visible: boolean, color: string} | {id: string}>();
     /**
      *  emit on drop target click
      */
@@ -67,9 +63,13 @@ export class calendar implements OnDestroy {
      */
     public modules: any[] = [];
     /**
+     * holds the owner calendar visibility
+     */
+    public ownerCalendarVisible: boolean = true;
+    /**
      * holds the other users calendars
      */
-    public usersCalendars: any[] = [];
+    public usersCalendars: Array<{id: string, name: string, visible: boolean, color: string}> = [];
     /**
      * holds the other calendars
      */
@@ -150,6 +150,10 @@ export class calendar implements OnDestroy {
      * true while loading the events from backend
      */
     public isLoading: boolean = false;
+    /**
+     * ture if the user preferences are loaded
+     */
+    public userPreferencesLoaded: boolean = false;
     /**
      * holds the system timezone which is loaded from the session
      */
@@ -247,13 +251,6 @@ export class calendar implements OnDestroy {
     set sheetType(value) {
         this._sheetType = value;
         this.session.setSessionData('sheetType', value);
-    }
-
-    /**
-     * @return user calendar loaded boolean true if we have users calendars
-     */
-    get usersCalendarsLoaded(): boolean {
-        return !!this.usersCalendars && this.usersCalendars.length > 0;
     }
 
     /**
@@ -567,7 +564,7 @@ export class calendar implements OnDestroy {
         }
         let usersCalendars = this.usersCalendars;
         let color = '#' + this.colorPalette[Math.floor(this.colorPalette.length * Math.random())];
-        const newCalendar = {
+        const newCalendar: {id: string, name: string, visible: boolean, color: string} = {
             id: id,
             name: name,
             visible: true,
@@ -608,6 +605,15 @@ export class calendar implements OnDestroy {
                 return true;
             }
         });
+    }
+
+    /**
+     * save the owner calendar visibility to the user preferences and emit the changes
+     */
+    public toggleOwnerCalendarVisible() {
+        this.ownerCalendarVisible = !this.ownerCalendarVisible;
+        this.userCalendarChange$.emit({id: 'owner'});
+        this.userPreferences.setPreference("ownerVisible", this.ownerCalendarVisible, true, "Calendar");
     }
 
     /**
@@ -959,11 +965,11 @@ export class calendar implements OnDestroy {
         this.userPreferences.loadPreferences("Calendar")
             .pipe(take(1))
             .subscribe(calendars => {
+                this.ownerCalendarVisible = calendars.hasOwnProperty('ownerVisible') ? calendars.ownerVisible: true;
                 this.setUserCalendars(calendars.Users, false);
                 this.setOtherCalendars(calendars.Other, false);
-                if (calendars.Users && calendars.Users.length > 0) {
-                    this.usersCalendarsLoad$.emit();
-                }
+                this.userPreferencesLoaded = true;
+                this.cdRef.detectChanges();
             });
         if (this.session.authData.googleToken || (this.configuration.checkCapability('google_oauth') && this.configuration.getCapabilityConfig('google_oauth').serviceaccess)) {
             this.loggedByGoogle = true;

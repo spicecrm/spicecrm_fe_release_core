@@ -13,7 +13,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 /**
  * @module ModuleActivities
  */
-import {Component, ElementRef, OnInit, Renderer2} from '@angular/core';
+import {Component, ElementRef, OnInit, Renderer2, OnDestroy} from '@angular/core';
 import {Router} from '@angular/router';
 import {model} from '../../../services/model.service';
 import {view} from '../../../services/view.service';
@@ -27,7 +27,7 @@ import {relateFilter} from "../../../services/modellist.service";
 @Component({
     templateUrl: './src/modules/activities/templates/fieldactivityparticipationpanel.html'
 })
-export class fieldActivityParticipationPanel extends fieldGeneric implements OnInit {
+export class fieldActivityParticipationPanel extends fieldGeneric implements OnInit, OnDestroy  {
 
     /**
      * the index of the type of lookup (index of the aray above
@@ -88,17 +88,17 @@ export class fieldActivityParticipationPanel extends fieldGeneric implements OnI
 
         super(model, view, language, metadata, router);
 
-        // build the lookup links
-        this.lookuplinks = this.getLookuplinks();
+
 
         // subscriber to the broadcast when new model is added from the model
         this.subscriptions.add(this.broadcast.message$.subscribe((message) => this.handleMessage(message)));
 
         // subscribe to model $data and build the participants .. replacing the setter
         this.subscriptions.add(this.model.data$.subscribe(modelData => {
-            // set the participants
-            this.setParticipants();
-
+            if(this.lookuplinks.length > 0) {
+                // set the participants
+                this.setParticipants();
+            }
             // update the relate filter
             this.updateRelateFilter();
         }));
@@ -108,17 +108,21 @@ export class fieldActivityParticipationPanel extends fieldGeneric implements OnI
      * returns the name for the link resp the module
      */
     get lookupTypeName() {
-        return this.language.getModuleName(this.lookuplinks[this.lookupType].module);
+        return this.language.getModuleName(this.lookuplinks[this.lookupType]?.module);
     }
 
     get relateFilterActive() {
-        return this.lookuplinks[this.lookupType].module != 'Users';
+        return this.lookuplinks[this.lookupType]?.module != 'Users';
     }
 
     /**
      * load the links and the table fieldset
      */
     public ngOnInit() {
+        // build the lookup links
+        this.lookuplinks = this.getLookuplinks();
+        this.setParticipants();
+
         if (!this.fieldconfig.fieldset) {
             this.fieldset = this.metadata.getComponentConfig('fieldActivityParticipationPanel').fieldset;
         } else {
@@ -129,6 +133,10 @@ export class fieldActivityParticipationPanel extends fieldGeneric implements OnI
         if (this.fieldconfig.relatefilterfield) {
             this.createRelateFilter();
         }
+    }
+
+    public ngOnDestroy() {
+        this.subscriptions.unsubscribe();
     }
 
     /**
@@ -204,10 +212,20 @@ export class fieldActivityParticipationPanel extends fieldGeneric implements OnI
      * fallback to the metadata
      */
     private getLookuplinks(): any[] {
-        let linknames: string[] = ['contacts', 'users'];
+
+        let linknames: string[] = [];
+        if(this.fieldconfig.linknames) {
+            linknames = this.fieldconfig.linknames.split(',');
+        }
+        if(linknames.length == 0) {
+            linknames = ['contacts', 'users', 'consumers'];
+        }
         let links = [];
         for (let linkname of linknames) {
-            links.push({name: linkname, module: this.metadata.getFieldDefs(this.model.module, linkname).module});
+            linkname = linkname.trim();
+            if(this.metadata.getFieldDefs(this.model.module, linkname)) {
+                links.push({name: linkname, module: this.metadata.getFieldDefs(this.model.module, linkname).module});
+            }
         }
         return links;
     }

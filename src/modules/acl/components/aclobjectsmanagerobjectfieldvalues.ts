@@ -38,9 +38,7 @@ export class ACLObjectsManagerObjectFieldvalues {
         this.view.isEditable = true;
         this.view.setEditMode();
 
-        //this.model.data$.subscribe(data => {
-            this.handleType();
-        //});
+        this.handleType();
 
         // get the config
         let componentconfig = this.metadata.getComponentConfig('ACLObjectsManagerObjectFieldvalues', 'SpiceACLObjects');
@@ -72,7 +70,6 @@ export class ACLObjectsManagerObjectFieldvalues {
     }
 
     private setFieldValue(field, valueid, eventtype, event) {
-        console.log(event);
         let fieldValues = this.model.getFieldValue('fieldvalues');
         if (fieldValues && fieldValues.length > 0) {
             for (let fieldvalue of fieldValues) {

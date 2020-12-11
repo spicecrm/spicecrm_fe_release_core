@@ -13,40 +13,15 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 /**
  * @module ModuleSpiceMap
  */
-import {
-    AfterViewInit,
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    Input,
-    IterableDiffers,
-    OnDestroy,
-    OnInit
-} from '@angular/core';
+import {AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, IterableDiffers, OnDestroy, OnInit} from '@angular/core';
 import {language} from '../../../services/language.service';
 import {metadata} from "../../../services/metadata.service";
 import {modellist} from "../../../services/modellist.service";
-import {animate, style, transition, trigger} from "@angular/animations";
 import {MapCenterI, MapOptionsI, RecordComponentConfigI, RecordI} from "../interfaces/spicemap.interfaces";
 import {model} from "../../../services/model.service";
 import {Subscription} from "rxjs";
-import {navigationtab} from "../../../services/navigationtab.service";
 import {broadcast} from "../../../services/broadcast.service";
-
-/** @ignore */
-const ANIMATIONS = [
-    trigger('animatepanel', [
-        transition(':enter', [
-            style({right: '-320px', overflow: 'hidden'}),
-            animate('.5s', style({right: '0px'})),
-            style({overflow: 'unset'})
-        ]),
-        transition(':leave', [
-            style({overflow: 'hidden'}),
-            animate('.5s', style({right: '-320px'}))
-        ])
-    ])
-];
+import {navigation} from "../../../services/navigation.service";
 
 /**
  * renders a list of records on google maps
@@ -54,8 +29,7 @@ const ANIMATIONS = [
 @Component({
     selector: 'spice-google-maps-list',
     templateUrl: './src/include/spicemap/templates/spicegooglemapslist.html',
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    animations: ANIMATIONS
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SpiceGoogleMapsList implements OnInit, AfterViewInit, OnDestroy {
 
@@ -85,6 +59,10 @@ export class SpiceGoogleMapsList implements OnInit, AfterViewInit, OnDestroy {
      */
     public subscriptions: Subscription = new Subscription();
     /**
+     * to be highlighted on the map and re centered
+     */
+    public focusedRecordId: string;
+    /**
      * map options will be passed to the spice google maps
      */
     protected mapOptions: MapOptionsI = {};
@@ -92,10 +70,6 @@ export class SpiceGoogleMapsList implements OnInit, AfterViewInit, OnDestroy {
      * List of records to be displayed on the map as markers
      */
     protected records: RecordI[] = [];
-    /**
-     * to be highlighted on the map and re centered
-     */
-    protected focusedRecordId: string;
 
     constructor(
         public language: language,
@@ -104,7 +78,7 @@ export class SpiceGoogleMapsList implements OnInit, AfterViewInit, OnDestroy {
         public iterableDiffers: IterableDiffers,
         public cdRef: ChangeDetectorRef,
         public model: model,
-        public navigationtab: navigationtab,
+        public navigation: navigation,
         public broadcast: broadcast
     ) {
     }
@@ -146,6 +120,7 @@ export class SpiceGoogleMapsList implements OnInit, AfterViewInit, OnDestroy {
     public ngOnDestroy() {
         this.subscriptions.unsubscribe();
         this.modelList.searchGeo = undefined;
+        this.modelList.reLoadList();
     }
 
     /**
@@ -249,16 +224,45 @@ export class SpiceGoogleMapsList implements OnInit, AfterViewInit, OnDestroy {
     }
 
     /**
-     * set the focused record from geo data field broadcast
+     * set the focused record from map.focus broadcast message
+     * or recenter the map and start the search around if the message record is not found on the map
      * @param msg
      */
     public handleBroadcastMessage(msg: { messagedata: any, messagetype: string }) {
-        if (msg.messagetype != 'map.focus' || !msg.messagedata || !msg.messagedata.modelId || (msg.messagedata.tabId == 'main' && !!this.navigationtab.tabid) ||
-            (msg.messagedata.tabId != 'main' && this.navigationtab.tabid != msg.messagedata.tabId)) {
+        if ((msg.messagetype != 'map.focus' && msg.messagetype != 'map.defocus') || !msg.messagedata || !msg.messagedata.record || this.navigation.activeTab != msg.messagedata.tabId) {
             return;
         }
+        this.focusedRecordId = undefined;
+        this.cdRef.detectChanges();
 
-        this.focusedRecordId = msg.messagedata.modelId;
+        if (msg.messagetype == 'map.defocus') {
+            this.mapOptions.circle = undefined;
+            this.searchAroundActive = false;
+            this.setMapOptionChanged('circle');
+
+        } else {
+            const focusedRecord = this.records.find((record: RecordI) => record.id == msg.messagedata.record.id);
+            if (!focusedRecord) {
+                this.mapOptions.circle = {
+                    center: {
+                        lat: msg.messagedata.record.data[this.latName],
+                        lng: msg.messagedata.record.data[this.lngName],
+                    },
+                    draggable: true,
+                    editable: true,
+                    radius: null,
+                    radiusPercentage: this.componentconfig.radiusPercentage,
+                    color: this.componentconfig.circleColor
+                };
+
+                this.searchAroundActive = true;
+                this.startRadiusEditing(true);
+                this.setMapOptionChanged('circle');
+            } else {
+                this.focusedRecordId = focusedRecord.id;
+            }
+        }
+        this.cdRef.detectChanges();
     }
 
     /**
@@ -279,6 +283,7 @@ export class SpiceGoogleMapsList implements OnInit, AfterViewInit, OnDestroy {
         this.mapOptions = {
             showCluster: this.componentconfig.showCluster,
             markerWithModelPopover: this.componentconfig.markerWithModelPopover,
+            popoverComponent: this.componentconfig.popoverComponent,
             focusColor: this.componentconfig.focusColor,
             showMyLocation: this.componentconfig.showMyLocation,
         };

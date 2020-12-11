@@ -23,6 +23,7 @@ import {metadata} from "../../services/metadata.service";
 import {configurationService} from "../../services/configuration.service";
 
 import {fieldGeneric} from './fieldgeneric';
+import {backend} from "../../services/backend.service";
 
 /**
  * renders an address field with all elements
@@ -38,6 +39,8 @@ export class fieldAddress extends fieldGeneric {
      */
     private strict: boolean = false;
 
+    public config_address_format: any = {};
+
     /**
      * a fallback address format in case none is specified
      */
@@ -49,7 +52,8 @@ export class fieldAddress extends fieldGeneric {
         public language: language,
         public metadata: metadata,
         public router: Router,
-        public configuration: configurationService
+        public configuration: configurationService,
+        public backend: backend,
     ) {
         super(model, view, language, metadata, router);
 
@@ -57,6 +61,14 @@ export class fieldAddress extends fieldGeneric {
         let uiconfig = this.configuration.getCapabilityConfig('spiceui');
         if (uiconfig.addressmode == 'strict') this.strict = true;
         if (uiconfig.addressformat) this.addressFormat = uiconfig.addressformat;
+        this.getAddressConfig();
+    }
+
+    /*
+    * get the hidden fields from the config table in db
+     */
+    public getAddressConfig() {
+        this.config_address_format = JSON.parse(this.configuration.data.backendextensions.address_format.config);
     }
 
     /*
@@ -82,7 +94,7 @@ export class fieldAddress extends fieldGeneric {
         // check if we have a country format
         if (this.strict && this.country) {
             let countries = this.configuration.getData('countries');
-            if(countries) {
+            if (countries) {
                 let countryrecod = countries.countries.find(c => c.cc == this.country);
                 if (countryrecod && countryrecod.addressformat) formattedaddress = countryrecod.addressformat;
             }
@@ -105,7 +117,7 @@ export class fieldAddress extends fieldGeneric {
             let country = this.country;
             if (country) {
                 let countries = this.configuration.getData('countries');
-                if(countries) {
+                if (countries) {
                     let countryrecod = countries.countries.find(c => c.cc == country);
                     if (countryrecod) country = this.language.getLabel(countryrecod.label);
                 }
@@ -125,7 +137,7 @@ export class fieldAddress extends fieldGeneric {
             let state = this.state;
             if (state) {
                 let states = this.configuration.getData('countries');
-                if(states) {
+                if (states) {
                     let staterecod = states.states.find(s => s.cc == country && s.sc == state);
                     if (staterecod) state = this.language.getLabel(staterecod.label);
                 }
@@ -158,6 +170,15 @@ export class fieldAddress extends fieldGeneric {
      */
     private getAddressLabel() {
         return this.language.getLabel(this.fieldconfig.label);
+    }
+
+    /**
+     * returns the proper fieldname as found in the model
+     *
+     * @param field
+     */
+    private fieldName(field) {
+        return this.addresskey + 'address_' + field;
     }
 
     /**
@@ -336,4 +357,52 @@ export class fieldAddress extends fieldGeneric {
     set longitude(value) {
         this.model.setField(this.addresskey + 'address_longitude', value);
     }
+
+
+    /**
+     * a getter to hide the field
+     */
+    get hideattn() {
+        if (this.fieldconfig.hideattn) return true;
+        if (this.config_address_format?.hideattn) return true;
+        return false;
+    }
+
+    /**
+     * a getter to hide the field
+     */
+    get hidestate() {
+        if (this.fieldconfig.hidestate) return true;
+        if (this.config_address_format?.hidestate) return true;
+        return false;
+    }
+
+    /**
+     * a getter to hide the field
+     */
+    get hidestreetnumber() {
+        if (this.fieldconfig.hidestreetnumber) return true;
+        if (this.config_address_format?.hidestreetnumber) return true;
+        return false;
+    }
+
+    /**
+     * a getter to hide the field
+     */
+    get hidedistrict() {
+        if (this.fieldconfig.hidedistrict) return true;
+        if (this.config_address_format?.hidedistrict) return true;
+        return false;
+    }
+
+    /**
+     * a getter to hide the field
+     */
+    get hidenumbersuffix() {
+        if (this.fieldconfig.hidenumbersuffix) return true;
+        if (this.config_address_format?.hidenumbersuffix) return true;
+        return false;
+    }
+
+
 }

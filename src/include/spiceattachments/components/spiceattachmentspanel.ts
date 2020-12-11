@@ -25,7 +25,8 @@ import {
     Renderer2,
     Injector,
     Optional,
-    SkipSelf
+    SkipSelf,
+    AfterViewInit
 } from '@angular/core';
 import {metadata} from "../../../services/metadata.service";
 import {model} from "../../../services/model.service";
@@ -40,19 +41,24 @@ import {modelattachments} from "../../../services/modelattachments.service";
 declare var moment: any;
 
 /**
- * displays a quicknote that is read in teh stream
+ * renders a panel for the attachments. The modelatatchment service can be provided by the component or by the parent
+ * if the parent provides the service the parent is also responsible for the laoding of atatchments
  */
 @Component({
     templateUrl: './src/include/spiceattachments/templates/spiceattachmentspanel.html',
-    providers: [modelattachments],
+    providers: [modelattachments]
 })
-export class SpiceAttachmentsPanel {
-
+export class SpiceAttachmentsPanel implements AfterViewInit {
 
     /**
      * the fileupload elelent
      */
     @ViewChild("fileupload", {read: ViewContainerRef, static: false}) private fileupload: ViewContainerRef;
+
+    /**
+     * an object array with base64 files that shoudl be loaded when the panel initializes itself
+     */
+    public uploadfiles: any[] = [];
 
     /**
      * emits when the attachments are loaded
@@ -102,14 +108,24 @@ export class SpiceAttachmentsPanel {
     private loadFiles() {
         this.modelattachments.getAttachments().subscribe(loaded => {
             this.attachmentsLoaded.emit(true);
+            this.loadInputFiles();
         });
     }
 
     /**
-     * @ignore
+     * loads files that are to be added dynamically in the call from a compoinent adding a base64 file
+     */
+    private loadInputFiles() {
+        this.modelattachments.uploadAttachmentsBase64FromArray(this.uploadfiles);
+    }
+
+    /**
+     * load the attachments .. unless the service is provided from teh parent .. then the parent is responsible for the load
      */
     public ngAfterViewInit() {
-        if (!this.model.isNew) setTimeout(() => this.loadFiles(), 10);
+        if(!this.parentmodelattachments) {
+            setTimeout(() => this.loadFiles(), 10);
+        }
     }
 
     /**

@@ -12,6 +12,6 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 <field-label *ngIf="displayLabel" [fieldname]="fieldname" [fieldconfig]="fieldconfig"></field-label>
 <field-generic-display *ngIf="!isEditMode()" [fielddisplayclass]="fielddisplayclass" [editable]="isEditable()" [fieldconfig]="fieldconfig">
-    <span>{{viewModeValue}}</span>
+    <span>{{viewModeValueText}}</span>
 </field-generic-display>
-<system-multiple-select *ngIf="isEditMode()" [ngModel]="fieldValueArray" (ngModelChange)="setFieldValue($event)" [listItems]="listItems" [grouped]="true" [showPills]="true"></system-multiple-select>
+<system-multiple-select *ngIf="isEditMode()" [ngModel]="valueArray" (ngModelChange)="setFieldValue($event)" [listItems]="listItems" [groupSeparator]="fieldconfig.groupSeparator" [grouped]="fieldconfig.grouped" [showPills]="fieldconfig.showPills" [listHeight]="fieldconfig.listHeight"></system-multiple-select>

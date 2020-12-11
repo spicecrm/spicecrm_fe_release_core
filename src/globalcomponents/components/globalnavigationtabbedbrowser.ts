@@ -66,9 +66,7 @@ export class GlobalNavigationTabbedBrowser {
      * opens the browser modal window
      */
     private openModal() {
-        this.modal.openModal('GlobalNavigationTabbedBrowserModal').subscribe(ref => {
-            console.log('opened');
-        });
+        this.modal.openModal('GlobalNavigationTabbedBrowserModal')
     }
 
 }

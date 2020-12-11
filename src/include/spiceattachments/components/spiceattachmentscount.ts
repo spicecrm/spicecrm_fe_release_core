@@ -15,6 +15,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
  */
 import {ChangeDetectionStrategy, Component, ChangeDetectorRef, Optional, SkipSelf, OnDestroy} from '@angular/core';
 import {model} from "../../../services/model.service";
+import {metadata} from "../../../services/metadata.service";
 import {language} from "../../../services/language.service";
 import {modelattachments} from "../../../services/modelattachments.service";
 import {Subscription} from "rxjs";
@@ -44,7 +45,7 @@ export class SpiceAttachmentsCount implements OnDestroy {
      * @param language
      * @param model
      */
-    constructor(private modelattachments: modelattachments, @Optional() @SkipSelf() private parentmodelattachments: modelattachments, private language: language, private model: model, private cdRef: ChangeDetectorRef) {
+    constructor(private metadata: metadata, private modelattachments: modelattachments, @Optional() @SkipSelf() private parentmodelattachments: modelattachments, private language: language, private model: model, private cdRef: ChangeDetectorRef) {
         this.modelattachments.module = this.model.module;
         this.modelattachments.id = this.model.id;
     }
@@ -53,15 +54,22 @@ export class SpiceAttachmentsCount implements OnDestroy {
      * @ignore
      */
     public ngAfterViewInit() {
-        if (this.parentmodelattachments) {
-            this.subscriptions.add(this.parentmodelattachments.getCount().subscribe(count => {
-                this.cdRef.detectChanges();
-            }));
-        } else {
-            this.subscriptions.add(this.modelattachments.getCount().subscribe(count => {
-                this.cdRef.detectChanges();
-            }));
+        if(!this.modelHasAttachmentcount()) {
+            if (this.parentmodelattachments) {
+                this.subscriptions.add(this.parentmodelattachments.getCount().subscribe(count => {
+                    this.cdRef.detectChanges();
+                }));
+            } else {
+                this.subscriptions.add(this.modelattachments.getCount().subscribe(count => {
+                    this.cdRef.detectChanges();
+                }));
+            }
         }
+    }
+
+    private modelHasAttachmentcount() {
+        let fields = this.metadata.getModuleFields(this.model.module);
+        return !!fields.attachments_count;
     }
 
     /**
@@ -75,6 +83,10 @@ export class SpiceAttachmentsCount implements OnDestroy {
      * returns the count
      */
     get count() {
+        // if the model has an attachment count .. return the value
+        if(this.modelHasAttachmentcount()) return this.model.getField('attachments_count');
+
+        // otherwise get the atachment model count
         return this.parentmodelattachments ? this.parentmodelattachments.count : this.modelattachments.count;
     }
 }

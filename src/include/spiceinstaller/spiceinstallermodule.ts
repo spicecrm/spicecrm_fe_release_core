@@ -36,9 +36,7 @@ import /*embed*/ {SpiceInstallerSetLanguage} from "./components/spiceinstallerse
 import /*embed*/ {SpiceInstallerReview} from "./components/spiceinstallerreview";
 import /*embed*/ {SpiceinstallerMySQLi} from "./components/spiceinstallermysqli";
 import /*embed*/ {SpiceinstallerPostgreSQL} from "./components/spiceinstallerpgsql";
-
-
-
+import /*embed*/ {SpiceinstallerOCI8} from "./components/spiceinstalleroci8";
 
 
 @NgModule({
@@ -60,6 +58,7 @@ import /*embed*/ {SpiceinstallerPostgreSQL} from "./components/spiceinstallerpgs
         SpiceInstallerDatabase,
         SpiceinstallerMySQLi,
         SpiceinstallerPostgreSQL,
+        SpiceinstallerOCI8,
         SpiceInstallerFTS,
         SpiceInstallerCredentials,
         SpiceInstallerSetLanguage,

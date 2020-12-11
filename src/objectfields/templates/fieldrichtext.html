@@ -11,16 +11,18 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 -->
 
 <div class="slds-grid slds-grid--vertical-align-center slds-grid--align-spread">
-    <field-label *ngIf="displayLabel" [fieldname]="fieldname" [fieldconfig]="fieldconfig"></field-label>
+    <div>
+        <field-label *ngIf="displayLabel" [fieldname]="fieldname" [fieldconfig]="fieldconfig"></field-label>
+    </div>
     <button *ngIf="!isEditMode() && isEditable()" class="slds-button slds-button--icon slds-m-left--xx-small spice-hover-button" (click)="setEditMode()">
         <system-button-icon [icon]="'edit'"></system-button-icon>
     </button>
 </div>
 <field-generic-display *ngIf="!isEditMode()" [fielddisplayclass]="fielddisplayclass" [editable]="false" [fieldconfig]="fieldconfig">
-    <div *ngIf="!asiframe" class="slds-size--1-of-1 slds-rich-text-editor__output" [innerHTML]="htmlValue" style="white-space: normal; resize: vertical; overflow-y: auto;"></div>
-    <iframe *ngIf="asiframe" [src]="sanitizedValue" style="resize: vertical;" [ngStyle]="heightStyle" width="100%" frameborder="0" seamless="true" sandbox></iframe>
+    <div *ngIf="!fieldconfig.asiframe" class="slds-size--1-of-1 slds-rich-text-editor__output" [innerHTML]="parsedHtml" style="white-space: normal; resize: vertical; overflow-y: auto;"></div>
+    <iframe *ngIf="fieldconfig.asiframe" [src]="sanitizedValue" style="resize: vertical;" [ngStyle]="heightStyle" width="100%" frameborder="0" seamless="true" sandbox></iframe>
 </field-generic-display>
 <div *ngIf="isEditable() && isEditMode()" class="slds-form-element__control" [ngClass]="getFieldClass()">
-    <system-richtext-editor [(ngModel)]="value" (save$)="save($event)" [extendedmode]="extendedmode"></system-richtext-editor>
+    <system-richtext-editor [(ngModel)]="value" (save$)="save($event)" [extendedmode]="!fieldconfig.simplemode" [innerheight]="fieldconfig.innerheight"></system-richtext-editor>
     <field-messages [fieldname]="fieldname"></field-messages>
 </div>

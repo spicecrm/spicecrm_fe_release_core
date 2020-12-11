@@ -41,7 +41,7 @@ export class SpiceInstallerSystemCheck {
 
     private checkSystem() {
         this.loading = true;
-        this.http.get(`${this.spiceinstaller.configObject.backendconfig.backendUrl}/KREST/spiceinstaller/check`).subscribe((response: any) => {
+        this.http.get(`${this.spiceinstaller.configObject.backendconfig.backendUrl}/spiceinstaller/check`).subscribe((response: any) => {
             this.loading = false;
             let result = response;
             this.requirements = result.requirements;
@@ -50,6 +50,13 @@ export class SpiceInstallerSystemCheck {
                 this.spiceinstaller.dbdrivers = this.requirements.dbdrivers;
             } else {
                 this.toast.sendToast('error, missing requirements', "error");
+            }
+        },(err: any) => {
+            this.loading = false;
+            switch (err.status) {
+                case 500:
+                    this.toast.sendAlert(err.message, 'error');
+                    break;
             }
         });
     }

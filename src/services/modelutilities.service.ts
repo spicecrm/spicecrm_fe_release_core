@@ -216,8 +216,18 @@ export class modelutilities {
             case "between":
                 // do something
                 break;
+            case "empty":
+                return !(val1.length > 0);
+            case "nempty":
+                return val1.length > 0;
+            case "notnull":
+                return val1 !== null;
+            case "null":
+                return val1 === null;
             case "contain":
                 return (val1.indexOf(val2) !== -1);
+            case "ncontain":
+                return !(val1.indexOf(val2) !== -1);
             case "greaterequal":
                 return (val1 >= val2);
             case "greater":
@@ -228,6 +238,12 @@ export class modelutilities {
                 return (val1 < val2);
             case "unequal":
                 return (val1 != val2);
+            case "regex":
+                let regex = new RegExp(val2);
+                return regex.test(val1);
+            case "notregex":
+                let notregex = new RegExp(val2);
+                return !notregex.test(val1);
             case "equal":
             default:
                 return (val1 == val2);

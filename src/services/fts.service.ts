@@ -20,6 +20,7 @@ import {modelutilities} from './modelutilities.service';
 import {backend} from './backend.service';
 import {metadata} from './metadata.service';
 import {Subject} from 'rxjs';
+import {language} from "./language.service";
 
 
 interface ftsSearchBuckets {
@@ -279,6 +280,9 @@ export class fts {
     }
 
     public getSearchModules() {
+        this.searchModules = this.metadata.getGlobalSearchModules();
+
+        /*
         this.backend.getRequest('fts/searchmodules')
             .subscribe((response: any) => {
                 for (let module of response.modules) {
@@ -287,6 +291,7 @@ export class fts {
                     }
                 }
             });
+         */
     }
 
     public resetData() {

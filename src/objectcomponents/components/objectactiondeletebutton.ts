@@ -113,7 +113,6 @@ export class ObjectActionDeleteButton implements AfterViewInit, OnDestroy {
     * @navigate to list view
     */
     private delete() {
-        window.console.log(this.injector);
         this.model.delete().subscribe(status => {
             this.completeAction();
         });

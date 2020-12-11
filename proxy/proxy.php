@@ -24,8 +24,13 @@ if ( isset( $_REQUEST['useurl']{0} )) {
     $proxyPos = strpos($requesturl, '/proxy/');
     $sitePos = strpos($requesturl, '/', $proxyPos + 7);
     $siteId = substr($requesturl, $proxyPos + 7, $sitePos - $proxyPos - 7);
-    $sites = configHandler::getSite($siteId);
-    $baseurl = $sites['backendUrl'];
+    $site = configHandler::getSite( $siteId );
+    if ( $site === false ) {
+        http_response_code( 404 );
+        echo 'Backend site '.$siteId.' not found.';
+        exit;
+    };
+    $baseurl = $site['backendUrl'];
 
     $url = $baseurl . @$_GET['url'] . substr($requesturl, $sitePos);
 }
@@ -67,7 +72,7 @@ foreach ($_COOKIE as $key => $value)
     $cookieArray[] = $key . '=' . $value;
 
 if (is_array($cookieArray) || $cookieArray instanceof Countable) {
-    if (count($cookieArray > 0)) {
+    if (count($cookieArray)  > 0) {
         curl_setopt($ch, CURLOPT_COOKIE, implode(',', $cookieArray));
     }
 }

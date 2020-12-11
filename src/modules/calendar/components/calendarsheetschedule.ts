@@ -84,11 +84,11 @@ export class CalendarSheetSchedule implements OnChanges, OnDestroy {
         this.untilDate = new moment().hour(0).minute(0).second(0).add(1, "M");
 
         this.subscription.add(this.calendar.userCalendarChange$.subscribe(calendar => {
+            if (calendar.id == 'owner') {
+                this.getOwnerEvents();
+            } else {
                 this.getUserEvents(calendar);
-            })
-        );
-        this.subscription.add(this.calendar.usersCalendarsLoad$.subscribe(() => {
-                this.getUsersEvents();
+            }
             })
         );
     }
@@ -115,9 +115,7 @@ export class CalendarSheetSchedule implements OnChanges, OnDestroy {
         if (changes.setdate) {
             this.setUntilDate();
             this.getOwnerEvents();
-            if (this.calendar.usersCalendarsLoaded) {
-                this.getUsersEvents();
-            }
+            this.getUsersEvents();
         }
         if (changes.googleIsVisible || changes.setdate) {
             this.getGoogleEvents();
@@ -136,6 +134,7 @@ export class CalendarSheetSchedule implements OnChanges, OnDestroy {
      */
     private setEventDays() {
         let events = this.groupByDay(this.ownerEvents.concat(this.userEvents, this.googleEvents));
+        events.forEach(event => event.events.sort((a, b) => a.start - b.start));
         this.eventDays = events.sort((a, b) => a.date - b.date);
         this.cdRef.detectChanges();
     }
@@ -185,6 +184,7 @@ export class CalendarSheetSchedule implements OnChanges, OnDestroy {
                 let sameDay = date.year() == eventDay.year() && date.month() == eventDay.month() && date.date() == eventDay.date();
 
                 if (eventDay.isAfter(date) || sameDay) {
+                    event.timeText = !event.isMulti ? `${event.start.format('HH:mm')} - ${event.end.format('HH:mm')} ` : 'All Day';
                     let day = {
                         year: eventDay.year(),
                         month: eventDay.month(),
@@ -204,8 +204,7 @@ export class CalendarSheetSchedule implements OnChanges, OnDestroy {
                     });
 
                     if (days.length > 0 && dayIndex > -1) {
-                        event.timeText = !event.isMulti ? `${event.start.format('HH:mm')} - ${event.end.format('HH:mm')} ` : 'All Day';
-                        days[dayIndex].events.push(event);
+                        days[dayIndex].events.push({...event});
                     } else {
                         days.push(day);
                     }
@@ -221,6 +220,8 @@ export class CalendarSheetSchedule implements OnChanges, OnDestroy {
     private getOwnerEvents() {
         this.ownerEvents = [];
         this.setEventDays();
+
+        if (!this.calendar.ownerCalendarVisible) return this.cdRef.detectChanges();
 
         this.calendar.loadEvents(this.startDate, this.untilDate)
             .subscribe(events => {

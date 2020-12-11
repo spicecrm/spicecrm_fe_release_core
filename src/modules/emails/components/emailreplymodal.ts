@@ -10,19 +10,18 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 */
 
-
 /**
- * @module ObjectComponents
+ * @module ModuleEmails
  */
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output, SkipSelf} from '@angular/core';
 import {metadata} from '../../../services/metadata.service';
 import {model} from '../../../services/model.service';
 import {view} from '../../../services/view.service';
 import {language} from '../../../services/language.service';
-import {backend} from '../../../services/backend.service';
 import {modal} from '../../../services/modal.service';
 import {userpreferences} from '../../../services/userpreferences.service';
 import {session} from "../../../services/session.service";
+import {dockedComposer} from "../../../services/dockedcomposer.service";
 
 declare var moment: any;
 
@@ -32,13 +31,6 @@ declare var moment: any;
     providers: [view, model]
 })
 export class EmailReplyModal implements OnInit {
-
-    // private componentRefs: Array<any> = [];
-
-    /**
-     * the parent
-     */
-    @Input() public parent: any = null;
 
     /**
      * reference to the modal window self instance
@@ -53,27 +45,38 @@ export class EmailReplyModal implements OnInit {
     /**
      * the title for the modal window to be displayed
      */
-    @Input() private titlelabel: string = 'LBL_EMAIL_REPLY';
+    public titlelabel: string = 'LBL_EMAIL_REPLY';
+
+    /**
+     * the reply mode
+     *
+     * @private
+     */
+    private mode: 'reply'|'replyall' = 'reply';
 
     /**
      * an event emitter when the email ahs been sent and the modal window will destroy itself
      */
     @Output() private mailsent: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-    private fieldset: string;
-
+    /**
+     * the component config
+     *
+     * @private
+     */
     private componentconfig: any = {};
 
-
-    constructor(private language: language,
-                private metadata: metadata,
-                private model: model,
-                private view: view,
-                private backend: backend,
-                private prefs: userpreferences,
-                private modal: modal,
-                private session: session,
-                private userpreferences: userpreferences) {
+    constructor(public language: language,
+                public metadata: metadata,
+                public model: model,
+                @SkipSelf() public parent: model,
+                public view: view,
+                public prefs: userpreferences,
+                public modal: modal,
+                public session: session,
+                public userpreferences: userpreferences,
+                public dockedcomposer: dockedComposer,
+    ) {
 
         // initialize the model and the view
         this.model.module = 'Emails';
@@ -83,41 +86,47 @@ export class EmailReplyModal implements OnInit {
 
         // get the config of the EmailReplyModal-Component
         this.componentconfig = this.metadata.getComponentConfig("EmailReplyModal", this.model.module);
-        this.fieldset = this.componentconfig.fieldset;
     }
 
     /**
      * initialize the model and try to get the parent data
      */
     public ngOnInit() {
-         this.model.initializeModel(this.parent);
-         this.model.setField('parent_type', this.parent.module);
-         this.model.setField('parent_id', this.parent.data.id);
+        this.model.initializeModel(this.parent);
+        this.model.startEdit(false);
+        // set the from-addresses to to-addresses and vice versa
+        this.model.data.recipient_addresses = [];
 
-         // set the from-addresses to to-addresses and vice versa
-         for(let address of this.model.data.recipient_addresses) {
-             if(address.address_type == "from" || address.address_type == "to") {
-                 let addrtype = address.address_type == "from" ? "to": "from";
-                 address.address_type = addrtype;
-             }
-         }
+        for (let address of this.parent.data.recipient_addresses) {
+            if (address.address_type == "from") {
+                let toaddress = {...address};
+                toaddress.address_type = "to";
+                this.model.data.recipient_addresses.push(toaddress);
+            } else if (address.address_type != "from" && address.address_type != "to") {
+                let addaddress = {...address};
+                this.model.data.recipient_addresses.push(addaddress);
+            }
+        }
 
-         // set the email-history into the body
-         this.model.setField('body', '<br><br><br>' + this.buildHistoryText());
+        // set the email-history into the body
+        this.model.setFields({
+            name: this.language.getLabel('LBL_RE') + this.parent.getField('name'),
+            body: '<br><br><br>' + this.buildHistoryText()
+        });
     }
 
 
     /**
      * generate the email-history-text and return it
      */
-    private buildHistoryText() {
+    public buildHistoryText() {
 
         let datetime = new moment.utc(this.parent.data.date_sent).tz(this.session.getSessionData('timezone') || moment.tz.guess(true));
         let hdate = datetime ? datetime.format(this.userpreferences.getDateFormat()) : "";
         let htime = datetime ? datetime.format(this.userpreferences.getTimeFormat()) : "";
 
         let historytext = "";
-        historytext += "<div class='spicecrm_quote'>"
+        historytext += "<div class='spicecrm_quote'>";
         historytext += "<div dir='ltr' class='crm_attr'>";
         historytext += "<b>" + this.language.getLabel('LBL_FROM') + ":</b> <a href='mailto:" + this.parent.data.from_addr + "'>" + this.parent.data.from_addr + "</a>";
         historytext += "<br>";
@@ -155,7 +164,18 @@ export class EmailReplyModal implements OnInit {
      * close the modal
      */
     private close() {
-         this.self.destroy();
+        this.self.destroy();
+    }
+
+    /**
+     * docks teh reply modal to the composer
+     *
+     * @private
+     */
+    private dock() {
+        this.dockedcomposer.addComposer(this.model.module, this.model);
+        this.close();
+
     }
 
     /**
@@ -166,7 +186,7 @@ export class EmailReplyModal implements OnInit {
             modalRef.instance.messagelabel = 'LBL_SENDING';
 
             this.sending = true;
-            this.model.setField('type', 'out');
+            this.model.setField('type', 'outbound');
             this.model.setField('to_be_sent', '1');
             this.model.setField('from_addr', this.model.data.from_addr_name);
             this.model.setField('to_addrs', this.model.data.to_addrs_names);
@@ -185,5 +205,18 @@ export class EmailReplyModal implements OnInit {
                 }
             );
         });
+    }
+
+    /**
+     * handles the action from the actionset
+     *
+     * @param action
+     * @private
+     */
+    private handleaction(action) {
+        switch (action) {
+            default:
+                this.close();
+        }
     }
 }

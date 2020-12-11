@@ -36,10 +36,10 @@ export class spiceinstaller {
      * backend config
      */
     public systemid: string = '000';
-    public systemname: string = 'spice';
+    public systemname: string = '';
     public systemurl: string = '';
-    public systemproxy: number = 0;
-    public systemdevmode: boolean = true;
+    public systemproxy: number = 1;
+    public systemdevmode: boolean = false;
     public systemloginprogressbar: number = 0;
     public systemallowforgotpass: number = 0;
     /**
@@ -49,6 +49,7 @@ export class spiceinstaller {
     /**
      * database defaults
      */
+
     public db_host_name: string = '';
     public db_host_instance: string = '';
     public db_user_name: string = '';
@@ -76,10 +77,16 @@ export class spiceinstaller {
     public lc_collate: string = 'en_US.UTF-8';
     public lc_ctype: string = 'en_US.UTF-8';
     /**
+     * oracle additional parameters
+     */
+
+    public db_schema: string = 'SpiceCRM';
+    /**
      * fts
      */
+
     public server: string = '';
-    public port: string = '';
+    public port: string = '9200';
     public prefix: string = 'spicecrm_';
     /**
      * credentials
@@ -92,7 +99,7 @@ export class spiceinstaller {
     /**
      * language
      */
-    public language: string = 'en_us';
+    public language: any = {language_code: 'en_us', language_name: 'English (US)'};
     public configObject: any = {};
 
     constructor() {
@@ -103,14 +110,13 @@ export class spiceinstaller {
             dboptions: {},
             fts: {},
             credentials: {},
-            language: {}
         },
-        this._selectedStep = {
-            id: 'setbackend',
-            name: 'Set Backend',
-            visible: true,
-            completed: false,
-        };
+            this._selectedStep = {
+                id: 'setbackend',
+                name: 'Set Backend',
+                visible: true,
+                completed: false,
+            };
         this.steps = [
             {
                 id: 'setbackend',
@@ -201,4 +207,25 @@ export class spiceinstaller {
         }
     }
 
+    /**
+     * makes a human readable label out of an object/array key
+     * @param key
+     */
+    public keyToLabel(key: string) {
+        let label = key.charAt(0).toUpperCase() + key.slice(1);
+
+        if (key.includes('dir')) {
+            label = label.replace('dir', 'directory');
+        }
+        if (key.includes('_')) {
+            label = label.split('_').join(' ');
+        }
+        if (key.match(/(?=[A-Z])/)) {
+            label = label.split(/(?=[A-Z])/).join(' ');
+        }
+        if (key.includes('db')) {
+            label = label.replace('Db', 'Database');
+        }
+        return label;
+    }
 }

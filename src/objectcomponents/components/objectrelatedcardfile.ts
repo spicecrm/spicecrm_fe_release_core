@@ -64,16 +64,21 @@ export class ObjectRelatedCardFile {
         }
 
         if (this.file.file_mime_type) {
-            let fileTypeArray = this.file.file_mime_type.split("/");
+            let fileTypeArray = this.file.file_mime_type.toLowerCase().split("/");
             // check the application
             switch (fileTypeArray[0].trim()) {
                 case "image":
                     this.modal.openModal('SystemImagePreviewModal').subscribe(modalref => {
                         modalref.instance.imgname = this.file.filename;
-                        modalref.instance.imgtype = this.file.file_mime_type;
-                        this.modelattachments.getAttachment(this.file.id).subscribe(file => {
-                            modalref.instance.imgsrc = 'data:' + this.file.file_mime_type + ';base64,' + file;
-                        });
+                        modalref.instance.imgtype = this.file.file_mime_type.toLowerCase();
+                        this.modelattachments.getAttachment(this.file.id).subscribe(
+                            file => {
+                                modalref.instance.imgsrc = 'data:' + this.file.file_mime_type.toLowerCase() + ';base64,' + file;
+                            },
+                            err => {
+                                modalref.instance.loadingerror = true;
+                            }
+                        );
                     });
                     break;
                 case 'text':
@@ -81,10 +86,15 @@ export class ObjectRelatedCardFile {
                 case 'video':
                     this.modal.openModal('SystemObjectPreviewModal').subscribe(modalref => {
                         modalref.instance.name = this.file.filename;
-                        modalref.instance.type = this.file.file_mime_type;
-                        this.modelattachments.getAttachment(this.file.id).subscribe(file => {
-                            modalref.instance.data = atob(file);
-                        });
+                        modalref.instance.type = this.file.file_mime_type.toLowerCase();
+                        this.modelattachments.getAttachment(this.file.id).subscribe(
+                            file => {
+                                modalref.instance.data = atob(file);
+                            },
+                            err => {
+                                modalref.instance.loadingerror = true;
+                            }
+                        );
                     });
                     break;
                 case "application":
@@ -92,10 +102,15 @@ export class ObjectRelatedCardFile {
                         case 'pdf':
                             this.modal.openModal('SystemObjectPreviewModal').subscribe(modalref => {
                                 modalref.instance.name = this.file.filename;
-                                modalref.instance.type = this.file.file_mime_type;
-                                this.modelattachments.getAttachment(this.file.id).subscribe(file => {
-                                    modalref.instance.data = atob(file);
-                                });
+                                modalref.instance.type = this.file.file_mime_type.toLowerCase();
+                                this.modelattachments.getAttachment(this.file.id).subscribe(
+                                    file => {
+                                        modalref.instance.data = atob(file);
+                                    },
+                                    err => {
+                                        modalref.instance.loadingerror = true;
+                                    }
+                                );
                             });
                             break;
                         default:
@@ -105,7 +120,7 @@ export class ObjectRelatedCardFile {
                                 case 'msg':
                                     this.modal.openModal('EmailPreviewModal', true, this.injector).subscribe(modalref => {
                                         modalref.instance.name = this.file.filename;
-                                        modalref.instance.type = this.file.file_mime_type;
+                                        modalref.instance.type = this.file.file_mime_type.toLowerCase();
                                         modalref.instance.file = this.file;
                                     });
                                     break;

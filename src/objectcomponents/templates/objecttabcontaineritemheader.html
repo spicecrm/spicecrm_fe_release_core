@@ -10,5 +10,5 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 -->
 
-<ng-container *ngIf="displayName">{{getTabLabel(tab.name)}}</ng-container>
+<ng-container *ngIf="displayName"><system-label [label]="tab.name"></system-label></ng-container>
 <ng-container #headercontainer></ng-container>

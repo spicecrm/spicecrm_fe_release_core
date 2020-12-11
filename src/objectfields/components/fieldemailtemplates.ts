@@ -81,7 +81,7 @@ export class fieldEmailTemplates extends fieldGeneric implements OnInit {
 
         let emailTemplates = this.configuration.getData('EmailTemplates');
         if (emailTemplates) {
-            this.availableTemplates = emailTemplates.filter(et => et.type == 'email' &&  et.for_bean == this.model.getFieldValue('parent_type'));
+            this.availableTemplates = emailTemplates.filter(et => et.type == 'email' && (et.for_bean == '*' || et.for_bean == this.model.getFieldValue('parent_type')));
             this.isLoaded = true;
         } else {
             let params = {
@@ -95,7 +95,7 @@ export class fieldEmailTemplates extends fieldGeneric implements OnInit {
                     this.configuration.setData('EmailTemplates', data.list);
 
                     // set the templates internally
-                    this.availableTemplates = data.list.filter(et => et.type == 'email' && et.for_bean == this.model.getFieldValue('parent_type'));
+                    this.availableTemplates = data.list.filter(et => et.type == 'email' && (et.for_bean == '*' || et.for_bean == this.model.getFieldValue('parent_type')));
 
                     this.isLoaded = true;
                 }

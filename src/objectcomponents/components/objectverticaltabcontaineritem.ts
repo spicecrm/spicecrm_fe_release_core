@@ -42,7 +42,7 @@ export class ObjectVerticalTabContainerItem implements OnInit, AfterViewInit {
     /**
      * the componentset to be rendered in the tab
      */
-    @Input() private componentset: any = [];
+    @Input() private componentset: string;
 
     /**
      * errors on the tabs

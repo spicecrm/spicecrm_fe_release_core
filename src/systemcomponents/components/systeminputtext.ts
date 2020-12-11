@@ -14,25 +14,23 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
  * @module WorkbenchModule
  */
 import {
-    Component, EventEmitter, forwardRef, Input, OnInit, Output
+    Component, forwardRef, Input, OnInit, Output
 } from '@angular/core';
-import {backend} from '../../services/backend.service';
-import {metadata} from '../../services/metadata.service';
-import {language} from '../../services/language.service';
+import {modelutilities} from '../../services/modelutilities.service';
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from "@angular/forms";
 
 @Component({
     selector: 'system-input-text',
     templateUrl: './src/systemcomponents/templates/systeminputtext.html',
     providers: [
-    {
-        provide: NG_VALUE_ACCESSOR,
-        useExisting: forwardRef(() => SystemInputText),
-        multi: true
-    }
-]
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => SystemInputText),
+            multi: true
+        }
+    ]
 })
-export class SystemInputText implements ControlValueAccessor {
+export class SystemInputText implements ControlValueAccessor, OnInit {
 
     /**
      * for the value accessor
@@ -40,11 +38,39 @@ export class SystemInputText implements ControlValueAccessor {
     private onChange: (value: string) => void;
     private onTouched: () => void;
 
+    /**
+     * the internal value
+     * @private
+     */
     private _value: string;
 
+    /**
+     * optionally set disabled
+     * @private
+     */
+    @Input() private disabled: boolean = false;
 
-    constructor(
-    ) {
+    /**
+     * the placeholder string
+     * @private
+     */
+    @Input() private placeholder: string;
+
+    /**
+     * to disable autocomplete set value to off or set a specific value
+     *
+     * @private
+     */
+    @Input() private autocomplete: string;
+
+    /**
+     * a string to break the autocomplete
+     *
+     * @private
+     */
+    private autocompletebreaker: string = '';
+
+    constructor(private modelutilities: modelutilities) {
 
     }
 
@@ -56,6 +82,15 @@ export class SystemInputText implements ControlValueAccessor {
         if (value != this._value) {
             this._value = value;
             this.onChange(value);
+        }
+    }
+
+    /**
+     * generate an autocomplete breaker if th evalue shoudl be off
+     */
+    public ngOnInit() {
+        if(this.autocomplete) {
+            this.autocompletebreaker = this.autocomplete == 'off' ? this.modelutilities.generateGuid() : this.autocomplete;
         }
     }
 

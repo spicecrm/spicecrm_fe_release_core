@@ -54,6 +54,8 @@ export class ReporterFilterItem {
 
         switch (this.wherecondition.type) {
             case 'enum':
+            case 'multienum':
+            case 'radioenum':
                 switch (this.wherecondition.operator) {
                     case 'equals':
                     case 'notequal':

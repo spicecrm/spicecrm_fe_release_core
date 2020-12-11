@@ -10,6 +10,6 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 -->
 
-<button class="slds-button slds-button--neutral" title="add item" (click)="addModel()" [disabled]="allTranslated">
+<button class="slds-button slds-button--neutral" title="add item" (click)="addModel()" [disabled]="!canAdd">
     <system-label label="LBL_ADD"></system-label> <system-label-modulename module="SpiceTexts" [singular]="true"></system-label-modulename>
 </button>

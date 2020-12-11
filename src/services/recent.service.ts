@@ -31,7 +31,7 @@ export class recent {
     }
 
     get items(): any[] {
-        let recentItems = this.configuration.getData('recentitmes')
+        let recentItems = this.configuration.getData('recentitmes');
         return recentItems ? recentItems : [];
     }
 

@@ -15,6 +15,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
  */
 import {Component} from "@angular/core";
 import {navigation} from "../../../services/navigation.service";
+import {navigationtab} from "../../../services/navigationtab.service";
 import {mailboxesEmails} from "../services/mailboxesemail.service";
 
 /**
@@ -28,9 +29,11 @@ import {mailboxesEmails} from "../services/mailboxesemail.service";
 export class MailboxManager {
     constructor(
         private navigation: navigation,
+        private navigationtab: navigationtab,
         private mailboxesEmails: mailboxesEmails,
     ) {
-        this.navigation.setActiveModule('Mailboxes');
+        this.navigationtab.setTabInfo({displayname: 'Mailboxes', displaymodule: 'Mailboxes'});
+
     }
 
     /**

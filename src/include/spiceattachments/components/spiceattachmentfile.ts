@@ -37,10 +37,28 @@ declare var moment: any;
 export class SpiceAttachmentFile {
 
 
+    /**
+     * the file
+     *
+     * @private
+     */
     @Input() private file: any = {};
 
 
-    constructor(private modelattachments: modelattachments, private userpreferences: userpreferences, private modal: modal, private toast: toast, private helper: helper, private injector: Injector) {
+    /**
+     * if we are editing and thus can unlink files
+     *
+     * @private
+     */
+    @Input() private editmode: boolean = true;
+
+    /**
+     * the modalatatchments service
+     * passed in as input since the container knows if self or parent element
+     */
+    @Input() private modelattachments: modelattachments;
+
+    constructor(private userpreferences: userpreferences, private modal: modal, private toast: toast, private helper: helper, private injector: Injector) {
 
     }
 
@@ -84,16 +102,21 @@ export class SpiceAttachmentFile {
         }
 
         if (this.file.file_mime_type) {
-            let fileTypeArray = this.file.file_mime_type.split("/");
+            let fileTypeArray = this.file.file_mime_type.toLowerCase().split("/");
             // check the application
             switch (fileTypeArray[0].trim()) {
                 case "image":
                     this.modal.openModal('SystemImagePreviewModal').subscribe(modalref => {
                         modalref.instance.imgname = this.file.filename;
-                        modalref.instance.imgtype = this.file.file_mime_type;
-                        this.modelattachments.getAttachment(this.file.id).subscribe(file => {
-                            modalref.instance.imgsrc = 'data:' + this.file.file_mime_type + ';base64,' + file;
-                        });
+                        modalref.instance.imgtype = this.file.file_mime_type.toLowerCase();
+                        this.modelattachments.getAttachment(this.file.id).subscribe(
+                            file => {
+                                modalref.instance.imgsrc = 'data:' + this.file.file_mime_type.toLowerCase() + ';base64,' + file;
+                            },
+                            err => {
+                                modalref.instance.loadingerror = true;
+                            }
+                        );
                     });
                     break;
                 case 'text':
@@ -101,10 +124,15 @@ export class SpiceAttachmentFile {
                 case 'video':
                     this.modal.openModal('SystemObjectPreviewModal').subscribe(modalref => {
                         modalref.instance.name = this.file.filename;
-                        modalref.instance.type = this.file.file_mime_type;
-                        this.modelattachments.getAttachment(this.file.id).subscribe(file => {
-                            modalref.instance.data = atob(file);
-                        });
+                        modalref.instance.type = this.file.file_mime_type.toLowerCase();
+                        this.modelattachments.getAttachment(this.file.id).subscribe(
+                            file => {
+                                modalref.instance.data = atob(file);
+                            },
+                            err => {
+                                modalref.instance.loadingerror = true;
+                            }
+                        );
                     });
                     break;
                 case "application":
@@ -112,10 +140,15 @@ export class SpiceAttachmentFile {
                         case 'pdf':
                             this.modal.openModal('SystemObjectPreviewModal').subscribe(modalref => {
                                 modalref.instance.name = this.file.filename;
-                                modalref.instance.type = this.file.file_mime_type;
-                                this.modelattachments.getAttachment(this.file.id).subscribe(file => {
-                                    modalref.instance.data = atob(file);
-                                });
+                                modalref.instance.type = this.file.file_mime_type.toLowerCase();
+                                this.modelattachments.getAttachment(this.file.id).subscribe(
+                                    file => {
+                                        modalref.instance.data = atob(file);
+                                    },
+                                    err => {
+                                        modalref.instance.loadingerror = true;
+                                    }
+                                );
                             });
                             break;
                         default:
@@ -125,7 +158,7 @@ export class SpiceAttachmentFile {
                                 case 'msg':
                                     this.modal.openModal('EmailPreviewModal', true, this.injector).subscribe(modalref => {
                                         modalref.instance.name = this.file.filename;
-                                        modalref.instance.type = this.file.file_mime_type;
+                                        modalref.instance.type = this.file.file_mime_type.toLowerCase();
                                         modalref.instance.file = this.file;
                                     });
                                     break;
@@ -140,6 +173,15 @@ export class SpiceAttachmentFile {
                     this.downloadFile();
                     break;
             }
+        }
+    }
+
+    /**
+     * action to delete the file
+     */
+    private deleteFile() {
+        if (this.editmode) {
+            this.modelattachments.deleteAttachment(this.file.id);
         }
     }
 }

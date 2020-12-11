@@ -14,19 +14,16 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
  * @module AdminComponentsModule
  */
 import {
-    AfterViewInit,
-    ComponentFactoryResolver,
     Component,
-    Input,
-    NgModule,
-    ViewChild,
-    ViewContainerRef, OnInit
+    OnInit
 } from '@angular/core';
 import {metadata} from '../../services/metadata.service';
-import {navigation} from '../../services/navigation.service';
 import {language} from '../../services/language.service';
 import {administrationconfigurator} from '../services/administrationconfigurator.service';
 
+/**
+ * a generic configurator component that can load entries from a tabel and allow management of those
+ */
 @Component({
     selector: 'administration-configurator',
     templateUrl: './src/admincomponents/templates/administrationconfigurator.html',
@@ -34,9 +31,26 @@ import {administrationconfigurator} from '../services/administrationconfigurator
 })
 export class AdministrationConfigurator implements OnInit {
 
-    componentconfig: any = {};
-    displayFilters: boolean = false;
-    filters: any = {};
+    /**
+     *
+     * @private
+     */
+    private componentconfig: any = {};
+
+    /**
+     *
+     * set if filters shoudl be displayed
+     *
+     * @private
+     */
+    private displayFilters: boolean = false;
+
+    /**
+     * filters applied
+     *
+     * @private
+     */
+    private filters: any = {};
 
     constructor(
         private metadata: metadata,
@@ -46,7 +60,7 @@ export class AdministrationConfigurator implements OnInit {
 
     }
 
-    ngOnInit() {
+    public ngOnInit() {
         this.administrationconfigurator.dictionary = this.componentconfig.dictionary;
         this.administrationconfigurator.loadEntries(this.componentconfig.fields);
     }
@@ -59,48 +73,49 @@ export class AdministrationConfigurator implements OnInit {
         return item.id;
     }
 
-    getEntries() {
+    private getEntries() {
         let entries = [];
         for (let entry of this.administrationconfigurator.entries) {
             // check for filters
             let ignoreentry = false;
             if(this.displayFilters) {
                 for (let filterfield in this.filters) {
-                    if (!this.administrationconfigurator.isEditMode(entry.id) && this.filters[filterfield] && entry.data[filterfield] && entry.data[filterfield].toUpperCase().indexOf(this.filters[filterfield].toUpperCase()) == -1)
-                        ignoreentry = true;
+                    if (!this.administrationconfigurator.isEditMode(entry.id) && this.filters[filterfield] && entry.data[filterfield] && entry.data[filterfield].toUpperCase().indexOf(this.filters[filterfield].toUpperCase()) == -1) ignoreentry = true;
                 }
             }
 
-            if (!ignoreentry)
+            if (!ignoreentry) {
                 entries.push(entry);
+            }
         }
         return entries;
     }
 
-    getFields() {
+    private getFields() {
         let fields = [];
 
         for (let field of this.componentconfig.fields) {
-            if (field.hidden !== true)
+            if (field.hidden !== true) {
                 fields.push(field);
+            }
         }
 
         return fields;
     }
 
-    addEntry() {
+    private addEntry() {
         this.administrationconfigurator.addEntry();
     }
 
-    sort(field) {
+    private sort(field) {
         this.administrationconfigurator.sort(field);
     }
 
-    toggleFilter() {
+    private toggleFilter() {
         this.displayFilters = !this.displayFilters;
     }
 
-    clearFilter(){
+    private clearFilter(){
         this.filters = {};
     }
 }

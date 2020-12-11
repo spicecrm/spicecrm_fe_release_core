@@ -14,10 +14,12 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
  * @module ObjectComponents
  */
 import {
-    Component, ElementRef, OnInit
+    Component, OnInit
 } from '@angular/core';
 import {metadata} from '../../services/metadata.service';
 import {model} from '../../services/model.service';
+
+declare var _: any;
 
 @Component({
     selector: 'object-recordview-detail-2and1',
@@ -28,7 +30,7 @@ export class ObjectRecordViewDetail2and1 implements OnInit {
     private initialized: boolean = false;
     private componentconfig: any = {};
 
-    constructor(private metadata: metadata, private model: model, private elementRef: ElementRef) {
+    constructor(private metadata: metadata, private model: model) {
 
     }
 
@@ -37,6 +39,8 @@ export class ObjectRecordViewDetail2and1 implements OnInit {
     }
 
     private getComponentconfig() {
-        this.componentconfig = this.metadata.getComponentConfig('ObjectRecordViewDetail2and1', this.model.module);
+        if(_.isEmpty(this.componentconfig)) {
+            this.componentconfig = this.metadata.getComponentConfig('ObjectRecordViewDetail2and1', this.model.module);
+        }
     }
 }

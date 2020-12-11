@@ -10,4 +10,11 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 -->
 
-{{language.getLabel(label, undefined, length)}}
+<ng-container *ngIf="!language.inlineEditEnabled; else labelListenerContainer">
+    {{language.getLabel(label, undefined, length)}}
+</ng-container>
+<ng-template #labelListenerContainer>
+    <span (dblclick)="onDblClick($event)" (contextmenu)="onRightClick($event)">
+        {{language.getLabel(label, undefined, length)}}
+    </span>
+</ng-template>

@@ -133,7 +133,7 @@ export class fieldEmail extends fieldGeneric {
             emailAddresses = emailAddresses.filter(email => email.primary_address != 1);
         } else {
             emailAddresses = emailAddresses.map(email => {
-                if (email.primary_address == 1) {
+                if (email.primary_address == 1 && newEmail.email_address_caps != email.email_address_caps) {
                     email = newEmail;
                 }
                 return email;
@@ -145,9 +145,13 @@ export class fieldEmail extends fieldGeneric {
     /**
      * navigate to operation system email sender
      */
-    private sendEmail() {
+    private sendEmail(e: MouseEvent) {
+        // avoid double opening
+        e.stopPropagation();
+        e.preventDefault();
+
         if (this.value.length > 0) {
-            window.location.assign('mailto:' + this.value);
+            window.open('mailto:' + this.value);
         }
     }
 }

@@ -32,9 +32,6 @@ import {socket} from "./socket.service";
 
 declare var _: any;
 
-// import {GlobalHeader} from '../globalcomponents/components/globalheader';
-// import {GlobalFooter} from '../globalcomponents/components/globalfooter';
-
 /**
  * @ignore
  */
@@ -73,9 +70,10 @@ export class model implements OnDestroy {
     private _module: string = "";
 
     /**
-     * the id of the record in the backend
+     * the id of the record in the backend held internally
+     * this is get/set via a setter that also handels the model registry
      */
-    public id: string = "";
+    public _id: string = "";
 
     /**
      * an object holding the acl data for the record as it is set in the backend
@@ -244,6 +242,10 @@ export class model implements OnDestroy {
      */
     public savingProgress: BehaviorSubject<number> = new BehaviorSubject(1);
 
+    /**
+     * any subscriptions the service might have to be collected here
+     * @private
+     */
     private subscriptions: Subscription = new Subscription();
 
     constructor(
@@ -262,7 +264,6 @@ export class model implements OnDestroy {
         public injector: Injector,
         public socket: socket
     ) {
-        this.modelRegisterId = this.navigation.registerModel(this);
 
         this.data$ = new BehaviorSubject(this.data);
 
@@ -276,18 +277,56 @@ export class model implements OnDestroy {
         );
     }
 
+    /**
+     * registers the model but only if id and module are set
+     * otherwise it spams the model registry
+     *
+     * @private
+     */
+    private registerModel() {
+        if (this.module && this._id && !this.navigation.modelregister.find(m => m.model._id == this._id && m.model.module == this.module)) {
+            this.modelRegisterId = this.navigation.registerModel(this);
+        }
+    }
 
     get messages(): any[] {
         return this._messages;
     }
 
+    /**
+     * getter for the module
+     */
     get module(): string {
         return this._module;
     }
 
+    /**
+     * setter for the module
+     * also triggers inittialization of field statis as well as model registry
+     *
+     * @param val
+     */
     set module(val: string) {
         this._module = val;
         this.initializeFieldsStati();
+        this.registerModel();
+    }
+
+    /**
+     * getter for the id
+     */
+    get id() {
+        return this._id;
+    }
+
+    /**
+     * setter for teh id also triggers the registration of the model if module and id are set
+     *
+     * @param id
+     */
+    set id(id) {
+        this._id = id;
+        this.registerModel();
     }
 
     /*
@@ -348,7 +387,14 @@ export class model implements OnDestroy {
      */
     public checkAccess(access): boolean {
         if (this.data && this.data.acl) {
-            return this.data.acl[access];
+            // legacy handling for view & detail
+            // ToDo: clean this up and make view or detail in general
+            if (access == 'detail' || access == 'view') {
+                return this.data.acl.detail || this.data.acl.view;
+            } else {
+                return this.data.acl[access];
+            }
+
         } else {
             return false;
         }
@@ -450,7 +496,7 @@ export class model implements OnDestroy {
             // check required
             if (
                 field !== "id" && this.getFieldStati(field).required &&
-                (!this.data[field] || this.data[field].length === 0)
+                ((!this.data[field] && this.data[field] !== 0) || String(this.data[field]).length === 0)
             ) {
                 this.isValid = false;
                 this.addMessage("error", this.language.getLabel("MSG_INPUT_REQUIRED") + "!", field);
@@ -648,7 +694,12 @@ export class model implements OnDestroy {
         }
 
         let val_left = this.data[condition.fieldname];
-        let val_right = this.evaluateValidationParams(condition.valuations);
+        let val_right = null;
+        if (condition.comparator.match(/regex/g)) {
+            val_right = condition.valuations;
+        } else {
+            val_right = this.evaluateValidationParams(condition.valuations);
+        }
 
         check = modelutilities.compare(val_left, condition.comparator, val_right);
 
@@ -957,7 +1008,6 @@ export class model implements OnDestroy {
                     }
 
 
-
                     // emit the save$
                     // redetermin the dirty fields since the backend call might have changed also additonal fields
                     this.saved$.emit({changed: this.getDirtyFields(), backupdata: this.backupData});
@@ -1065,7 +1115,7 @@ export class model implements OnDestroy {
         return this.initializeModel(parent);
     }
 
-    public initializeModel(parent: any = null) {
+    public initializeModel(parent: model = null) {
         if (!this.id) {
             this.id = this.generateGuid();
             this.isNew = true;
@@ -1081,10 +1131,13 @@ export class model implements OnDestroy {
         this.data.assigned_user_name = this.session.authData.userName;
         this.data.modified_by_id = this.session.authData.userId;
         this.data.modified_by_name = this.session.authData.userName;
+        this.data.created_by_id = this.session.authData.userId;
+        this.data.created_by_name = this.session.authData.userName;
         this.data.date_entered = new moment();
         this.data.date_modified = new moment();
 
         this.executeCopyRules(parent);
+        this.setFieldsDefaultValues();
         this.evaluateValidationRules();
 
         // set default acl to allow editing
@@ -1096,6 +1149,9 @@ export class model implements OnDestroy {
         // initialize the field stati and run the initial evaluation rules
         this.initializeFieldsStati();
         this.evaluateValidationRules(null, "init");
+
+        // set the parent model from the intialized one in the call
+        this.parentmodel = parent;
     }
 
 
@@ -1106,8 +1162,7 @@ export class model implements OnDestroy {
 
         // acl check if we are alowed to create
         if (this.metadata.checkModuleAcl(this.module, "create")) {
-            this.initializeModel();
-            this.executeCopyRules(parent);
+            this.initializeModel(parent);
 
             // set teh reference
             this.reference = addReference;
@@ -1164,6 +1219,19 @@ export class model implements OnDestroy {
         this.executeCopyRulesGeneric();
     }
 
+    /**
+     * set fields default values from the fields definitions
+     * @private
+     */
+    private setFieldsDefaultValues() {
+        const moduleFields = this.metadata.getModuleFields(this.module);
+        if (!moduleFields) return;
+        _.each(moduleFields, fieldDefs => {
+            if (!('default' in fieldDefs) || this.data[fieldDefs.name] != undefined || fieldDefs.type == 'link' || fieldDefs.source == 'non-db') return;
+            this.setFixedValue(fieldDefs.name, fieldDefs.default);
+        });
+    }
+
     // get generic copy rules
     public executeCopyRulesGeneric() {
         let copyrules = this.metadata.getCopyRules("*", this.module);
@@ -1171,7 +1239,7 @@ export class model implements OnDestroy {
             if (copyrule.tofield && copyrule.fixedvalue) {
                 this.setFixedValue(copyrule.tofield, copyrule.fixedvalue);
             } else if (copyrule.tofield && copyrule.calculatedvalue) {
-                this.setFieldValue(copyrule.tofield, this.getCalculatdValue(copyrule.calculatedvalue));
+                this.setField(copyrule.tofield, this.getCalculatedValue(copyrule));
             }
         }
     }
@@ -1180,14 +1248,16 @@ export class model implements OnDestroy {
     public executeCopyRulesParent(parent) {
         // todo: figure out why we loose the id in data
         if (!parent.data.id) parent.data.id = parent.id;
-        let copyrules = this.metadata.getCopyRules(parent.module, this.module);
-        for (let copyrule of copyrules) {
-            if (copyrule.fromfield && copyrule.tofield) {
-                // this.setFieldValue(copyrule.tofield, parent.getFieldValue(copyrule.fromfield));
-                // this.setFieldValue(copyrule.tofield, parent.data[copyrule.fromfield]);
-                this.copyValue(copyrule.tofield, parent.data[copyrule.fromfield]);
-            } else if (copyrule.tofield && copyrule.fixedvalue) {
-                this.setFieldValue(copyrule.tofield, copyrule.fixedvalue);
+        let copyRules = this.metadata.getCopyRules(parent.module, this.module);
+        for (let copyRule of copyRules) {
+            if (!copyRule.tofield) continue;
+            if (!!copyRule.fromfield) {
+                this.copyValue(copyRule.tofield, parent.data[copyRule.fromfield], copyRule.params);
+            } else if (!!copyRule.fixedvalue) {
+                this.setFixedValue(copyRule.tofield, copyRule.fixedvalue);
+            }
+            if (!!copyRule.calculatedvalue) {
+                this.setField(copyRule.tofield, this.getCalculatedValue(copyRule, parent.data[copyRule.fromfield]));
             }
         }
     }
@@ -1198,25 +1268,27 @@ export class model implements OnDestroy {
      * @param toField
      * @param value
      */
-    private copyValue(toField, value) {
+    private copyValue(toField, value, params) {
         let fieldDef = this.metadata.getFieldDefs(this.module, toField);
-
         // if not found just set the field attribute
         if (!fieldDef) this.setField(toField, value);
 
         // handle links
+
         switch (fieldDef.type) {
             case 'link':
-                if (_.isObject(value) && value.beans) {
-                    const newLink = {beans: {}};
-                    for (let relId in value.beans) {
-                        if (!value.beans.hasOwnProperty(relId)) continue;
+                if (params.generatenewid) {
+                    if (_.isObject(value) && value.beans) {
+                        const newLink = {beans: {}};
+                        for (let relId in value.beans) {
+                            if (!value.beans.hasOwnProperty(relId)) continue;
 
-                        const newId = this.utils.generateGuid();
-                        newLink.beans[newId] = {...value.beans[relId]};
-                        newLink.beans[newId].id = newId;
+                            const newId = this.utils.generateGuid();
+                            newLink.beans[newId] = {...value.beans[relId]};
+                            newLink.beans[newId].id = newId;
+                        }
+                        this.setField(toField, newLink);
                     }
-                    this.setField(toField, newLink);
                 }
                 break;
             default:
@@ -1235,31 +1307,45 @@ export class model implements OnDestroy {
         let fieldDef = this.metadata.getFieldDefs(this.module, toField);
 
         // if no field definition found just set the field attribute
-        if (!fieldDef) this.setField(toField, value);
+        if (!fieldDef || (fieldDef && !fieldDef.type)) this.setField(toField, value);
 
-        switch (fieldDef.type) {
-            case 'bool':
-                this.setField(toField, (value === 'true' || value === '1') ? true : ((value === 'false' || value === '0') ? false : null));
-                break;
-            default:
-                this.setField(toField, value);
-                break;
+        if(fieldDef && fieldDef.type) {
+            switch (fieldDef.type) {
+                case 'bool':
+                    this.setField(toField, (value === 'true' || value === '1') ? true : ((value === 'false' || value === '0') ? false : null));
+                    break;
+                default:
+                    this.setField(toField, value);
+                    break;
+            }
         }
     }
 
-    public getCalculatdValue(valuetype: string) {
-        switch (valuetype) {
+    public getCalculatedValue(copyRule, fromField?) {
+
+        switch (copyRule.calculatedvalue) {
             case "now":
                 return new moment();
             case "nextfullhour":
-                let value = new moment();
-                if (value.minute() == 0) {
-                    return value;
+                let date = new moment();
+                if (date.minute() == 0) {
+                    return date;
                 } else {
-                    value.minute(0);
-                    value.add(1, "h");
-                    return value;
+                    date.minute(0);
+                    date.add(1, "h");
+                    return date;
                 }
+            case "addDate":
+                const fromFieldDate = moment.isMoment(fromField) ? new moment( fromField) : new moment();
+                let params;
+                try {
+                    params = JSON.parse(copyRule.params);
+                } catch {
+                    return fromFieldDate;
+                }
+                if (!params.number || !params.unit) return fromFieldDate;
+
+                return new moment(fromFieldDate.format()).add(params.number,params.unit);
         }
         return "";
     }
@@ -1582,7 +1668,7 @@ export class model implements OnDestroy {
             this.data[relation_link_name] = {beans: []};
         }
 
-        for(let record of records) {
+        for (let record of records) {
 
             for (let id in this.data[relation_link_name].beans) {
                 if (record == id) {
@@ -1708,14 +1794,16 @@ export class model implements OnDestroy {
      * Deep cloning of an object. Minds also moment objects.
      * @param object The object to clone.
      */
-    private buildBackup( object ) {
+    private buildBackup(object) {
         let clone = {};
-        _.each( object, ( value, key ) => {
-            if ( _.isObject( value )) {
-                if ( moment.isMoment( value )) {
-                    clone[key] = moment( value );
+        _.each(object, (value, key) => {
+            if (_.isObject(value)) {
+                if (_.isArray(value)) {
+                    clone[key] = value.map(item => this.buildBackup(item));
+                } else if (moment.isMoment(value)) {
+                    clone[key] = moment(value);
                 } else {
-                    clone[key] = this.buildBackup( value );
+                    clone[key] = this.buildBackup(value);
                 }
             } else {
                 clone[key] = object[key];

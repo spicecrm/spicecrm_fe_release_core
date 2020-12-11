@@ -174,7 +174,7 @@ export class GlobalLogin {
                 error => {
                     this.loggingIn = false;
                 }
-        );
+            );
         }
     }
 
@@ -219,6 +219,13 @@ export class GlobalLogin {
             }
         }
         return langArray;
+    }
+
+    /**
+     * only display the login image when the screenheight is large enough
+     */
+    get displayimage() {
+        return window.innerHeight > 800;
     }
 
     /**
@@ -274,7 +281,7 @@ export class GlobalLogin {
      * a helper functions that returns if the sidebar in teh login screen shoudl be shown or not
      */
     get showSidebar() {
-        return window.innerWidth >= 1024;
+        return this.configuration.data.displayloginsidebar !== false && window.innerWidth >= 1024;
     }
 
     /**
