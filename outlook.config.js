@@ -1,10 +1,10 @@
-(function (global) {
+(function(global) {
     System.config({
         paths: {
-            'vendor:': 'vendor/'
+            "vendor:": "vendor/",
         },
         map: {
-            app: 'app',
+            app: "app",
             '@angular/core': 'vendor:@angular/core.umd.min.js?v=11.0.2',
             '@angular/common': 'vendor:@angular/common.umd.min.js?v=11.0.2',
             '@angular/common/http': 'vendor:@angular/common-http.umd.min.js?v=11.0.2',
@@ -26,21 +26,21 @@
             '@angular/cdk/portal': 'vendor:@angular/cdk-portal.umd.min.js?v=11.0.0',
             'socket.io-client': 'vendor:socket.io-client/dist/socket.io.js',
             'rxjs': 'vendor:rxjs',
-            'rxjs/operators': 'vendor:rxjs/operators/index',
+            'rxjs/operators': 'vendor:rxjs/operators/index.js',
             'tslib': 'vendor:tslib/tslib.js',
             'google-auth-library': 'vendor:google-auth-library',
             'hammerjs': 'vendor:hammerjs/hammer.min.js',
             'ts-md5': 'vendor:ts-md5/md5.js',
         },
         packages: {
-            'app': {
-                main: './spiceui',
-                defaultExtension: 'js?v=2020.04.001.1608202760457'
+            app: {
+                main: "./include/outlook/outlook",
+                defaultExtension: "js?v=2020.04.001.1608202760457",
             },
             rxjs: {
-                main: "index",
-                defaultExtension: 'js?v=6.6.3'
-            }
-        }
+                main: "index.js",
+                defaultExtension: "js",
+            },
+        },
     });
 })(this);
