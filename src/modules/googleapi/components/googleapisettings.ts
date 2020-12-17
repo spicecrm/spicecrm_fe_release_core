@@ -79,24 +79,26 @@ export class GoogleAPISettings implements OnInit {
      * @private
      */
     private loadScope() {
-        let scopes = this.configvalues.serviceuserscope.split(' ');
-        for (let scope of scopes) {
-            switch (scope) {
-                case 'https://www.googleapis.com/auth/calendar':
-                    this.serviceuserscope.calendar = true;
-                    break;
-                case 'https://www.googleapis.com/auth/contacts':
-                    this.serviceuserscope.contacts = true;
-                    break;
-                case 'https://www.googleapis.com/auth/gmail.readonly':
-                    this.serviceuserscope.gmail_radonly = true;
-                    break;
-                case 'https://www.googleapis.com/auth/gmail.compose':
-                    this.serviceuserscope.gmail_compose = true;
-                    break;
-                case 'https://www.googleapis.com/auth/gmail.modify':
-                    this.serviceuserscope.gmail_modify = true;
-                    break;
+        if(this.configvalues && this.configvalues.serviceuserscope) {
+            let scopes = this.configvalues.serviceuserscope.split(' ');
+            for (let scope of scopes) {
+                switch (scope) {
+                    case 'https://www.googleapis.com/auth/calendar':
+                        this.serviceuserscope.calendar = true;
+                        break;
+                    case 'https://www.googleapis.com/auth/contacts':
+                        this.serviceuserscope.contacts = true;
+                        break;
+                    case 'https://www.googleapis.com/auth/gmail.readonly':
+                        this.serviceuserscope.gmail_radonly = true;
+                        break;
+                    case 'https://www.googleapis.com/auth/gmail.compose':
+                        this.serviceuserscope.gmail_compose = true;
+                        break;
+                    case 'https://www.googleapis.com/auth/gmail.modify':
+                        this.serviceuserscope.gmail_modify = true;
+                        break;
+                }
             }
         }
     }

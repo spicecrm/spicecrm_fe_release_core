@@ -35,7 +35,7 @@
         packages: {
             app: {
                 main: "./include/outlook/outlook",
-                defaultExtension: "js?v=2020.04.001.1608202760457",
+                defaultExtension: "js?v=2020.04.001.1608205522160",
             },
             rxjs: {
                 main: "index.js",
