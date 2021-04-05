@@ -11,7 +11,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 -->
 
 <div>
-    <div class="slds-grid slds-grid_align-spread slds-p-bottom_x-small">
+    <div *ngIf="!hideText"  class="slds-grid slds-grid_align-spread slds-p-bottom_x-small">
         <span class="slds-m-left--xx-small"><ng-content></ng-content></span>
         <strong class="slds-m-right--x-small">{{progressText}} {{lang.getLabel('LBL_COMPLETED')}}</strong>
     </div>

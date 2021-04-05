@@ -46,7 +46,7 @@ export class spiceimportsservice {
         this.activeItemLogs = undefined;
         this.isloadingLogs = true;
 
-        this.backend.getRequest(`/modules/SpiceImports/${this.activeImportData.id}/logs`)
+        this.backend.getRequest(`modules/SpiceImports/${this.activeImportData.id}/logs`)
             .subscribe(logs => {
                 logs.map(log => log.data = log.data.split('";"'));
                 this.activeItemLogs = logs;
@@ -59,7 +59,7 @@ export class spiceimportsservice {
         this.isloading = true;
 
         this.backend.getRequest(
-            '/module/SpiceImports',
+            'module/SpiceImports',
             {orderby: 'date_entered DESC', limit: this.loadLimit, offset: 0, fields: '*'})
             .subscribe(res => {
                 this.parseItemsStatus(res.list);
@@ -76,7 +76,7 @@ export class spiceimportsservice {
         this.isloading = true;
 
         this.backend.getRequest(
-            '/module/SpiceImports',
+            'module/SpiceImports',
             {orderby: 'date_entered DESC', limit: this.loadLimit, offset: this.items.length, fields: '*'})
             .subscribe(res => {
                 this.parseItemsStatus(res.list);

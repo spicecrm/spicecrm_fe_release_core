@@ -26,7 +26,7 @@ import {configurationService} from "../../../services/configuration.service";
 })
 export class ObjectActionOutputBeanButton {
 
-    private templates: any[] = [];
+    public templates: any[] = [];
     public forcedFormat: 'html'|'pdf';
     public modalTitle: string;
     public noDownload: boolean;
@@ -77,7 +77,7 @@ export class ObjectActionOutputBeanButton {
     }
 
 
-    private openOutput() {
+    public openOutput() {
         if (this.templates.length > 0) {
             // sort the templates
             this.templates.sort((a, b) => a.name > b.name ? 1 : -1);

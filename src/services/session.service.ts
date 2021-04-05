@@ -24,7 +24,6 @@ declare var moment: any;
 // Taken from https://github.com/killmenot/webtoolkit.md5
 
 interface authDataIf {
-    renewPass: boolean;
     sessionId: string;
     loaded: boolean;
     userId: string;
@@ -40,7 +39,10 @@ interface authDataIf {
     googleToken: string;
     userimage: string;
     companycode_id: string;
+    tenant_id: string;
+    tenant_name: string;
     obtainGDPRconsent: boolean;
+    canchangepassword: boolean;
 }
 
 /**
@@ -61,12 +63,14 @@ export class session {
         password: '',
         admin: false,
         dev: false,
-        renewPass: false,
         portalOnly: false,
         googleToken: '',
         userimage: '',
         companycode_id: '',
-        obtainGDPRconsent: false
+        tenant_id: '',
+        tenant_name: '',
+        obtainGDPRconsent: false,
+        canchangepassword: false
     };
 
     /**
@@ -91,6 +95,7 @@ export class session {
     public getSessionHeader(): HttpHeaders {
         let headers = new HttpHeaders();
         headers = headers.set('OAuth-Token', this.authData.sessionId);
+        headers = headers.set('OAuth-Issuer', 'SpiceCRM');
         return headers;
     }
 
@@ -179,9 +184,9 @@ export class session {
         this.authData.password = '';
         this.authData.admin = false;
         this.authData.dev = false;
-        this.authData.renewPass = false;
         this.authData.companycode_id = '';
         this.authData.obtainGDPRconsent = false;
+        this.authData.canchangepassword = false;
 
         this.sessionData = {};
 

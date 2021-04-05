@@ -82,7 +82,7 @@ export class SpiceImporter implements OnInit {
         });
 
         // get saved imports
-        this.backend.getRequest('/modules/SpiceImports/savedImports/' + this.model.module).subscribe(res => {
+        this.backend.getRequest('modules/SpiceImports/savedImports/' + this.model.module).subscribe(res => {
             this.spiceImporter.savedImports = res;
         });
 
@@ -291,7 +291,7 @@ export class SpiceImporter implements OnInit {
         this.spiceImporter.result = {};
         this.processing = true;
 
-        this.backend.postRequest('/modules/SpiceImports/import', {
+        this.backend.postRequest('modules/SpiceImports/import', {
             objectimport: preparedObjectImport,
         }).subscribe(res => {
 

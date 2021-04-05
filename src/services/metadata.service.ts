@@ -23,10 +23,11 @@ import {
     NgModuleFactoryLoader
 } from "@angular/core";
 import {HttpClient} from "@angular/common/http";
+import {CanActivate, CanDeactivate, Router} from "@angular/router";
+import {LocationStrategy} from "@angular/common";
 import {session} from "./session.service";
 import {broadcast} from "./broadcast.service";
 import {configurationService} from "./configuration.service";
-import {CanActivate, Router} from "@angular/router";
 import {SpiceInstaller} from "../include/spiceinstaller/components/spiceinstaller";
 
 // for the dynamic routes
@@ -173,6 +174,7 @@ export class metadata {
                                     path: route.path,
                                     component: factory.componentType,
                                     canActivate: [aclCheck]
+                                    // canDeactivate: [noBack]
                                 });
 
                                 // add the same for the tabbed browser
@@ -180,6 +182,7 @@ export class metadata {
                                     path: 'tab/:tabid/' + route.path,
                                     component: factory.componentType,
                                     canActivate: [aclCheck]
+                                    // canDeactivate: [noBack]
                                 });
                             }
                             return true;
@@ -1735,5 +1738,30 @@ export class aclCheck implements CanActivate {
         } else {
             return true;
         }
+    }
+}
+
+
+@Injectable()
+export class noBack implements CanDeactivate<any> {
+
+    public navigatingBack: boolean = false;
+
+    constructor(private location: LocationStrategy, private broadcast: broadcast) {
+        // catch the popstate event
+        this.location.onPopState(() => {
+            this.navigatingBack = true;
+        });
+    }
+
+    public canDeactivate(): boolean {
+
+        if (this.navigatingBack) {
+            this.navigatingBack = false;
+            history.pushState(null, document.title, location.href);
+            return false;
+        }
+        return true;
+
     }
 }

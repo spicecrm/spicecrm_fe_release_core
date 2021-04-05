@@ -42,6 +42,7 @@ export class spiceinstaller {
     public systemdevmode: boolean = false;
     public systemloginprogressbar: number = 0;
     public systemallowforgotpass: number = 0;
+    public frontendUrl: string = window.location.href.split('#')[0];
     /**
      * systemcheck
      */
@@ -55,7 +56,7 @@ export class spiceinstaller {
     public db_user_name: string = '';
     public db_password: string = '';
     public db_name: string = '';
-    public db_type: string = 'mysql';
+    public db_type: string = 'mysqli';
     public db_port: string = '';
     public db_manager: string = '';
     public persistent: boolean = true;
@@ -88,6 +89,7 @@ export class spiceinstaller {
     public server: string = '';
     public port: string = '9200';
     public prefix: string = 'spicecrm_';
+    public transferProtocol: string = 'http';
     /**
      * credentials
      */

@@ -34,6 +34,10 @@ export class fieldEmailEmailAddress {
     * @input emailaddress: object
     */
     @Input() private emailaddress: any = {};
+    /**
+     * holds the input radio unique name for the primary radio button
+     */
+    @Input() public primaryInputRadioName: string;
 
     constructor(public language: language) {
 

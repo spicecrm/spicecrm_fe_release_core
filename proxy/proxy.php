@@ -43,7 +43,7 @@ curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 $headers = getallheaders();
 // create header array with the originating IP for logging purposes
 $headerarray = [
-    'X-Forwarded-For' => 'X-Forwarded-For:' . ( isset( $_SERVER['HTTP_CLIENT_IP']{0} ) ? $_SERVER['HTTP_CLIENT_IP'] : $_SERVER['REMOTE_ADDR'])
+    'X-Forwarded-For' => 'X-Forwarded-For:' . ( isset( $_SERVER['HTTP_CLIENT_IP'][0] ) ? $_SERVER['HTTP_CLIENT_IP'] : $_SERVER['REMOTE_ADDR'])
 ];
 
 foreach ($headers as $element => $value) {
@@ -51,6 +51,7 @@ foreach ($headers as $element => $value) {
         case 'authorization':
         case 'cookie':
         case 'oauth-token':
+        case 'oauth-issuer':
         case 'content-type':
         case 'accept':
             $headerarray[$element] = $element . ': ' . $value;

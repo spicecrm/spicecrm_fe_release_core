@@ -31,7 +31,7 @@ import {model} from "../../services/model.service";
 })
 export class SystemModelProviderDirective {
     constructor(
-        private model: model
+        public model: model
     ) {
         // in case the host component is listening to the loading status and waits for it!
         this.model.isLoading = true;

@@ -61,7 +61,7 @@ export class GlobalObtainGDPRConsent {
     public save() {
         if ( this.isSaving ) return;
         this.isSaving = true;
-        this.backend.postRequest('/gdpr/portalGDPRconsent', null, { consentText: this.consentText } ).subscribe(
+        this.backend.postRequest('gdpr/portalGDPRconsent', null, { consentText: this.consentText } ).subscribe(
             ( response: any ) => {
                 this.loginService.session.authData.obtainGDPRconsent = false; // The GDPR consent is no longer missing.
             },

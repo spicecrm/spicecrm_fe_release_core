@@ -13,7 +13,16 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 /**
  * @module SystemComponents
  */
-import {Component, EventEmitter, forwardRef, Input, Output, ChangeDetectorRef} from '@angular/core';
+import {
+    Component,
+    EventEmitter,
+    forwardRef,
+    Input,
+    Output,
+    ChangeDetectorRef,
+    ViewChild,
+    ElementRef, OnChanges, SimpleChanges, AfterViewInit
+} from '@angular/core';
 import {language} from "../../services/language.service";
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from "@angular/forms";
 
@@ -36,13 +45,20 @@ declare var _;
         }
     ]
 })
-export class SystemCheckbox implements ControlValueAccessor {
+export class SystemCheckbox implements ControlValueAccessor, OnChanges, AfterViewInit {
+
+    @ViewChild('inputCheckbox') public inputCheckbox: ElementRef;
 
     /**
      * set to true to render the checkbox without the NGContent. This is useful if you want to display the checkbox without any text and the adjacent elements are messing up the layout
      * ToDo: check if we can assess if ngcontent has been ppassed in ..
      */
     @Input() private hidelabel: boolean = false;
+
+    /**
+     * holds the checkbox indeterminate value
+     */
+    @Input() private indeterminate: boolean = false;
 
     /**
      * set to true if the model value should be returned as integer
@@ -59,6 +75,11 @@ export class SystemCheckbox implements ControlValueAccessor {
      * an event emitter for the click
      */
     @Output('click') public click$ = new EventEmitter<boolean>();
+
+    /**
+     * an event emitter for the click
+     */
+    @Output('change') public change$ = new EventEmitter<MouseEvent>();
 
     /**
      * the internal uinique id for the element
@@ -106,13 +127,42 @@ export class SystemCheckbox implements ControlValueAccessor {
 
     }
 
-    private click() {
+    /**
+     * call to set the checkbox indeterminate value
+     */
+    public ngAfterViewInit() {
+        this.setCheckboxIndeterminate();
+    }
+
+    /**
+     * call to set the checkbox indeterminate value
+     * @param changes
+     */
+    public ngOnChanges(changes: SimpleChanges) {
+        if (changes.indeterminate) {
+            this.setCheckboxIndeterminate();
+        }
+    }
+
+    /**
+     * set the checkbox indeterminate value
+     * @private
+     */
+    private setCheckboxIndeterminate() {
+        if (!this.inputCheckbox) return;
+        this.inputCheckbox.nativeElement.indeterminate = this.indeterminate;
+    }
+
+    private click(e: MouseEvent) {
+        e.stopPropagation();
+
         if (this.disabled) return false;
 
         this.onTouched();
 
         this.click$.emit(this.value);
     }
+
 
     // ControlValueAccessor implementation:
     private onChange(val: string){};// => void;
