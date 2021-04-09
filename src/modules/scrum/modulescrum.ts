@@ -1,5 +1,5 @@
 /*
-SpiceUI 2018.10.001
+SpiceUI 2021.01.001
 
 Copyright (c) 2016-present, aac services.k.s - All rights reserved.
 Redistribution and use in source and binary forms, without modification, are permitted provided that the following conditions are met:
@@ -22,7 +22,6 @@ import {GlobalComponents} from '../../globalcomponents/globalcomponents';
 import {ObjectComponents} from '../../objectcomponents/objectcomponents';
 import {SystemComponents} from '../../systemcomponents/systemcomponents';
 import {DirectivesModule} from "../../directives/directives";
-import {VersionManagerService} from "../../services/versionmanager.service";
 
 import /*embed*/ {scrum} from "./services/scrum.service";
 
@@ -56,12 +55,4 @@ import /*embed*/ {ScrumTree} from "./components/scrumtree";
     providers: [scrum]
 })
 export class ModuleScrum {
-    public readonly version = '1.0';
-    public readonly build_date = '/*build_date*/';
-
-    constructor(
-        private vms: VersionManagerService,
-    ) {
-        vms.registerModule(this);
-    }
 }

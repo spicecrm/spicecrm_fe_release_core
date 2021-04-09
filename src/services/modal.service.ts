@@ -1,5 +1,5 @@
 /*
-SpiceUI 2018.10.001
+SpiceUI 2021.01.001
 
 Copyright (c) 2016-present, aac services.k.s - All rights reserved.
 Redistribution and use in source and binary forms, without modification, are permitted provided that the following conditions are met:
@@ -32,11 +32,11 @@ export class modal {
     private modalsArray: any[] = [];
 
     /**
-     * keeps an array of the obnjects rendered as modals
+     * keeps an array of the objects rendered as modals
      */
     private modalsObject = {};
 
-    constructor( private metadata: metadata, private footer: footer, private toast: toast, private language: language ) {
+    constructor(private metadata: metadata, private footer: footer, private toast: toast, private language: language) {
         window.addEventListener("keyup", (event) => {
             if (event.keyCode === 27 && this.modalsArray.length) {
                 event.stopImmediatePropagation();
@@ -51,13 +51,14 @@ export class modal {
     /*
     * tries to open a modal and if the component is not found or no componentfactory is found returns an error as the subject and prompts a toast.
     */
-    public openModal(componentName, escKey = true, injector?: Injector) {
+    public openModal(componentName, escKey = true, injector?: Injector, blurBackdrop?: boolean) {
         // SPICEUI-35
         if (this.metadata.checkComponent(componentName)) {
             let retSubjectXY = new Subject<any>();
             this.metadata.addComponentDirect("SystemModalWrapper", this.footer.modalcontainer).subscribe(wrapperComponent => {
                 let newModal: any = {};
                 newModal.wrapper = wrapperComponent;
+                newModal.blurBackdrop = blurBackdrop;
                 wrapperComponent.instance.escKey = escKey;
                 this.modalsArray.push(newModal);
                 this.modalsObject[newModal.modalId] = newModal;
@@ -86,13 +87,15 @@ export class modal {
         }
     }
 
+
+
     /**
      * sends an error toast if the modal compopnent that shoudk be rendered is not defined int he repository
      *
      * @param componentName the name of the component hat was intended to be rendered in the modal
      */
     private sendError(componentName) {
-        this.toast.sendToast('Component "' + componentName + '" not found.', "error", "Misconfiguration on the system as the component should have been opened in a modal but is not avilable. Please contact your system administrator.");
+        this.toast.sendToast('Component "' + componentName + '" not found.', "error", "Misconfiguration on the system as the component should have been opened in a modal but is not available. Please contact your system administrator.");
     }
 
     /**
@@ -153,6 +156,17 @@ export class modal {
     }
 
     /**
+     * returns a style for the last backdrop
+     * used to blur a backdrop if the user is logged out
+     */
+    get backdropBlurred() {
+        if (this.modalsArray.length > 0 && this.modalsArray[this.modalsArray.length - 1].blurBackdrop === true) {
+            return 'blur(4px)';
+        }
+        return 'none';
+    }
+
+    /**
      * prompts a dialog
      *
      * @param type the type of the prompts
@@ -163,7 +177,7 @@ export class modal {
      * @param options options to be presented to the user
      * @param optionsAsRadio
      */
-    public prompt( type: 'info'|'input'|'confirm', text: string, headertext: string = null, theme: string = 'shade', defaultvalue: string|number = null, options: Array<{value: string, display: string}> = null, optionsAsRadio?: boolean): Observable<any> {
+    public prompt(type: 'info' | 'input' | 'confirm', text: string, headertext: string = null, theme: string = 'shade', defaultvalue: string | number = null, options: Array<{ value: string, display: string }> = null, optionsAsRadio?: boolean): Observable<any> {
         let responseSubject = new Subject();
         this.openModal("SystemPrompt").subscribe(component => {
             component.instance.type = type;
@@ -200,7 +214,7 @@ export class modal {
      * @param theme
      */
     public confirmDeleteRecord(): Observable<any> {
-        return this.prompt('confirm', this.language.getLabel('LBL_DELETE_RECORD', '', 'long') , this.language.getLabel('LBL_DELETE_RECORD'));
+        return this.prompt('confirm', this.language.getLabel('LBL_DELETE_RECORD', '', 'long'), this.language.getLabel('LBL_DELETE_RECORD'));
     }
 
     /**
@@ -211,8 +225,8 @@ export class modal {
      * @param defaultvalue
      * @param theme
      */
-    public input(text: string, headertext: string = null, theme: string = null, defaultvalue: string = null ): Observable<any> {
-        return this.prompt('input', text, headertext, theme, defaultvalue );
+    public input(text: string, headertext: string = null, theme: string = null, defaultvalue: string = null): Observable<any> {
+        return this.prompt('input', text, headertext, theme, defaultvalue);
     }
 
     /**
@@ -233,7 +247,7 @@ export class modal {
      */
     public await(messagelabel: string = null): EventEmitter<boolean> {
         let stopper = new EventEmitter<boolean>();
-        this.openModal('SystemLoadingModal', false ).subscribe(component => {
+        this.openModal('SystemLoadingModal', false).subscribe(component => {
             component.instance.messagelabel = messagelabel;
             stopper.subscribe(() => {
                 component.instance.self.destroy();

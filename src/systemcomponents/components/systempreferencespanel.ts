@@ -1,5 +1,5 @@
 /*
-SpiceUI 2018.10.001
+SpiceUI 2021.01.001
 
 Copyright (c) 2016-present, aac services.k.s - All rights reserved.
 Redistribution and use in source and binary forms, without modification, are permitted provided that the following conditions are met:
@@ -131,16 +131,7 @@ export class SystemPreferencesPanel implements OnChanges {
      * @private
      */
     private nameFormats: Array<{ name: string, example: string }> = [];
-    /**
-     * holds an object of the timezones
-     * @private
-     */
-    private timezones: object;
-    /**
-     * holds a list of timezones
-     * @private
-     */
-    private timezoneKeys: string[];
+
     /**
      * holds the example text for the name
      * @private
@@ -194,10 +185,6 @@ export class SystemPreferencesPanel implements OnChanges {
 
         this.setNameFormats();
 
-        this.backend.getRequest('/timezones').subscribe(response => {
-            this.timezones = response;
-            this.timezoneKeys = Object.keys(this.timezones);
-        });
         this.currencyList = this.currency.getCurrencies();
 
         for (let i = 0; i < 24; i++) {

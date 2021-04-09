@@ -1,5 +1,5 @@
 /*
-SpiceUI 2018.10.001
+SpiceUI 2021.01.001
 
 Copyright (c) 2016-present, aac services.k.s - All rights reserved.
 Redistribution and use in source and binary forms, without modification, are permitted provided that the following conditions are met:
@@ -75,6 +75,16 @@ export class ObjectActionSaveRelatedButton {
                 // return to edit mode
                 this.view.setEditMode();
                 this.saving = false;
+            });
+        } else {
+            this.saving = false;
+            this.model.edit().subscribe(res => {
+                if (!res) {
+                    this.model.cancelEdit();
+                    this.view.setViewMode();
+                } else {
+                    this.execute();
+                }
             });
         }
     }

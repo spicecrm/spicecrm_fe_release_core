@@ -1,5 +1,5 @@
 /*
-SpiceUI 2018.10.001
+SpiceUI 2021.01.001
 
 Copyright (c) 2016-present, aac services.k.s - All rights reserved.
 Redistribution and use in source and binary forms, without modification, are permitted provided that the following conditions are met:
@@ -60,7 +60,7 @@ export class ObjectActionOutputBeanModal {
     public noDownload = false;
     public handBack: EventEmitter<any>;
     public buttonText: string;
-    private contentForHandBack: string;
+    public contentForHandBack: string;
 
     /**
      * the window itsel .. resp the containing modal container
@@ -124,14 +124,14 @@ export class ObjectActionOutputBeanModal {
     private blobUrl: any;
 
     constructor(
-        private language: language,
-        private model: model,
-        private metadata: metadata,
-        private modal: modal,
-        private view: view,
-        private backend: backend,
-        private sanitizer: DomSanitizer,
-        private viewContainerRef: ViewContainerRef
+        public language: language,
+        public model: model,
+        public metadata: metadata,
+        public modal: modal,
+        public view: view,
+        public backend: backend,
+        public sanitizer: DomSanitizer,
+        public viewContainerRef: ViewContainerRef
     ) {
         // get the fieldset of the email area
         let componentconfig = this.metadata.getComponentConfig('ObjectActionOutputBeanModal');
@@ -247,11 +247,11 @@ export class ObjectActionOutputBeanModal {
         this.rendertemplate();
     }
 
-    private close() {
+    public close() {
         this.self.destroy();
     }
 
-    private create() {
+    public create() {
         if ( this.handBack ) this.handBack.emit( { name: this.selected_template.name, content: this.contentForHandBack });
         if ( this.noDownload ) this.close();
         else {

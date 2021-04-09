@@ -1,5 +1,5 @@
 /*
-SpiceUI 2018.10.001
+SpiceUI 2021.01.001
 
 Copyright (c) 2016-present, aac services.k.s - All rights reserved.
 Redistribution and use in source and binary forms, without modification, are permitted provided that the following conditions are met:
@@ -31,6 +31,7 @@ declare var moment: any;
 export class reminder {
 
     public reminders: any[] = [];
+    public loaded: boolean = false;
     public loaded$: EventEmitter<boolean> = new EventEmitter<boolean>()
 
 
@@ -49,6 +50,7 @@ export class reminder {
                         reminder.reminder_date = moment.utc(reminder.reminder_date);
                         this.reminders.push(reminder);
                     }
+                    this.loaded = true;
                     this.loaded$.emit(true);
                 }
                 break;

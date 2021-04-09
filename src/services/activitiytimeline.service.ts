@@ -1,5 +1,5 @@
 /*
-SpiceUI 2018.10.001
+SpiceUI 2021.01.001
 
 Copyright (c) 2016-present, aac services.k.s - All rights reserved.
 Redistribution and use in source and binary forms, without modification, are permitted provided that the following conditions are met:
@@ -325,11 +325,10 @@ export class activitiytimeline {
     ) {
 
         if (!silent) {
-
             this.activities[module].loading = true;
         }
 
-        let params = {
+        let body = {
             count: true,
             limit: this.defaultLimit,
             objects: JSON.stringify(this.filters.objectfilters),
@@ -338,7 +337,7 @@ export class activitiytimeline {
         };
 
 
-        this.backend.postRequest('module/' + module + '/fts/' + this.parent.module + '/' + this.parent.id, {}, params).subscribe(
+        this.backend.postRequest('module/' + module + '/fts/' + this.parent.module + '/' + this.parent.id, {}, body).subscribe(
             (response: any) => {
                 if (response) {
                     this.resetListData(module);

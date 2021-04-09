@@ -1,5 +1,5 @@
 /*
-SpiceUI 2018.10.001
+SpiceUI 2021.01.001
 
 Copyright (c) 2016-present, aac services.k.s - All rights reserved.
 Redistribution and use in source and binary forms, without modification, are permitted provided that the following conditions are met:
@@ -51,6 +51,8 @@ export class broadcast {
      * ```typescript
      * this.broadcast.broadcastMessage("model.loaded", {id: this.id, module: this.module, data: this.data});
      * ```
+     *
+     * ToDo: add type for the message and add documentation for the message so this is clear and not simply whatever can be broadcasted
      */
     public broadcastMessage(message: string, data: any = {}): void {
         this.message$.emit({

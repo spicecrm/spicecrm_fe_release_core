@@ -1,5 +1,5 @@
 /*
-SpiceUI 2018.10.001
+SpiceUI 2021.01.001
 
 Copyright (c) 2016-present, aac services.k.s - All rights reserved.
 Redistribution and use in source and binary forms, without modification, are permitted provided that the following conditions are met:
@@ -16,9 +16,9 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
 import {FormsModule}   from '@angular/forms';
+import {DragDropModule} from "@angular/cdk/drag-drop";
 
 import {metadata} from '../services/metadata.service';
-import {VersionManagerService} from '../services/versionmanager.service';
 
 import {SystemComponents} from '../systemcomponents/systemcomponents';
 import {DirectivesModule} from "../directives/directives";
@@ -53,6 +53,7 @@ import /*embed*/ {fieldMultipleEnumDropdown} from './components/fieldmultipleenu
 import /*embed*/ {fieldEnumAlternate} from './components/fieldenumalternate';
 import /*embed*/ {fieldEnumRadio} from './components/fieldenumradio';
 import /*embed*/ {fieldBool} from './components/fieldbool';
+import /*embed*/ {fieldBoolLabelAligned} from './components/fieldboollabelaligned';
 import /*embed*/ {fieldParent} from './components/fieldparent';
 import /*embed*/ {fieldModuleFilter} from './components/fieldmodulefilter';
 import /*embed*/ {fieldRelate} from './components/fieldrelate';
@@ -120,6 +121,7 @@ import /*embed*/ {fieldUnitsOfMeasure} from "./components/fieldunitsofmeasure";
 import /*embed*/ {fieldQuantity} from "./components/fieldquantity";
 import /*embed*/ {fieldQuestionnaireEvaluation} from './components/fieldquestionnaireevaluation';
 import /*embed*/ {fieldTags} from './components/fieldtags';
+import /*embed*/ {fieldParentDetails} from './components/fieldparentdetails';
 import /*embed*/ {fieldRelatedDetails} from './components/fieldrelateddetails';
 import /*embed*/ {fieldRelatedDetailsContainer} from './components/fieldrelateddetailscontainer';
 import /*embed*/ {fieldPhone} from "./components/fieldphone";
@@ -127,6 +129,7 @@ import /*embed*/ {fieldActionset} from "./components/fieldactionset";
 import /*embed*/ {fieldSlider} from "./components/fieldslider";
 import /*embed*/ {fieldImage} from './components/fieldimage';
 import /*embed*/ {fieldCompound} from './components/fieldcompound';
+import /*embed*/ {fieldChecklist} from './components/fieldchecklist';
 
 /**
  * @ignore
@@ -141,7 +144,8 @@ declare var _: any;
         CommonModule,
         FormsModule,
         SystemComponents,
-        DirectivesModule
+        DirectivesModule,
+        DragDropModule
     ],
     declarations: [
         fieldSet,
@@ -177,6 +181,7 @@ declare var _: any;
         fieldEnumAlternate,
         fieldEnumRadio,
         fieldBool,
+        fieldBoolLabelAligned,
         fieldDate,
         fieldTime,
         fieldDateTime,
@@ -242,6 +247,7 @@ declare var _: any;
         fieldQuantity,
         fieldQuestionnaireEvaluation,
         fieldTags,
+        fieldParentDetails,
         fieldRelatedDetails,
         fieldRelatedDetailsContainer,
         fieldPhone,
@@ -249,7 +255,8 @@ declare var _: any;
         fieldImage,
         fieldActionset,
         fieldSlider,
-        fieldCompound
+        fieldCompound,
+        fieldChecklist
     ],
     exports: [
         fieldSet,
@@ -269,14 +276,4 @@ declare var _: any;
         fieldTags,
     ]
 })
-export class ObjectFields {
-    private readonly  version = '1.0';
-    private readonly build_date = '/*build_date*/';
-
-    constructor(
-        public metadata: metadata,
-        private vms: VersionManagerService,
-    ) {
-        this.vms.registerModule(this);
-    }
-}
+export class ObjectFields {}

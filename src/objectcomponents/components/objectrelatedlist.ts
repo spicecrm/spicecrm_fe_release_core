@@ -1,5 +1,5 @@
 /*
-SpiceUI 2018.10.001
+SpiceUI 2021.01.001
 
 Copyright (c) 2016-present, aac services.k.s - All rights reserved.
 Redistribution and use in source and binary forms, without modification, are permitted provided that the following conditions are met:
@@ -18,6 +18,9 @@ import {relatedmodels} from "../../services/relatedmodels.service";
 import {model} from "../../services/model.service";
 import {metadata} from "../../services/metadata.service";
 import {language} from "../../services/language.service";
+import {Subscription} from "rxjs";
+
+declare var _: any;
 
 /**
  * a generic component for a related list.
@@ -51,6 +54,15 @@ export class ObjectRelatedList implements OnInit {
      */
     private hideactions: boolean = false;
 
+    /**
+     * a load subscription that awaitsa the model to be loaded before triggering the load of the subpanels
+     *
+     * @private
+     */
+    private loadsubscription: Subscription = new Subscription();
+
+    private loaded: boolean = false;
+
     constructor(
         public language: language,
         public metadata: metadata,
@@ -81,8 +93,10 @@ export class ObjectRelatedList implements OnInit {
         // Initialize the related Model Service
         this.initializeRelatedModelService();
 
-        // load the related records
-        this.loadRelated();
+        this.loadsubscription = this.model.data$.subscribe(modeldata => {
+            this.loadRelated();
+        });
+
     }
 
     /**
@@ -112,11 +126,12 @@ export class ObjectRelatedList implements OnInit {
         // set the related model from teh config
         this.relatedmodels.relatedModule = this.componentconfig.object;
 
-        // ToDo: check if this still is in use
-        this.relatedmodels.isonlyfiltered = this.componentconfig.isonlyfiltered;
-
-        // check if we have a separate link
-        if (this.componentconfig.link) this.relatedmodels.linkName = this.componentconfig.link;
+        // check if we have a separate link or even an EndPoint
+        if (this.componentconfig.linkEndPoint) {
+            this.relatedmodels.linkEndPoint = this.componentconfig.linkEndPoint;
+        } else if (this.componentconfig.link) {
+            this.relatedmodels.linkName = this.componentconfig.link;
+        }
 
         // check if we have a sequence field and thus the list shoudl be sequenced
         if (this.componentconfig.sequencefield) {
@@ -138,11 +153,30 @@ export class ObjectRelatedList implements OnInit {
         if (this.componentconfig.modulefilter) this.relatedmodels.modulefilter = this.componentconfig.modulefilter;
     }
 
+
+    /**
+     * checks the model state if a requiredmodelstate is set in the componentconfig
+     */
+    public checkModelState() {
+        if (this.componentconfig.requiredmodelstate && (_.isEmpty(this.model.data) || !this.model.checkModelState(this.componentconfig.requiredmodelstate))) {
+            return false;
+        }
+
+        // by default return true
+        return true;
+    }
+
+
     /**
      * loads the related records
      */
     public loadRelated() {
-        if (!this.aclAccess) return;
+        if (this.loaded || !this.aclAccess || (this.componentconfig.requiredmodelstate && !this.checkModelState())) return;
+
+        this.loaded = true;
+
+        // unsubscribe if we loaded once
+        this.loadsubscription.unsubscribe();
 
         this.relatedmodels.getData();
     }

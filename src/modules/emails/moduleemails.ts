@@ -1,5 +1,5 @@
 /*
-SpiceUI 2018.10.001
+SpiceUI 2021.01.001
 
 Copyright (c) 2016-present, aac services.k.s - All rights reserved.
 Redistribution and use in source and binary forms, without modification, are permitted provided that the following conditions are met:
@@ -17,7 +17,6 @@ import {CommonModule} from "@angular/common";
 import {NgModule} from "@angular/core";
 import {FormsModule} from "@angular/forms";
 
-import {VersionManagerService} from "../../services/versionmanager.service";
 import {DirectivesModule} from "../../directives/directives";
 
 import {ObjectFields} from "../../objectfields/objectfields";
@@ -45,6 +44,7 @@ import /*embed*/ {EmailSchedulesView} from "./components/emailschedulesview";
 import /*embed*/ {EmailActionSetReadButton} from "./components/emailactionsetreadbutton";
 import /*embed*/ {EmailTemplatesEditor} from "./components/emailtemplateseditor";
 import /*embed*/ {EmailTemplatesPreview} from "./components/emailtemplatespreview";
+import /*embed*/ {fieldEmailSubject} from "./fields/fieldemailsubject";
 
 @NgModule({
     imports: [
@@ -76,7 +76,8 @@ import /*embed*/ {EmailTemplatesPreview} from "./components/emailtemplatesprevie
         EmailSchedulesView,
         EmailActionSetReadButton,
         EmailTemplatesEditor,
-        EmailTemplatesPreview
+        EmailTemplatesPreview,
+        fieldEmailSubject
     ]
 })
 export class ModuleEmails {}

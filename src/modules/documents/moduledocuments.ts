@@ -1,5 +1,5 @@
 /*
-SpiceUI 2018.10.001
+SpiceUI 2021.01.001
 
 Copyright (c) 2016-present, aac services.k.s - All rights reserved.
 Redistribution and use in source and binary forms, without modification, are permitted provided that the following conditions are met:
@@ -11,7 +11,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 */
 
 /**
- * @module ModuleCurrencies
+ * @module ModuleDocuments
  */
 
 import {CommonModule} from '@angular/common';
@@ -22,10 +22,11 @@ import {GlobalComponents} from '../../globalcomponents/globalcomponents';
 import {ObjectComponents} from '../../objectcomponents/objectcomponents';
 import {SystemComponents} from '../../systemcomponents/systemcomponents';
 import {DirectivesModule} from "../../directives/directives";
-import {VersionManagerService} from "../../services/versionmanager.service";
 import {FormsModule} from "@angular/forms";
 
 import /*embed*/ {fieldDocumentRevisionStatus} from "./fields/fielddocumentrevisionstatus";
+import /*embed*/ {DocumentCreateRevisionButton} from "./components/documentcreaterevisionbutton";
+import /*embed*/ {DocumentCreateRevisionModal} from "./components/documentcreaterevisionmodal";
 
 
 
@@ -41,7 +42,9 @@ import /*embed*/ {fieldDocumentRevisionStatus} from "./fields/fielddocumentrevis
         DirectivesModule,
     ],
     declarations: [
-        fieldDocumentRevisionStatus
+        fieldDocumentRevisionStatus,
+        DocumentCreateRevisionButton,
+        DocumentCreateRevisionModal
     ]
 })
 export class ModuleDocuments {}

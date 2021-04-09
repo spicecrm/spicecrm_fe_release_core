@@ -1,5 +1,5 @@
 /*
-SpiceUI 2018.10.001
+SpiceUI 2021.01.001
 
 Copyright (c) 2016-present, aac services.k.s - All rights reserved.
 Redistribution and use in source and binary forms, without modification, are permitted provided that the following conditions are met:
@@ -111,18 +111,10 @@ export class language {
     public loadLanguage(): Observable<any> {
         let retSubject = new Subject();
 
-        let params: any = {
-            modules: JSON.stringify(this.metadata.getModules())
-        };
-
         if (this.currentlanguage == '') {
             if (this.cookie.getValue('spiceuilanguage')) {
                 this.currentlanguage = this.cookie.getValue('spiceuilanguage');
             }
-        }
-
-        if (this.currentlanguage != '') {
-            params.lang = this.currentlanguage;
         }
 
         this.http.get(

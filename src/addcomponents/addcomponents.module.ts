@@ -1,5 +1,5 @@
 /*
-SpiceUI 2018.10.001
+SpiceUI 2021.01.001
 
 Copyright (c) 2016-present, aac services.k.s - All rights reserved.
 Redistribution and use in source and binary forms, without modification, are permitted provided that the following conditions are met:
@@ -16,8 +16,6 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 import {CommonModule} from "@angular/common";
 import {FormsModule}   from "@angular/forms";
 import {NgModule} from "@angular/core";
-
-import { VersionManagerService } from "../services/versionmanager.service";
 
 import  { ObjectFields }      from "../objectfields/objectfields";
 import  { SystemComponents}      from "../systemcomponents/systemcomponents";
@@ -60,12 +58,4 @@ import /*embed*/ { SpiceTerritorriesPrimary, SpiceTerritoriesAdditional } from "
     ]
 })
 export class AddComponentsModule {
-    public readonly version = "1.0";
-    public readonly build_date = "/*build_date*/";
-
-    constructor(
-        private vms: VersionManagerService,
-    ) {
-        this.vms.registerModule(this);
-    }
 }

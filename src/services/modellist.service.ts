@@ -1,5 +1,5 @@
 /*
-SpiceUI 2018.10.001
+SpiceUI 2021.01.001
 
 Copyright (c) 2016-present, aac services.k.s - All rights reserved.
 Redistribution and use in source and binary forms, without modification, are permitted provided that the following conditions are met:
@@ -733,7 +733,7 @@ export class modellist implements OnDestroy {
      */
     public aggregatesEnabled() {
         try {
-            return this.searchAggregates ? true : false;
+            return this.searchAggregates && !_.isEmpty(this.searchAggregates) ? true : false;
         } catch (e) {
             return false;
         }
@@ -1332,6 +1332,7 @@ export class modellist implements OnDestroy {
             relatefilter: this.relatefilter?.active ? this.relatefilter : null
         })
             .subscribe((res: any) => {
+                bucket.items = res.buckets.bucketitems[0].items;
                 this.listData.list = this.listData.list.concat(res.list);
                 this.lastLoad = new moment();
                 this.listDataChanged$.next(true);

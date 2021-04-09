@@ -1,5 +1,5 @@
 /*
-SpiceUI 2018.10.001
+SpiceUI 2021.01.001
 
 Copyright (c) 2016-present, aac services.k.s - All rights reserved.
 Redistribution and use in source and binary forms, without modification, are permitted provided that the following conditions are met:
@@ -34,16 +34,16 @@ export class SystemSlider implements ControlValueAccessor {
     /**
      * for the value accessor
      */
-    private onChange: (value: string) => void;
+    private onChange: (value: number) => void;
     private onTouched: () => void;
 
-    @Input() private _max: string;
-    @Input() private _min: string;
-    @Input() private _step: string;
+    @Input() private max: string;
+    @Input() private min: string;
+    @Input() private step: string;
     @Input() private disabled: boolean = false;
 
 
-    private _value: string;
+    private _value: number = 0;
 
 
     constructor() {
@@ -60,17 +60,6 @@ export class SystemSlider implements ControlValueAccessor {
         }
     }
 
-    get max() {
-        return this._max;
-    }
-
-    get min() {
-        return this._min;
-    }
-
-    get step() {
-        return this._step;
-    }
 
     /**
      * Set the function to be called

@@ -1,5 +1,5 @@
 /*
-SpiceUI 2018.10.001
+SpiceUI 2021.01.001
 
 Copyright (c) 2016-present, aac services.k.s - All rights reserved.
 Redistribution and use in source and binary forms, without modification, are permitted provided that the following conditions are met:
@@ -71,7 +71,7 @@ export class SystemInputNumber implements ControlValueAccessor {
      * @param event The DOM event
      */
     private fieldChanged(event) {
-        this.textValue = this.getValSanitized(this.textValue);
+        this.textValue = typeof(this.textValue) != 'number' ? this.getValSanitized(this.textValue) : this.textValue;
         // Only submit the (new) value if the sanitized value has actually changed:
         if ( this.textValue !== this.lastTextValue ) {
             this.onChange( this.textValue );

@@ -1,5 +1,5 @@
 /*
-SpiceUI 2018.10.001
+SpiceUI 2021.01.001
 
 Copyright (c) 2016-present, aac services.k.s - All rights reserved.
 Redistribution and use in source and binary forms, without modification, are permitted provided that the following conditions are met:
@@ -19,12 +19,19 @@ import {metadata} from '../../../services/metadata.service';
 import {navigationtab} from '../../../services/navigationtab.service';
 import {mailboxesEmails} from '../services/mailboxesemail.service';
 import {ActivatedRoute} from '@angular/router';
+import {InputRadioOptionI} from "../../../systemcomponents/interfaces/systemcomponents.interfaces";
 
 @Component({
     selector: 'mailbox-manager-header',
     templateUrl: './src/modules/mailboxes/templates/mailboxmanagerheader.html',
 })
 export class MailboxManagerHeader implements OnInit {
+
+    public splitTypeOptions: InputRadioOptionI[] = [
+        {value: 'noSplit', icon: 'picklist_type', title: 'LBL_NO_SPLIT'},
+        {value: 'verticalSplit', icon: 'side_list', title: 'LBL_VERTICAL_SPLIT'},
+        {value: 'horizontalSplit', icon: 'inspector_panel', title: 'LBL_HORIZONTAL_SPLIT'},
+    ];
 
     /**
      * the selected mailbox
@@ -140,4 +147,27 @@ export class MailboxManagerHeader implements OnInit {
         );
     }
 
+    /**
+     * set the active split type
+     * @param type
+     */
+    public setActiveSplitType(type: 'verticalSplit' | 'horizontalSplit' | 'noSplit') {
+        const activeType: any = {name: type};
+        switch (type) {
+            case'noSplit':
+                this.mailboxesEmails.activeMessage = null;
+                activeType.icon = 'picklist_type';
+                activeType.label = 'LBL_NO_SPLIT';
+                break;
+            case'verticalSplit':
+                activeType.icon = 'side_list';
+                activeType.label = 'LBL_VERTICAL_SPLIT';
+                break;
+            case'horizontalSplit':
+                activeType.icon = 'inspector_panel';
+                activeType.label = 'LBL_HORIZONTAL_SPLIT';
+                break;
+        }
+        this.mailboxesEmails.activeSplitType = activeType;
+    }
 }

@@ -1,5 +1,5 @@
 /*
-SpiceUI 2018.10.001
+SpiceUI 2021.01.001
 
 Copyright (c) 2016-present, aac services.k.s - All rights reserved.
 Redistribution and use in source and binary forms, without modification, are permitted provided that the following conditions are met:
@@ -294,5 +294,15 @@ export class ObjectRelatedlistFiles implements AfterViewInit {
                         .filter(file => file.filename.toLowerCase().includes(term) || (!!file.display_name && file.display_name.toLowerCase().includes(term)) || (!!file.text && file.text.toLowerCase().includes(term)));
                 }, 600);
         }
+    }
+
+    /**
+     * toggle big thumbnail value
+     */
+    public toggleBigThumbnail() {
+        if (!this.componentconfig) {
+            this.componentconfig = {};
+        }
+        this.componentconfig.bigThumbnail = !this.componentconfig.bigThumbnail;
     }
 }

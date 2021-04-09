@@ -1,5 +1,5 @@
 /*
-SpiceUI 2018.10.001
+SpiceUI 2021.01.001
 
 Copyright (c) 2016-present, aac services.k.s - All rights reserved.
 Redistribution and use in source and binary forms, without modification, are permitted provided that the following conditions are met:
@@ -24,7 +24,6 @@ import {NgModule} from "@angular/core";
 declare var moment: any;
 
 import {metadata} from "../../services/metadata.service";
-import {VersionManagerService} from "../../services/versionmanager.service";
 
 import {ObjectFields} from "../../objectfields/objectfields";
 import {SystemComponents} from "../../systemcomponents/systemcomponents";
@@ -73,14 +72,4 @@ import /*embed*/ {DashboardSelectPanelAddButton} from "./components/dashboardsel
         DashboardContainer,
     ]
 })
-export class ModuleDashboard {
-    public readonly version = "1.0";
-    public readonly build_date = "/*build_date*/";
-
-    constructor(
-        public metadata: metadata,
-        private vms: VersionManagerService,
-    ) {
-        this.vms.registerModule(this);
-    }
-}
+export class ModuleDashboard {}

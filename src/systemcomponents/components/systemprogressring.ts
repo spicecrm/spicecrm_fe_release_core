@@ -1,5 +1,5 @@
 /*
-SpiceUI 2018.10.001
+SpiceUI 2021.01.001
 
 Copyright (c) 2016-present, aac services.k.s - All rights reserved.
 Redistribution and use in source and binary forms, without modification, are permitted provided that the following conditions are met:
@@ -41,6 +41,13 @@ export class SystemProgressRing {
      */
     @Input() private status: "" | "warning" | "expired" = "";
 
+    /**
+     * an optional background color if the ring is rendered in a contect with different background
+     *
+     * @private
+     */
+    @Input() private backgroundcolor: string;
+
     constructor(private language: language) {
     }
 
@@ -52,6 +59,16 @@ export class SystemProgressRing {
             height: this.size + 'px',
             width: this.size + 'px'
         };
+    }
+
+    /**
+     * gets the colos for the inner ring
+     */
+    get innerStyle() {
+        if (this.backgroundcolor) {
+            return {background: this.backgroundcolor};
+        }
+        return {};
     }
 
     /**

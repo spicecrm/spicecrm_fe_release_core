@@ -1,5 +1,5 @@
 /*
-SpiceUI 2018.10.001
+SpiceUI 2021.01.001
 
 Copyright (c) 2016-present, aac services.k.s - All rights reserved.
 Redistribution and use in source and binary forms, without modification, are permitted provided that the following conditions are met:
@@ -20,7 +20,7 @@ import { Directive, HostListener, Input } from '@angular/core';
  *  https://github.com/KingMario/packages/tree/master/projects/ngx-trim-directive
  */
 @Directive({
-    selector: 'input[system-trim-input]',
+    selector: 'input[system-trim-input], textarea[system-trim-input]',
 })
 export class SystemTrimInputDirective {
 

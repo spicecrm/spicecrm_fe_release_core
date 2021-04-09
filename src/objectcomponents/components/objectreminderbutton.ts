@@ -1,5 +1,5 @@
 /*
-SpiceUI 2018.10.001
+SpiceUI 2021.01.001
 
 Copyright (c) 2016-present, aac services.k.s - All rights reserved.
 Redistribution and use in source and binary forms, without modification, are permitted provided that the following conditions are met:
@@ -38,7 +38,7 @@ export class ObjectReminderButton {
 
     constructor(private language: language, private metadata: metadata, private model: model, private renderer: Renderer2, private elementRef: ElementRef, private reminder: reminder, private userpreferences: userpreferences) {
 
-        if (this.reminder.loaded$) {
+        if (!this.reminder.loaded) {
             this.reminder.loaded$.subscribe(loaded => {
                 this.loadReminder();
             });

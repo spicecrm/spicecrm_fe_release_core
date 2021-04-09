@@ -1,5 +1,5 @@
 /*
-SpiceUI 2018.10.001
+SpiceUI 2021.01.001
 
 Copyright (c) 2016-present, aac services.k.s - All rights reserved.
 Redistribution and use in source and binary forms, without modification, are permitted provided that the following conditions are met:
@@ -154,8 +154,12 @@ export class fieldAddress extends fieldGeneric {
      * @param address is handed over from the Event Emitter from the autocomplete component
      */
     public addressSelected(address) {
-        this.street = address.street_name;
-        this.street_number = address.street_number;
+        if(this.hidestreetnumber) {
+            this.street = address.street; // street contains street_name and street_number
+        } else {
+            this.street = address.street_name;
+            this.street_number = address.street_number;
+        }
         this.city = address.city;
         this.district = address.district;
         this.postalcode = address.postalcode;

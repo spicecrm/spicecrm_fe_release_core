@@ -1,5 +1,5 @@
 /*
-SpiceUI 2018.10.001
+SpiceUI 2021.01.001
 
 Copyright (c) 2016-present, aac services.k.s - All rights reserved.
 Redistribution and use in source and binary forms, without modification, are permitted provided that the following conditions are met:
@@ -189,7 +189,7 @@ export class ReportsDesignerTree {
         this.reportModuleFields[rootModule] = [];
         this.isLoadingModuleFields = true;
         this.cdr.detectChanges();
-        this.backend.getRequest('/dictionary/browser/' + forModule + '/fields')
+        this.backend.getRequest('dictionary/browser/' + forModule + '/fields')
             .subscribe(items => {
                 this.reportModuleFields[rootModule] = items.filter(item => item.type != 'relate' && item.source != 'non-db');
                 this.isLoadingModuleFields = false;

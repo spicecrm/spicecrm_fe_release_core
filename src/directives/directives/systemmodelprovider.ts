@@ -1,5 +1,5 @@
 /*
-SpiceUI 2018.10.001
+SpiceUI 2021.01.001
 
 Copyright (c) 2016-present, aac services.k.s - All rights reserved.
 Redistribution and use in source and binary forms, without modification, are permitted provided that the following conditions are met:
@@ -31,7 +31,7 @@ import {model} from "../../services/model.service";
 })
 export class SystemModelProviderDirective {
     constructor(
-        private model: model
+        public model: model
     ) {
         // in case the host component is listening to the loading status and waits for it!
         this.model.isLoading = true;

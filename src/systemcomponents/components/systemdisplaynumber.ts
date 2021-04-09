@@ -1,5 +1,5 @@
 /*
-SpiceUI 2018.10.001
+SpiceUI 2021.01.001
 
 Copyright (c) 2016-present, aac services.k.s - All rights reserved.
 Redistribution and use in source and binary forms, without modification, are permitted provided that the following conditions are met:
@@ -47,6 +47,13 @@ export class SystemDisplayNumber implements OnChanges {
      */
     @Input() private currency_id: string;
 
+    /**
+     * set thisto ture so no values past the comma sre displayed
+     *
+     * @private
+     */
+    @Input() private noDigits: boolean = false;
+
 
     constructor(private language: language, private cdRef: ChangeDetectorRef, private currency: currency, private userpreferences: userpreferences) {
 
@@ -67,7 +74,11 @@ export class SystemDisplayNumber implements OnChanges {
      */
     get value() {
         if ((this.number && this.number != '') || this.number === 0) {
-            return this.userpreferences.formatMoney(this.number);
+
+            // check if thsi is a string and tehn try to parse to float
+            if(typeof(this.number) == "string") this.number = parseFloat(this.number);
+
+            return this.noDigits ?  this.userpreferences.formatMoney(this.number, 0) : this.userpreferences.formatMoney(this.number);
         }
     }
 

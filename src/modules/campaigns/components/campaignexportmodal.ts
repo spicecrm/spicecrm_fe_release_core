@@ -1,5 +1,5 @@
 /*
-SpiceUI 2018.10.001
+SpiceUI 2021.01.001
 
 Copyright (c) 2016-present, aac services.k.s - All rights reserved.
 Redistribution and use in source and binary forms, without modification, are permitted provided that the following conditions are met:
@@ -31,7 +31,7 @@ export class CampaignExportModal {
     private exportReports: any[] = [];
 
     constructor(private language: language, private model: model, private backend: backend, private modal: modal) {
-        this.backend.getRequest('/module/CampaignTasks/export/reports').subscribe(reports => {
+        this.backend.getRequest('module/CampaignTasks/export/reports').subscribe(reports => {
             this.exportReports = reports;
         });
     }

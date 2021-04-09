@@ -1,5 +1,5 @@
 /*
-SpiceUI 2018.10.001
+SpiceUI 2021.01.001
 
 Copyright (c) 2016-present, aac services.k.s - All rights reserved.
 Redistribution and use in source and binary forms, without modification, are permitted provided that the following conditions are met:
@@ -81,7 +81,7 @@ export class SystemCaptureImage implements AfterViewInit{
             file: dataUrl.replace('data:image/png;base64,', ''),
             filemimetype: 'image/png'
         };
-        this.backend.postRequest('/module/'+ this.model.module +'/' + this.model.id + '/attachment',{},  postBody).subscribe(response => {
+        this.backend.postRequest('module/'+ this.model.module +'/' + this.model.id + '/attachment',{},  postBody).subscribe(response => {
             this.response$.emit(response[0]);
             this.close();
         })

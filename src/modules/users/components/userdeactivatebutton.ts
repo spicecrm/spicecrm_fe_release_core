@@ -1,5 +1,5 @@
 /*
-SpiceUI 2018.10.001
+SpiceUI 2021.01.001
 
 Copyright (c) 2016-present, aac services.k.s - All rights reserved.
 Redistribution and use in source and binary forms, without modification, are permitted provided that the following conditions are met:
@@ -51,7 +51,7 @@ export class UserDeactivateButton {
                 res => {
                     if (res) {
                         let spinner = this.modal.await(this.language.getLabel('LBL_ACTIVATING'));
-                        this.backend.postRequest(`/module/Users/${this.model.id}/activate`).subscribe(
+                        this.backend.postRequest(`module/Users/${this.model.id}/activate`).subscribe(
                             res => {
                                 this.model.getData();
                                 spinner.emit(true);

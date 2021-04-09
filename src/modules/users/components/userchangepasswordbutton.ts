@@ -1,5 +1,5 @@
 /*
-SpiceUI 2018.10.001
+SpiceUI 2021.01.001
 
 Copyright (c) 2016-present, aac services.k.s - All rights reserved.
 Redistribution and use in source and binary forms, without modification, are permitted provided that the following conditions are met:
@@ -15,6 +15,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
  */
 import {Component} from "@angular/core";
 import {modal} from "../../../services/modal.service";
+import {model} from "../../../services/model.service";
 import {language} from "../../../services/language.service";
 import {UserChangePasswordModal} from "./userchangepasswordmodal";
 
@@ -24,8 +25,12 @@ import {UserChangePasswordModal} from "./userchangepasswordmodal";
 })
 export class UserChangePasswordButton {
 
-    constructor(private language: language, private modal: modal) {
+    constructor(private language: language, private modal: modal, private model: model) {
 
+    }
+
+    get disabled() {
+        return this.model.getFieldValue('external_auth_only') == false;
     }
 
     private execute() {

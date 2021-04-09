@@ -1,5 +1,5 @@
 /*
-SpiceUI 2018.10.001
+SpiceUI 2021.01.001
 
 Copyright (c) 2016-present, aac services.k.s - All rights reserved.
 Redistribution and use in source and binary forms, without modification, are permitted provided that the following conditions are met:
@@ -112,7 +112,8 @@ export class ReportsDesignerCondition {
      */
     private getOperators() {
         let retArray = [];
-        let operators = this.reporterConfig.operatorTypes[this.reporterConfig.operatorAssignments[this.whereCondition.type]];
+        const operatorType = this.reporterConfig.operatorAssignments[this.whereCondition.type] || 'varchar';
+        let operators = this.reporterConfig.operatorTypes[operatorType];
         for (let oprator of operators) {
             retArray.push({
                 value: oprator,

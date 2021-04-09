@@ -1,5 +1,5 @@
 /*
-SpiceUI 2018.10.001
+SpiceUI 2021.01.001
 
 Copyright (c) 2016-present, aac services.k.s - All rights reserved.
 Redistribution and use in source and binary forms, without modification, are permitted provided that the following conditions are met:
@@ -98,7 +98,7 @@ export class EmailSchedulesRelatedModal {
             let emailsubjectCondition = body.data.hasOwnProperty('email_subject');
             let selectedLinksCondition = selectedLinks.length > 0;
             if(mailboxCondition && emailsubjectCondition && selectedLinksCondition) {
-                this.backend.postRequest('/modules/EmailSchedules/saveScheduleFromRelated', {}, body).subscribe(result => {
+                this.backend.postRequest('modules/EmailSchedules/saveScheduleFromRelated', {}, body).subscribe(result => {
                     loadingRef.instance.self.destroy();
                     if (result.status) {
                         this.toast.sendToast(this.language.getLabel('MSG_SUCCESSFULLY_EXECUTED'), 'success');

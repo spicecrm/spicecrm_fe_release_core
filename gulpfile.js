@@ -23,12 +23,14 @@ var buildDate = moment(new Date()).format('YYYY-MM-DD HH:mm:ss');
 var tap = require('gulp-tap');
 var swig = require('gulp-swig');
 
+require('./gulpfile_globals.js');
+
 /**
  * prepare header texts
  * These lines are protected and shall not be modified
  * A packaged SpiceCRM frontend shall contain copyright notice to aac services k.s.
  */
-var releaseNumber = '2020.04.001';
+var releaseNumber = global.build.releaseNumber;
 var buildNumber = releaseNumber + '.' + Date.now();
 var aacservices = '© 2015 - ' + moment(new Date()).format('YYYY') + ' aac services k.s. All rights reserved.';
 var headerText = '/** \n';
@@ -114,7 +116,6 @@ gulp.task('js:build:subtask:dobuild', function(done){
     gulp.src([
         'src/services/interfaces.service.ts',
         'src/services/logger.service.ts',
-        'src/services/versionmanager.service.ts',
         'src/services/mathexpressioncompiler.ts',
         'src/services/cookie.service.ts',
         'src/services/broadcast.service.ts',

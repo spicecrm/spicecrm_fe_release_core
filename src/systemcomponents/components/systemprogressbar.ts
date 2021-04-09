@@ -1,5 +1,5 @@
 /*
-SpiceUI 2018.10.001
+SpiceUI 2021.01.001
 
 Copyright (c) 2016-present, aac services.k.s - All rights reserved.
 Redistribution and use in source and binary forms, without modification, are permitted provided that the following conditions are met:
@@ -28,6 +28,12 @@ import { userpreferences } from '../../services/userpreferences.service';
     }
 })
 export class SystemProgressBar {
+
+    /**
+     * if set to true the text for the progress will not be displayed
+     * @private
+     */
+    @Input() private hideText: boolean = false;
 
     /**
      * The progress of completion.

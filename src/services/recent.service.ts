@@ -1,5 +1,5 @@
 /*
-SpiceUI 2018.10.001
+SpiceUI 2021.01.001
 
 Copyright (c) 2016-present, aac services.k.s - All rights reserved.
 Redistribution and use in source and binary forms, without modification, are permitted provided that the following conditions are met:
@@ -131,7 +131,10 @@ export class recent {
             } else {
                 let responseSubject = new Subject<any[]>();
                 if (!this.moduleItems[module]) {
-                    this.backend.getRecent(module, 5).subscribe(response => {
+                    this.backend.getRequest('modules/Trackers/recent', {
+                        module: module,
+                        limit: 5
+                    }).subscribe(response => {
                         this.moduleItems[module] = [];
                         for (let item of response) {
                             this.moduleItems[module].push(item);

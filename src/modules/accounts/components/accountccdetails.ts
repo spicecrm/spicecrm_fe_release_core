@@ -1,5 +1,5 @@
 /*
-SpiceUI 2018.10.001
+SpiceUI 2021.01.001
 
 Copyright (c) 2016-present, aac services.k.s - All rights reserved.
 Redistribution and use in source and binary forms, without modification, are permitted provided that the following conditions are met:
@@ -46,7 +46,7 @@ export class AccountCCDetails implements OnInit {
     private loadCompanyCodes() {
         this.isLoading = true;
         let fields = JSON.stringify(["companycode", "date_modified", "description", "id"]);
-        this.backend.getRequest(`/module/CompanyCodes`, {fields: fields}).subscribe(CCodes => {
+        this.backend.getRequest(`module/CompanyCodes`, {fields: fields}).subscribe(CCodes => {
             this.companyCodes = CCodes.list;
         });
         this.isLoading = false;

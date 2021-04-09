@@ -1,5 +1,5 @@
 /*
-SpiceUI 2018.10.001
+SpiceUI 2021.01.001
 
 Copyright (c) 2016-present, aac services.k.s - All rights reserved.
 Redistribution and use in source and binary forms, without modification, are permitted provided that the following conditions are met:
@@ -17,8 +17,6 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
  */
 import {CommonModule} from "@angular/common";
 import {NgModule} from "@angular/core";
-
-import {VersionManagerService} from '../services/versionmanager.service';
 
 import /*embed*/ {SystemModelPopOverDirective} from "./directives/systemmodelpopover";
 import /*embed*/ {SystemPopOverDirective} from "./directives/systempopover";
@@ -79,12 +77,4 @@ import /*embed*/ {SystemPlaceholderDirective} from './directives/systemplacehold
     ]
 })
 export class DirectivesModule {
-    public readonly version = '1.0';
-    public readonly build_date = '/*build_date*/';
-
-    constructor(
-        private vms: VersionManagerService,
-    ) {
-        this.vms.registerModule(this);
-    }
 }

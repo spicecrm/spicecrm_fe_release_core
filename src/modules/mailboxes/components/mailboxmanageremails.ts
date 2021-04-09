@@ -1,5 +1,5 @@
 /*
-SpiceUI 2018.10.001
+SpiceUI 2021.01.001
 
 Copyright (c) 2016-present, aac services.k.s - All rights reserved.
 Redistribution and use in source and binary forms, without modification, are permitted provided that the following conditions are met:
@@ -41,9 +41,11 @@ export class MailboxManagerEmails {
     }
 
     /**
-     * loadmore triggered by the tobottom Directive
+     * load more if the scroll position reached the bottom
      */
-    private loadmore() {
-        this.mailboxesEmails.loadMore();
+    private loadmore(scrollContainer: HTMLElement) {
+        if (scrollContainer.scrollTop + scrollContainer.clientHeight + 50 > scrollContainer.scrollHeight) {
+            this.mailboxesEmails.loadMore();
+        }
     }
 }

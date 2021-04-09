@@ -1,5 +1,5 @@
 /*
-SpiceUI 2018.10.001
+SpiceUI 2021.01.001
 
 Copyright (c) 2016-present, aac services.k.s - All rights reserved.
 Redistribution and use in source and binary forms, without modification, are permitted provided that the following conditions are met:
@@ -21,11 +21,17 @@ import {metadata} from '../../services/metadata.service';
 import {fieldGeneric} from './fieldgeneric';
 import {Router} from '@angular/router';
 
+declare var _;
+
 @Component({
     selector: 'field-email-addresses',
     templateUrl: './src/objectfields/templates/fieldemailaddresses.html'
 })
 export class fieldEmailAddresses extends fieldGeneric implements OnInit {
+    /**
+     * holds the input radio unique name for the primary radio button
+     */
+    public primaryInputRadioName: string =  _.uniqueId('field-email-address-');
 
     constructor(public model: model,
                 public view: view,

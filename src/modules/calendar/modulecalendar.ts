@@ -1,5 +1,5 @@
 /*
-SpiceUI 2018.10.001
+SpiceUI 2021.01.001
 
 Copyright (c) 2016-present, aac services.k.s - All rights reserved.
 Redistribution and use in source and binary forms, without modification, are permitted provided that the following conditions are met:
@@ -19,8 +19,6 @@ import {FormsModule}   from "@angular/forms";
 import {DragDropModule} from "@angular/cdk/drag-drop";
 
 import {userpreferences} from "../../services/userpreferences.service";
-
-import {VersionManagerService} from "../../services/versionmanager.service";
 
 import {ObjectFields} from "../../objectfields/objectfields";
 import {GlobalComponents} from "../../globalcomponents/globalcomponents";
@@ -88,13 +86,4 @@ import /*embed*/ {CalendarThreeDaysDashlet} from "./components/calendarthreedays
     ],
     providers: [userpreferences]
 })
-export class ModuleCalendar {
-    public version = "1.0";
-    public build_date = "/*build_date*/";
-
-    constructor(
-        private vms: VersionManagerService,
-    ) {
-        this.vms.registerModule(this);
-    }
-}
+export class ModuleCalendar {}

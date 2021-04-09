@@ -1,5 +1,5 @@
 /*
-SpiceUI 2018.10.001
+SpiceUI 2021.01.001
 
 Copyright (c) 2016-present, aac services.k.s - All rights reserved.
 Redistribution and use in source and binary forms, without modification, are permitted provided that the following conditions are met:
@@ -23,11 +23,11 @@ import {language} from "../../services/language.service";
 import {Router} from "@angular/router";
 
 /**
-* @ignore
-*/
+ * @ignore
+ */
 /**
-* @ignore
-*/
+ * @ignore
+ */
 declare var moment: any;
 
 @Component({
@@ -108,6 +108,22 @@ export class fieldDateTimeSpan extends fieldGeneric implements OnInit {
             this.calculateDuration();
             this.isValid = true;
         }
+    }
+
+
+    get stati() {
+        let stati = this.model.getFieldStati(this.fieldname);
+
+        if (stati.editable && (!this.view.isEditable || this.fieldconfig.readonly)) {
+            stati.editable = false;
+        }
+
+        // add required flag if set via fieldconfig
+        if (this.fieldconfig.required) {
+            stati.required = true;
+        }
+
+        return stati;
     }
 
     private calculateEndDate() {

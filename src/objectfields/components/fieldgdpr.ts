@@ -1,5 +1,5 @@
 /*
-SpiceUI 2018.10.001
+SpiceUI 2021.01.001
 
 Copyright (c) 2016-present, aac services.k.s - All rights reserved.
 Redistribution and use in source and binary forms, without modification, are permitted provided that the following conditions are met:
@@ -18,10 +18,10 @@ import {model} from '../../services/model.service';
 import {modal} from '../../services/modal.service';
 import {view} from '../../services/view.service';
 import {backend} from '../../services/backend.service';
-import {language} from '../../services/language.service';
 import {metadata} from '../../services/metadata.service';
 import {fieldGeneric} from './fieldgeneric';
 import {Router} from '@angular/router';
+import {language} from "../../services/language.service";
 
 /**
  * renders a field with an indicator for data and marketing release according to GDPR Rules

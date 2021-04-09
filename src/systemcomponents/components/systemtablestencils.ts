@@ -1,5 +1,5 @@
 /*
-SpiceUI 2018.10.001
+SpiceUI 2021.01.001
 
 Copyright (c) 2016-present, aac services.k.s - All rights reserved.
 Redistribution and use in source and binary forms, without modification, are permitted provided that the following conditions are met:
@@ -82,7 +82,7 @@ export class SystemTableStencils implements OnInit {
      */
     private linestyle(index) {
         return {
-            opacity: 0.5 + (0.5 / index)
+            opacity: 0.2 + (0.8 / index)
         };
     }
 }

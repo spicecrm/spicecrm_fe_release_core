@@ -1,5 +1,5 @@
 /*
-SpiceUI 2018.10.001
+SpiceUI 2021.01.001
 
 Copyright (c) 2016-present, aac services.k.s - All rights reserved.
 Redistribution and use in source and binary forms, without modification, are permitted provided that the following conditions are met:
@@ -22,9 +22,14 @@ import {session} from '../../services/session.service';
 import {navigation} from '../../services/navigation.service';
 import {layout} from '../../services/layout.service';
 import {ActivationStart, Router} from '@angular/router';
-import { configurationService } from '../../services/configuration.service';
+import {configurationService} from '../../services/configuration.service';
 
+declare var _: any;
 
+/**
+ * renders the global header bar
+ * a central component on teh spiceui
+ */
 @Component({
     selector: 'global-header',
     templateUrl: './src/globalcomponents/templates/globalheader.html'
@@ -78,6 +83,14 @@ export class GlobalHeader {
      */
     get issmall() {
         return this.layout.screenwidth == 'small';
+    }
+
+    /**
+     * cheks if we have tenant data set and thus shoudl render the tenant bar
+     */
+    get isTenant() {
+        return !_.isEmpty(this.configurationService.getData('tenantconfig'));
+
     }
 }
 

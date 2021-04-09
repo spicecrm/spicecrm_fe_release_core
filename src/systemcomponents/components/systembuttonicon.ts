@@ -1,5 +1,5 @@
 /*
-SpiceUI 2018.10.001
+SpiceUI 2021.01.001
 
 Copyright (c) 2016-present, aac services.k.s - All rights reserved.
 Redistribution and use in source and binary forms, without modification, are permitted provided that the following conditions are met:
@@ -91,7 +91,7 @@ export class SystemButtonIcon implements OnChanges {
      */
     private getIcon() {
         if (this.icon) {
-            return this.icon;
+            return this.icon.indexOf(":") > 0 ? this.icon.split(":")[1] : this.icon;
         }
 
         if (this.module && this.metadata.getModuleIcon(this.module)) {
@@ -107,7 +107,9 @@ export class SystemButtonIcon implements OnChanges {
      * returns the sprite
      */
     private getSprite() {
-        if (this.module && this.metadata.getModuleIcon(this.module) && this.metadata.getModuleIcon(this.module).indexOf(":") > 0) {
+        if(this.icon && this.icon.indexOf(":") > 0) {
+            return this.icon.split(":")[0];
+        } else if (this.module && this.metadata.getModuleIcon(this.module) && this.metadata.getModuleIcon(this.module).indexOf(":") > 0) {
             return this.metadata.getModuleIcon(this.module).split(":")[0];
         } else if (this.module) {
             return 'standard';

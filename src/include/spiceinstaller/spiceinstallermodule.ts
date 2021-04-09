@@ -1,5 +1,5 @@
 /*
-SpiceUI 2018.10.001
+SpiceUI 2021.01.001
 
 Copyright (c) 2016-present, aac services.k.s - All rights reserved.
 Redistribution and use in source and binary forms, without modification, are permitted provided that the following conditions are met:
@@ -19,7 +19,6 @@ import {DirectivesModule} from "../../directives/directives";
 import {NgModule} from "@angular/core";
 import {RouterModule} from "@angular/router";
 import /*embed*/ {spiceinstaller} from "./services/spiceinstaller.service";
-import {VersionManagerService} from "../../services/versionmanager.service";
 import {SystemComponents} from "../../systemcomponents/systemcomponents";
 
 
@@ -67,13 +66,4 @@ import /*embed*/ {SpiceinstallerOCI8} from "./components/spiceinstalleroci8";
     providers: [spiceinstaller]
 })
 
-export class SpiceInstallerModule {
-    public readonly version = '1.0';
-    public readonly build_date = '/*build_date*/';
-
-    constructor(
-        private vms: VersionManagerService,
-    ) {
-        vms.registerModule(this);
-    }
-}
+export class SpiceInstallerModule {}

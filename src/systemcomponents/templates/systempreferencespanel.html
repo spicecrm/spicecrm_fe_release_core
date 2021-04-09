@@ -1,5 +1,5 @@
 <!--
-SpiceUI 2018.10.001
+SpiceUI 2021.01.001
 
 Copyright (c) 2016-present, aac services.k.s - All rights reserved.
 Redistribution and use in source and binary forms, without modification, are permitted provided that the following conditions are met:
@@ -18,14 +18,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
                     {{preferences.timezone}}
                 </system-preferences-panel-item-display>
                 <system-preferences-panel-item-edit>
-                    <div class="slds-select_container">
-                        <select class="slds-select" [(ngModel)]="preferences.timezone">
-                            <option></option>
-                            <option *ngFor="let key of timezoneKeys" [value]="key">
-                                {{timezones[key]}}
-                            </option>
-                        </select>
-                    </div>
+                    <system-input-timezone [(ngModel)]="preferences.timezone"></system-input-timezone>
                 </system-preferences-panel-item-edit>
             </system-preferences-panel-item>
             <system-preferences-panel-item class="slds-size--1-of-4" itemlabel="LBL_DISTANCE_UNIT_SYSTEM">
@@ -277,7 +270,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
         </div>
         <div class="slds-grid slds-grid--align-spread">
             <system-preferences-panel-item class="slds-size--1-of-4" itemlabel="LBL_DEFAULT_REMINDER_TIME">
-                <system-preferences-panel-item-display>{{preferences.week_day_start}}</system-preferences-panel-item-display>
+                <system-preferences-panel-item-display>{{preferences.reminder_time}}</system-preferences-panel-item-display>
                 <system-preferences-panel-item-edit>
                     <div class="slds-select_container">
                         <select [(ngModel)]="preferences.reminder_time" class="slds-select">

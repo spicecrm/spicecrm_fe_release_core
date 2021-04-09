@@ -1,5 +1,5 @@
 /*
-SpiceUI 2018.10.001
+SpiceUI 2021.01.001
 
 Copyright (c) 2016-present, aac services.k.s - All rights reserved.
 Redistribution and use in source and binary forms, without modification, are permitted provided that the following conditions are met:
@@ -50,16 +50,16 @@ export class SpiceInstallerDatabase {
      * saves the configuration
      */
     private checkDB() {
-
         switch (this.spiceinstaller.db_type) {
-            case 'mysql':
+            case 'mysql': // backward compatibility
+            case 'mysqli':
                 this.spiceinstaller.db_host_instance = 'SQLEXPRESS';
                 this.spiceinstaller.db_manager = 'MysqliManager';
                 break;
             case 'pgsql' :
                 this.spiceinstaller.db_manager = 'PostgreSQLManager';
                 break;
-            case 'sqlsrv':
+            case 'mssql':
                 this.spiceinstaller.db_manager = 'SqlsrvManager';
                 break;
             case 'oci8':

@@ -1,5 +1,5 @@
 /*
-SpiceUI 2018.10.001
+SpiceUI 2021.01.001
 
 Copyright (c) 2016-present, aac services.k.s - All rights reserved.
 Redistribution and use in source and binary forms, without modification, are permitted provided that the following conditions are met:
@@ -79,14 +79,14 @@ export class SystemInputTags {
 
     private doSearch() {
         /*
-        this.backend.getRequest('/SpiceTags/' + btoa(this.querystring.trim())).subscribe(tags => {
+        this.backend.getRequest('SpiceTags/' + btoa(this.querystring.trim())).subscribe(tags => {
             this.matchedtags = tags;
             this.matchedtags.sort((a, b) => {
                 return a.toLowerCase() > b.toLowerCase() ? 1 : -1;
             });
         });
         */
-        this.backend.postRequest('/SpiceTags', {},  {search: this.querystring.trim()}).subscribe(tags => {
+        this.backend.postRequest('SpiceTags', {},  {search: this.querystring.trim()}).subscribe(tags => {
             this.matchedtags = tags;
             this.matchedtags.sort((a, b) => {
                 return a.toLowerCase() > b.toLowerCase() ? 1 : -1;

@@ -1,5 +1,5 @@
 /*
-SpiceUI 2018.10.001
+SpiceUI 2021.01.001
 
 Copyright (c) 2016-present, aac services.k.s - All rights reserved.
 Redistribution and use in source and binary forms, without modification, are permitted provided that the following conditions are met:
@@ -36,7 +36,8 @@ export class ReporterFilterItem {
 
     private getOperators() {
         let retArray = [];
-        let operators = this.reporterconfig.operatorTypes[this.reporterconfig.operatorAssignments[this.wherecondition.type]];
+        const operatorType = this.reporterconfig.operatorAssignments[this.wherecondition.type] || 'varchar';
+        let operators = this.reporterconfig.operatorTypes[operatorType];
         for (let oprator of operators) {
             retArray.push({
                 value: oprator,

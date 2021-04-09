@@ -1,5 +1,5 @@
 /*
-SpiceUI 2018.10.001
+SpiceUI 2021.01.001
 
 Copyright (c) 2016-present, aac services.k.s - All rights reserved.
 Redistribution and use in source and binary forms, without modification, are permitted provided that the following conditions are met:
@@ -76,7 +76,7 @@ export class SpiceAttachmentAddImageModal {
         let mediaMetaData = this.inputMedia.mediaMetaData;
 
         // upload the attachment
-        this.modelattachments.uploadFileBase64(this.filecontent.substring(this.filecontent.indexOf('base64,') + 7), mediaMetaData.filename, mediaMetaData.mimetype);
+        this.modelattachments.uploadFileBase64( this.filecontent, mediaMetaData.filename, mediaMetaData.mimetype );
 
         this.self.destroy();
     }

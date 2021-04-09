@@ -1,5 +1,5 @@
 /*
-SpiceUI 2018.10.001
+SpiceUI 2021.01.001
 
 Copyright (c) 2016-present, aac services.k.s - All rights reserved.
 Redistribution and use in source and binary forms, without modification, are permitted provided that the following conditions are met:
@@ -154,7 +154,7 @@ export class MailboxmanagerEmailDetails implements OnDestroy {
 
         // get componentset
         let componentconfig = this.metadata.getComponentConfig("MailboxmanagerEmailDetails", this.model.module);
-        let viewComponentSet = componentconfig.componentset;
+        let viewComponentSet = this.mailboxesEmails.activeSplitType.name == 'horizontalSplit' ? componentconfig.horizontalComponentset : componentconfig.componentset;
         for (let component of this.metadata.getComponentSetObjects(viewComponentSet)) {
             this.metadata.addComponent(component.component, this.detailscontent).subscribe(componentRef => {
                 componentRef.instance.componentconfig = component.componentconfig ? component.componentconfig : {};
@@ -220,7 +220,7 @@ export class MailboxmanagerEmailDetails implements OnDestroy {
         // set the model
         this.model.setField('status', status);
         // update the backend
-        this.backend.postRequest('/module/' + this.model.module + '/' + this.model.id + '/setstatus/' + status).subscribe(
+        this.backend.postRequest('module/' + this.model.module + '/' + this.model.id + '/setstatus/' + status).subscribe(
             (res: any) => {
                 // also set it in the service
                 this.mailboxesEmails.activeMessage.status = status;
@@ -240,7 +240,7 @@ export class MailboxmanagerEmailDetails implements OnDestroy {
         // set the model
         this.model.setField("openness", openness);
         // update the backend
-        this.backend.postRequest("/module/" + this.model.module + '/' + this.model.id + "/setopenness/" + openness).subscribe(
+        this.backend.postRequest("module/" + this.model.module + '/' + this.model.id + "/setopenness/" + openness).subscribe(
             (res: any) => {
                 // also set it in the service
                 this.mailboxesEmails.activeMessage.openness = openness;
@@ -276,5 +276,12 @@ export class MailboxmanagerEmailDetails implements OnDestroy {
      */
     private delete() {
         this.model.delete();
+    }
+
+    /**
+     * set the active message to null
+     */
+    public goBack() {
+        this.mailboxesEmails.activeMessage = null;
     }
 }

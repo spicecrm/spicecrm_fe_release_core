@@ -1,5 +1,5 @@
 /*
-SpiceUI 2018.10.001
+SpiceUI 2021.01.001
 
 Copyright (c) 2016-present, aac services.k.s - All rights reserved.
 Redistribution and use in source and binary forms, without modification, are permitted provided that the following conditions are met:
@@ -16,16 +16,39 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 import {Component} from '@angular/core';
 import {HttpClient, HttpHeaders, HttpResponse} from "@angular/common/http";
 
+/**
+ * renders a bar on the login screen with a newsfeed from a wordpress site
+ */
 @Component({
     selector: 'global-newsfeed',
     templateUrl: './src/globalcomponents/templates/globalnewsfeed.html',
 })
 export class GlobalNewsFeed {
 
+    /**
+     * the news items to be displayed
+     * @private
+     */
     private news: Array<any> = [];
+
+    /**
+     * an indicator while the news feed is being retrieved
+     * @private
+     */
     private isLoading: boolean = true;
 
     constructor(private http: HttpClient) {
+        this.loadNewsFeed();
+    }
+
+    /**
+     * loads the newsfeedb
+     *
+     * ToDo: add capability to configure newsfeed url
+     *
+     * @private
+     */
+    private loadNewsFeed(){
         let posturl = btoa('https://www.spicecrm.io/wp-json/wp/v2/posts');
         this.http.get('proxy?useurl=' + posturl)
             .subscribe((res: any) => {
@@ -34,11 +57,4 @@ export class GlobalNewsFeed {
             });
     }
 
-    private getContainerClass() {
-        if (this.isLoading) {
-            return 'slds-align--absolute-center';
-        } else {
-            return '';
-        }
-    }
 }

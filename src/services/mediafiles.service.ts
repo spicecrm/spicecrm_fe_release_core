@@ -1,5 +1,5 @@
 /*
-SpiceUI 2018.10.001
+SpiceUI 2021.01.001
 
 Copyright (c) 2016-present, aac services.k.s - All rights reserved.
 Redistribution and use in source and binary forms, without modification, are permitted provided that the following conditions are met:
@@ -217,7 +217,7 @@ export class mediafiles {
             limit: -99
         };
 
-        this.backend.getRequest('/module/MediaCategories', paramsCategories).subscribe((response: any) => {
+        this.backend.getRequest('module/MediaCategories', paramsCategories).subscribe((response: any) => {
             for (let c of response.list) {
                 this.categories[c.id] = c;
                 this.categoriesSorted.push(c);

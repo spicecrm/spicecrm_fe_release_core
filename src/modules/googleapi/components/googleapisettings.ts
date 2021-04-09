@@ -1,5 +1,5 @@
 /*
-SpiceUI 2018.10.001
+SpiceUI 2021.01.001
 
 Copyright (c) 2016-present, aac services.k.s - All rights reserved.
 Redistribution and use in source and binary forms, without modification, are permitted provided that the following conditions are met:
@@ -79,26 +79,27 @@ export class GoogleAPISettings implements OnInit {
      * @private
      */
     private loadScope() {
-        if(this.configvalues && this.configvalues.serviceuserscope) {
-            let scopes = this.configvalues.serviceuserscope.split(' ');
-            for (let scope of scopes) {
-                switch (scope) {
-                    case 'https://www.googleapis.com/auth/calendar':
-                        this.serviceuserscope.calendar = true;
-                        break;
-                    case 'https://www.googleapis.com/auth/contacts':
-                        this.serviceuserscope.contacts = true;
-                        break;
-                    case 'https://www.googleapis.com/auth/gmail.readonly':
-                        this.serviceuserscope.gmail_radonly = true;
-                        break;
-                    case 'https://www.googleapis.com/auth/gmail.compose':
-                        this.serviceuserscope.gmail_compose = true;
-                        break;
-                    case 'https://www.googleapis.com/auth/gmail.modify':
-                        this.serviceuserscope.gmail_modify = true;
-                        break;
-                }
+        let scopes = [];
+        if(this.configvalues.hasOwnProperty('serviceuserscope')) {
+            scopes = this.configvalues.serviceuserscope.split(' ');
+        }
+        for (let scope of scopes) {
+            switch (scope) {
+                case 'https://www.googleapis.com/auth/calendar':
+                    this.serviceuserscope.calendar = true;
+                    break;
+                case 'https://www.googleapis.com/auth/contacts':
+                    this.serviceuserscope.contacts = true;
+                    break;
+                case 'https://www.googleapis.com/auth/gmail.readonly':
+                    this.serviceuserscope.gmail_radonly = true;
+                    break;
+                case 'https://www.googleapis.com/auth/gmail.compose':
+                    this.serviceuserscope.gmail_compose = true;
+                    break;
+                case 'https://www.googleapis.com/auth/gmail.modify':
+                    this.serviceuserscope.gmail_modify = true;
+                    break;
             }
         }
     }

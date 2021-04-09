@@ -1,5 +1,5 @@
 /*
-SpiceUI 2018.10.001
+SpiceUI 2021.01.001
 
 Copyright (c) 2016-present, aac services.k.s - All rights reserved.
 Redistribution and use in source and binary forms, without modification, are permitted provided that the following conditions are met:
@@ -18,7 +18,6 @@ import {FormsModule}   from '@angular/forms';
 import {NgModule, Component} from '@angular/core';
 import {DragDropModule} from '@angular/cdk/drag-drop';
 
-import {VersionManagerService} from '../services/versionmanager.service';
 import { RouterModule, Routes, Router } from '@angular/router';
 import {DirectivesModule} from "../directives/directives";
 import {SystemComponents} from '../systemcomponents/systemcomponents';
@@ -27,6 +26,7 @@ import /*embed*/ {administrationconfigurator} from './services/administrationcon
 import /*embed*/ {ftsconfiguration} from './services/ftsconfiguration.service';
 import /*embed*/ {dictionary} from './services/dictionary.service';
 import /*embed*/ {administration} from './services/administration.service';
+import /*embed*/ {administrationapiinspectorService} from "./services/administrationapiinspector.service";
 
 import /*embed*/ { AdministrationMain } from './components/administrationmain';
 import /*embed*/ { AdministrationMenu } from './components/administrationmenu';
@@ -54,6 +54,14 @@ import /*embed*/ {AdministrationHomeScreenCardItem} from "./components/administr
 import /*embed*/ { AdministrationSystemStats } from './components/administrationsystemstats';
 import /*embed*/ { AdministrationSystemVersions } from './components/administrationsystemversions';
 
+import /*embed*/ { AdministrationAPIInspector } from './components/administrationapiinspector';
+import /*embed*/ { AdministrationAPIInspectorDetails } from './components/administrationapiinspectordetails';
+import /*embed*/ { AdministrationApiInspectorMethodParameters } from "./components/administrationapiinspectormethodparameters";
+import /*embed*/ { AdministrationApiInspectorMethods } from "./components/administrationapiinspectormethods";
+import /*embed*/ { AdministrationapiinspectorMethodResponses } from "./components/administrationapiinspectormethodresponses";
+import /*embed*/ { AdministrationApiInspectorMethodTest } from "./components/administrationapiinspectormethodtest";
+
+
 import /*embed*/ { AdministrationSysTrashcanManager } from './components/administrationsystrashcanmanager';
 import /*embed*/ { AdministrationSysTrashcanRecover } from './components/administrationsystrashcanrecover';
 
@@ -63,6 +71,8 @@ import /*embed*/ {AdministrationDictRepairModal} from "./components/administrati
 import /*embed*/ {AdministrationDictRepairLanguage} from "./components/administrationdictrepairlanguage";
 import /*embed*/ {AdministrationDictRepairACLRoles} from "./components/administrationdictrepairaclroles";
 import /*embed*/ {AdministrationDictRepairCache} from "./components/administrationdictrepaircache";
+import /*embed*/ {AdministrationDictRepairDbColumns} from "./components/administrationdictrepairdbcolumns";
+import /*embed*/ {AdministrationDictRepairDbColumnsModal} from "./components/administrationdictrepairdbcolumnsmodal";
 import /*embed*/ { AdministrationConfigEditor } from './components/administrationconfigeditor';
 
 import /*embed*/ { AdministrationSchedulerJobsEnum } from './components/administrationschedulerjobsenum';
@@ -87,6 +97,12 @@ import /*embed*/ {AdministrationDefaultPreferences} from './components/administr
         DragDropModule
     ],
     declarations: [
+        AdministrationAPIInspector,
+        AdministrationApiInspectorMethods,
+        AdministrationApiInspectorMethodParameters,
+        AdministrationAPIInspectorDetails,
+        AdministrationapiinspectorMethodResponses,
+        AdministrationApiInspectorMethodTest,
         AdministrationMain,
         AdministrationMenu,
         AdministrationMenuRouteItem,
@@ -114,6 +130,8 @@ import /*embed*/ {AdministrationDefaultPreferences} from './components/administr
         AdministrationDictRepairModal,
         AdministrationDictRepairACLRoles,
         AdministrationDictRepairCache,
+        AdministrationDictRepairDbColumns,
+        AdministrationDictRepairDbColumnsModal,
         AdministrationConfigEditor,
         AdministrationSchedulerJobsEnum,
         AdministrationSchedulerJobLog,
@@ -145,12 +163,4 @@ import /*embed*/ {AdministrationDefaultPreferences} from './components/administr
 
 })
 export class AdminComponentsModule {
-    public readonly version = '1.0';
-    public readonly build_date = '/*build_date*/';
-
-    constructor(
-        private vms: VersionManagerService,
-    ) {
-        vms.registerModule(this);
-    }
 }
